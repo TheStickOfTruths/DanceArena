@@ -1,16 +1,27 @@
 from django.db import models
-from multiselectfield import MultiSelectField
+from users.models import User
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
-class Age_choices(models.TextChoices):
+class AgeChoices(models.TextChoices):
     DJECA = "DJECA", "Djeca"
     JUNIORI = "JUNIORI", "Juniori"
     SENIORI = "SENIORI", "Seniori"
 
 
-class Style_choices(models.TextChoices):
+class AgeCategory(models.Model):
+    name = models.CharField(
+        max_length=50,
+        choices=AgeChoices.choices,
+        unique=True
+    )
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class StyleChoices(models.TextChoices):
     BALET = "BALET", "Balet"
     HIPHOP = "HIPHOP", "Hip Hop"
     JAZZ = "JAZZ", "Jazz"
@@ -18,14 +29,36 @@ class Style_choices(models.TextChoices):
     BREAK = "BREAK", "Break"
 
 
-class Group_size_choices(models.TextChoices):
+class StyleCategory(models.Model):
+    name = models.CharField(
+        max_length=50,
+        choices=StyleChoices.choices,
+        unique=True
+    )
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class GroupSizeChoices(models.TextChoices):
     SOLO = "SOLO", "Solo"
     DUO = "DUO", "Duo"
     MALA_GRUPA = "MALA_GRUPA", "Mala grupa"
     FORMACIJA = "FORMACIJA", "Formacija"
 
 
-class Status_choices(models.TextChoices):
+class GroupSizeCategory(models.Model):
+    name = models.CharField(
+        max_length=50,
+        choices=GroupSizeChoices.choices,
+        unique=True
+    )
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class StatusChoices(models.TextChoices):
     DRAFT = "DRAFT", "Draft"
     PUBLISHED = "PUBLISHED", "Published"
     CLOSED_APPLICATIONS = "CLOSED_APPLICATIONS", "Closed applications"
@@ -41,27 +74,13 @@ class Competition(models.Model):
         settings.AUTH_USER_MODEL,
         limit_choices_to={'role': 'ORGANIZER'},
         on_delete=models.CASCADE,
-        related_name='competitions'
+        related_name='organized_competitions'
     )
-    age_categories = MultiSelectField(
-        choices=Age_choices,
-        max_choices=3,
-        max_length=50,
-        default=Age_choices.DJECA
-    )
-    style_categories = MultiSelectField(
-        choices=Style_choices,
-        max_choices=5,
-        max_length=50,
-        default=Style_choices.BALET
-    )
-    group_size_categories = MultiSelectField(
-        choices=Group_size_choices,
-        max_choices=4,
-        max_length=50,
-        default=Group_size_choices.SOLO
-    )
-    status = models.CharField(choices=Status_choices, max_length=20, default=Status_choices.DRAFT)
+    age_categories = models.ManyToManyField(AgeCategory, related_name='competitions')
+    style_categories = models.ManyToManyField(StyleCategory, related_name='competitions')
+    group_size_categories = models.ManyToManyField(GroupSizeCategory, related_name='competitions')
+    status = models.CharField(choices=StatusChoices, max_length=20, default=StatusChoices.DRAFT)
+    judges = models.ManyToManyField(User, through='CompetitionJudge', related_name='judged_competitions')
     starting_list_pdf = models.FileField(
         upload_to='starting_lists/',
         blank=True,
@@ -78,7 +97,7 @@ class Competition(models.Model):
                 """
 
 
-class Competition_Judge(models.Model):
+class CompetitionJudge(models.Model):
     competition = models.ForeignKey(
         Competition,
         on_delete=models.CASCADE,
@@ -118,20 +137,17 @@ class Appearance(models.Model):
     length = models.DurationField()
     choreograph = models.CharField(max_length=50)
     music = models.FileField(null=True, blank=True)
-    age_category = models.CharField(
-        max_length=50,
-        choices=Age_choices,
-        default=Age_choices.DJECA
+    age_category = models.ForeignKey(
+        AgeCategory, 
+        on_delete=models.PROTECT
     )
-    style_category = models.CharField(
-        max_length=50,
-        choices=Style_choices,
-        default=Style_choices.BALET
+    style_category = models.ForeignKey(
+        StyleCategory, 
+        on_delete=models.PROTECT
     )
-    group_size_category = models.CharField(
-        max_length=50,
-        choices=Group_size_choices,
-        default=Group_size_choices.SOLO
+    group_size_category = models.ForeignKey(
+        GroupSizeCategory, 
+        on_delete=models.PROTECT
     )
     paid_registration = models.BooleanField(default=False)
 

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden, HttpResponse, JsonResponse
-from .models import Competition, Appearance, Grade, Competition_Judge, Status_choices
+from .models import Competition, Appearance, Grade, CompetitionJudge, StatusChoices
 from .utils import generate_starting_list_pdf, generate_results, generate_grades
 from users.models import User, Role
 from users.decorators import role_required
@@ -9,8 +9,8 @@ from django.views.decorators.csrf import csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!
 
 @csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 def competition_live(request):
-    if Competition.objects.filter(status=Status_choices.ACTIVE):
-        return HttpResponse(Competition.objects.filter(status=Status_choices.ACTIVE))
+    if Competition.objects.filter(status=StatusChoices.ACTIVE):
+        return HttpResponse(Competition.objects.filter(status=StatusChoices.ACTIVE))
 
     else:
         return HttpResponse("Nema natjecanja.")
@@ -25,7 +25,7 @@ def competition_create(request):
             date=request.POST.get('date'),
             location = request.POST.get('location'),
             description=request.POST.get('description'),
-            status=Status_choices.DRAFT 
+            status=StatusChoices.DRAFT 
         )      
         competition.save()
         return HttpResponse(competition)
@@ -56,7 +56,7 @@ def competition_edit(request, id):
             if request.POST.get(attr):
                 setattr(competition, attr, request.POST.get(attr))
 
-        competition.status = Status_choices.DRAFT       
+        competition.status = StatusChoices.DRAFT       
         competition.save()
         return HttpResponse(competition)
 
@@ -72,7 +72,7 @@ def competition_publish(request, id):
         return HttpResponseForbidden("Pristup zabranjen.")
 
     if request.method == 'POST':
-        competition.status = Status_choices.PUBLISHED
+        competition.status = StatusChoices.PUBLISHED
         competition.save()
         return HttpResponse(competition)
 
@@ -87,11 +87,11 @@ def competition_close_applications(request, id):
     if competition.organizer != request.user:
         return HttpResponseForbidden("Pristup zabranjen.")
     
-    if competition.status != Status_choices.PUBLISHED:
+    if competition.status != StatusChoices.PUBLISHED:
         return HttpResponseForbidden("Natjecanje nije objavljeno.")
 
     if request.method == 'POST':
-        competition.status = Status_choices.CLOSED_APPLICATIONS
+        competition.status = StatusChoices.CLOSED_APPLICATIONS
         competition.save()
         url = generate_starting_list_pdf(competition)
         return HttpResponse(url)
@@ -116,7 +116,7 @@ def competition_starting_list(request, id):
     )
     allowed_users.update(club_managers)
     judges = (
-        Competition_Judge.objects.filter(competition=competition)
+        CompetitionJudge.objects.filter(competition=competition)
         .values_list('judge', flat=True)
     )
     allowed_users.update(judges)
@@ -135,7 +135,7 @@ def competition_invite_judge(request, id):
     if competition.organizer != request.user:
         return HttpResponseForbidden("Pristup zabranjen.")
     
-    if competition.status != Status_choices.PUBLISHED:
+    if competition.status != StatusChoices.PUBLISHED:
         return HttpResponseForbidden("Natjecanje nije objavljeno.")
 
     if request.method == 'POST':
@@ -145,12 +145,12 @@ def competition_invite_judge(request, id):
         user = User.objects.get(email=email)
         if user.role != 'JUDGE':
             return HttpResponseForbidden("Korisnik nije sudac.")
-        competition_judge = Competition_Judge(
+        CompetitionJudge = CompetitionJudge(
             competition=competition,
             judge=user
         )
-        competition_judge.save()
-        return HttpResponse(competition_judge)
+        CompetitionJudge.save()
+        return HttpResponse(CompetitionJudge)
 
     return HttpResponse("Pozovi suca.html")
 
@@ -164,11 +164,11 @@ def competition_activate(request, id):
         return HttpResponseForbidden("Pristup zabranjen.")
 
     if request.method == 'POST':
-        if not Competition_Judge.objects.filter(competition=competition).exists():
+        if not CompetitionJudge.objects.filter(competition=competition).exists():
             return HttpResponseForbidden("Nema sudaca.")
-        if Competition_Judge.objects.filter(competition=competition).count() / 2 == 1:
+        if CompetitionJudge.objects.filter(competition=competition).count() / 2 == 1:
             return HttpResponseForbidden("Broj sudaca je paran.")
-        competition.status = Status_choices.ACTIVE
+        competition.status = StatusChoices.ACTIVE
         competition.save()
         return HttpResponse(competition)
 
@@ -184,7 +184,7 @@ def competition_deactivate(request, id):
         return HttpResponseForbidden("Pristup zabranjen.")
 
     if request.method == 'POST':
-        competition.status = Status_choices.PUBLISHED
+        competition.status = StatusChoices.PUBLISHED
         competition.save()
         return HttpResponse(competition)
 
@@ -198,10 +198,10 @@ def competition_grade(request, competition_id, appearance_id):
     appearance = get_object_or_404(Appearance, id=appearance_id)
 
     if request.method == 'POST':
-        if competition.status != Status_choices.ACTIVE:
+        if competition.status != StatusChoices.ACTIVE:
             return HttpResponseForbidden("Natjecanje nije aktivno.")
         
-        if not Competition_Judge.objects.filter(competition=competition, judge=request.user).exists():
+        if not CompetitionJudge.objects.filter(competition=competition, judge=request.user).exists():
             return HttpResponseForbidden("Pristup zabranjen.")
         
         appearance_grade = request.POST.get('grade')
@@ -226,7 +226,7 @@ def competition_complete(request, id):
         return HttpResponseForbidden("Pristup zabranjen.")
 
     if request.method == 'POST':
-        competition.status = Status_choices.COMPLETED
+        competition.status = StatusChoices.COMPLETED
         competition.save()
         return HttpResponse(competition)
 
@@ -236,7 +236,7 @@ def competition_complete(request, id):
 @csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 def competition_results(request, id):
     competition = get_object_or_404(Competition, id=id)
-    if competition.status != Status_choices.COMPLETED:
+    if competition.status != StatusChoices.COMPLETED:
         return HttpResponseForbidden("Natjecanje nije gotovo.")
     
     results = generate_results(competition)
@@ -248,7 +248,7 @@ def competition_results(request, id):
 #@role_required(Role.CLUB_MANAGER)
 def competition_appearance_results(request, competition_id, appearance_id):
     competition = get_object_or_404(Competition, id=competition_id)
-    if competition.status != Status_choices.COMPLETED:
+    if competition.status != StatusChoices.COMPLETED:
         return HttpResponseForbidden("Natjecanje nije gotovo.")
     
     appearance = get_object_or_404(Appearance, id=appearance_id)
@@ -267,7 +267,7 @@ def competition_signup(request, id):
     competition = get_object_or_404(Competition, id=id)
 
     if request.method == 'POST':
-        if competition.status != Status_choices.PUBLISHED:
+        if competition.status != StatusChoices.PUBLISHED:
             return HttpResponseForbidden("Prijava nije moguća.")
         
         appearance = Appearance()

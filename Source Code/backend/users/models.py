@@ -29,7 +29,7 @@ class User(AbstractUser):
         super().save(*args, **kwargs)
 
 
-class Organizer_Subscription(models.Model):
+class OrganizerSubscription(models.Model):
     organizer = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         limit_choices_to={'role': 'ORGANIZER'},

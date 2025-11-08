@@ -1,5 +1,20 @@
 from django.contrib import admin
-from .models import Competition, Appearance, Grade, Competition_Judge
+from .models import AgeCategory, StyleCategory, GroupSizeCategory, Competition, Appearance, Grade, CompetitionJudge
+
+
+@admin.register(AgeCategory)
+class AgeCategoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+
+
+@admin.register(StyleCategory)
+class StyleCategoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+
+
+@admin.register(GroupSizeCategory)
+class GroupSizeCategoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
 
 
 @admin.register(Competition)
@@ -13,15 +28,15 @@ class CompetitionAdmin(admin.ModelAdmin):
     ordering = ('date', 'id')
 
     def get_age_categories(self, obj):
-        return ", ".join(obj.age_categories)
+        return ", ".join([str(cat) for cat in obj.age_categories.all()])
     get_age_categories.short_description = 'Age Categories'
 
     def get_style_categories(self, obj):
-        return ", ".join(obj.style_categories)
+        return ", ".join([str(cat) for cat in obj.style_categories.all()])
     get_style_categories.short_description = 'Style Categories'
 
     def get_group_size_categories(self, obj):
-        return ", ".join(obj.group_size_categories)
+        return ", ".join([str(cat) for cat in obj.group_size_categories.all()])
     get_group_size_categories.short_description = 'Group Size Categories'
 
 
@@ -67,8 +82,8 @@ class GradeAdmin(admin.ModelAdmin):
     appearance_id.short_description = 'Appearance ID'
 
 
-@admin.register(Competition_Judge)
-class Competition_JudgeAdmin(admin.ModelAdmin):
+@admin.register(CompetitionJudge)
+class CompetitionJudgeAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'judge_info', 'competition_info'
     )
