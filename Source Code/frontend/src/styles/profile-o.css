@@ -1,0 +1,150 @@
+.profile-container {
+    display: grid;
+    grid-template-rows: 10vh 90vh;
+    width: 100vw;
+}
+
+
+.header {
+    display: flex;
+    position:fixed;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 10vh;
+    box-shadow: 3px 3px 10px rgb(163, 157, 157);
+}
+
+
+.profile-content-container {
+    display: grid;
+    grid-template-rows: auto;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    position: relative;
+    height: 90vh;
+}
+
+.headboard {
+    background-color: var(--svijetloplava);
+    height: 10vh;
+    top:0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.headboard p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-left: 1%;
+    color: var(--svijetloplava);
+    color: rgba(255,255,255,0.5)
+}
+
+.profile-info {
+    display: grid;
+    grid-template-rows: auto auto;
+    position:absolute;
+    align-content: start;
+    left:50%;
+    transform: translate(-50%);
+    height: 60%;
+    width: 50%;
+    z-index: 2;
+}
+
+.profile-info-main {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    justify-content: left;
+    width: 100%;
+    border-bottom: 1px solid var(--tamnoplava);
+    padding-bottom: 20px;
+}
+
+.profile-info-main #ime {
+    padding: 0;
+    margin: 0;
+    font-size: 1.7rem;
+    font-weight: bold;
+    padding-left: 5%;
+    margin-bottom: 2%;
+    color: var(--tamnoplava)
+}
+
+.pfp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20vh;
+    height: 20vh;
+    border-radius: 20px;
+    border: 5px solid var(--svijetloplava);
+}
+
+.pfp img {
+    object-fit:fill;
+    width: 20vh;
+    height: 20vh;
+    z-index: -1;
+}
+
+.profile-info-general {
+    display: grid;
+    grid-template-columns: 22vh auto;
+    gap: 0 5%;
+    margin-top: 2%
+}
+
+.profile-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: top;
+    align-items: center;
+    margin-top: -4%;
+}
+
+.profile-buttons button {
+    padding: 0;
+    height: 4.5vh;
+    width: 90%;
+    border-style: none;
+    border-radius: 13px;
+    background-color: var(--tamnoplava);
+    margin-top: 11%;
+    font-size: 0.7rem;
+    color: white
+}
+
+.profile-buttons :hover {
+    cursor: pointer;
+    background-color: color-mix(in oklab, var(--tamnoplava) 100%, black 30%)
+}
+
+.profile-about div {
+    display: grid;
+    grid-template-columns: 20% 70%;
+    border-bottom: 1px solid var(--tamnoplava);
+    height: 7vh;
+    align-content: center;
+    align-items: center;
+}
+
+.profile-about #atribut {
+    font-size: 0.8rem;
+    color: rgba(0,0,0,0.4);
+    margin:0;
+    padding:0;
+}
+
+.profile-about #value {
+    font-size: 0.8rem;
+    color: rgb(0,0,0);
+    margin:0;
+    padding:0;
+}

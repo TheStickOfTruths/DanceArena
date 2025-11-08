@@ -2,7 +2,7 @@
     padding: 5px 20px;
     background-color: rgb(255, 255, 255);
     width: 100%;
-    height: 50px;
+    height: 10vh;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -17,6 +17,10 @@
     align-items: center;
     justify-content: flex-start;
     flex-direction: row;
+}
+
+.logo-text-container :hover {
+    cursor: pointer;
 }
 
 .navbar-logo {
