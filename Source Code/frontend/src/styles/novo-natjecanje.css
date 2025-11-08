@@ -1,0 +1,262 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+.new-comp-container {
+    display: grid;
+    grid-template-rows: 10vh 90vh;
+    width: 100vw;
+}
+
+.new-comp-form-container {
+    display: grid;
+    grid-template-rows: auto;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    position: relative;
+    height: 90vh;
+}
+
+.headboard {
+    background-color: var(--svijetloplava);
+    height: 10vh;
+    top:0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.headboard p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-left: 1%;
+    color: var(--svijetloplava);
+    color: rgba(255,255,255,0.5)
+}
+
+.new-comp-form {
+    position: absolute;
+    display:grid;
+    gap: 1%;
+    grid-template-rows: auto auto auto auto auto auto auto;
+    margin: 0;
+    padding: 0;
+    width: 50%;
+    left: 50%;
+    transform: translate(-50%);
+    top: 10vh;
+    height: auto;
+    padding-bottom: 20vh;
+}
+
+label{
+    padding: 2%;
+}
+
+::placeholder {
+    color: var(--tamnoplava);
+    opacity: 50%;
+    padding: 1%;
+}
+
+
+/* obicna polja za upis */
+
+.new-comp-form input[type='text'] {
+    height: 80%;
+    color: var(--tamnoplava);
+    border: 1px solid color-mix(in oklab, var(--tamnoplava) 50%, white 0%);
+    border-radius: 8px;
+}
+
+.new-comp-form input[type='text']:hover {
+    background-color: color-mix(in oklab, var(--tamnoplava) 10%, white 100%);
+}
+
+
+.new-comp-form div:nth-child(1),
+.new-comp-form div:nth-child(3),
+.new-comp-form div:nth-child(7) {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    height: 8vh;
+    align-items: center;
+    justify-content: start;
+    color: var(--tamnoplava);
+    font-size: 0.9rem;
+}
+
+
+/* za odabir datuma */
+
+.new-comp-form div:nth-child(2) {
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20%;
+    height: 8vh;
+    justify-content: start;
+    align-items: center;
+    color: var(--tamnoplava);
+    font-size: 0.9rem;
+}
+
+.new-comp-form div:nth-child(2) #datum-end-label {
+    margin-left: 2%;
+}
+
+.new-comp-form div:nth-child(2) input {
+    color: var(--tamnoplava);
+    border: 1px solid color-mix(in oklab, var(--tamnoplava) 50%, white 0%);
+    border-radius: 8px;
+    height: 80%;
+    padding-left: 2%;
+    padding-right: 2%;
+    font-size: 1rem;
+}
+
+.new-comp-form div:nth-child(2) input:hover {
+    background-color: color-mix(in oklab, var(--tamnoplava) 10%, white 100%);
+}
+
+
+
+
+/* textarea polje - opis natjecanja */
+.new-comp-form div:nth-child(4){
+    display: grid;
+    grid-template-columns: 20% 80%;
+    height: 11vh;
+    color: var(--tamnoplava);
+    font-size: 0.9rem;
+}
+
+.new-comp-form textarea {
+    font-family: 'Poppins', sans-serif;
+    color: var(--tamnoplava);
+    border: 1px solid color-mix(in oklab, var(--tamnoplava) 50%, white 0%);
+    border-radius: 8px;
+}
+
+.new-comp-form textarea:hover {
+    background-color: color-mix(in oklab, var(--tamnoplava) 10%, white 100%);
+}
+
+/* kategorije i checkboxovi */
+
+.new-comp-form div:nth-child(5) {
+    display: grid;
+    grid-template-columns: 20% 20% 20% 30%;
+    gap: 1%;
+    height: 24vh;
+    color: var(--tamnoplava);
+    font-size: 0.9rem;
+    padding-top: 2%;
+    justify-content: start;
+}
+
+.new-comp-form div:nth-child(5) #text-kategorije {
+    padding-left: 2%;
+    margin: 0;
+}
+
+.new-comp-form div:nth-child(5) div {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 2%;
+    justify-content: start;
+    align-items: start;
+}
+
+.new-comp-form div:nth-child(5) div p {
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+}
+
+.new-comp-form div:nth-child(5) .kategorije-form {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    justify-content: start;
+    align-items: center;
+}
+
+.new-comp-form div:nth-child(5) .kategorije-form .option {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 3vh;
+    justify-content: start;
+    align-items: center;
+    color: var(--tamnoplava);
+    font-size: 0.9rem;
+}
+
+.new-comp-form div:nth-child(5) .kategorije-form .option input {
+    border-radius: 50%;
+}
+
+/* izbor sudaca */
+
+.new-comp-form div:nth-child(6) {
+    display: grid;
+    grid-template-columns: 20% 60% 20%;
+    gap: 1%;
+    justify-items: start;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--tamnoplava);
+    font-size: 0.9rem;
+    height: auto;
+}
+
+.new-comp-form div:nth-child(6) #text-izbor {
+    padding-left: 2%;
+}
+
+.new-comp-form div:nth-child(6) .svi-sudci {
+    display: flex;
+    flex-direction: row;
+    height: 80%;
+    width: 100%;
+}
+
+.new-comp-form div:nth-child(6) .svi-sudci select {
+    margin: 1%;
+    border: 1px solid color-mix(in oklab, var(--tamnoplava) 50%, white 0%);
+    border-radius: 8px;
+    color: var(--tamnoplava)
+}
+
+.new-comp-form div:nth-child(6) #noviSudac {
+    font-style: italic;
+    font-size: 0.8rem;
+    color: color-mix(in oklab, var(--tamnoplava) 60%, white 0%)
+}
+
+.new-comp-form div:nth-child(6) #noviSudac:hover {
+    cursor: pointer;
+    color: color-mix(in oklab, var(--tamnoplava) 60%, white 80%)
+}
+
+.new-comp-form input[type='submit'] {
+    padding: 0;
+    margin-top: 3%;
+    height: 4.5vh;
+    width: 20%;
+    border-style: none;
+    border-radius: 13px;
+    background-color: var(--tamnoplava);
+    font-size: 0.7rem;
+    color: white
+}
+
+.new-comp-form input[type='submit']:hover {
+    cursor: pointer;
+    background-color: color-mix(in oklab, var(--tamnoplava) 100%, black 30%)
+}
+
