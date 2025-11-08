@@ -11,11 +11,14 @@ import Homepage from './pages/homepage.jsx'
 const router = createBrowserRouter([{
   path: "/homepage",
   element: <Homepage />,
-  errorElement: <NotFoundPage />,
 },
 {
   path: "/login",
   element: <Login />,
+},
+{
+  path: "*",
+  element: <NotFoundPage />,
 }
 ]);
 
