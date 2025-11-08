@@ -13,9 +13,8 @@ export const getCurrentUser = async () => {
         if (!response.ok) {
             if (response.status === 401 || response.status === 403) {
                 console.log("APIService: Korisnik nije prijavljen ili nije autoriziran.");
-                return null; // Vrati null umjesto bacanja greške za ove statuse
+                return null;
             }
-            // Za ostale HTTP greške, baci grešku
             throw new Error(`APIService: HTTP error! status: ${response.status}`);
         }
 
@@ -24,6 +23,6 @@ export const getCurrentUser = async () => {
 
     } catch (error) {
         console.error("APIService: Greška pri dohvaćanju trenutnog korisnika:", error);
-        throw error; // Proslijedi grešku dalje komponentama
+        throw error;
     }
 };
