@@ -22,8 +22,8 @@ function ProfileO({setPage}){
 
                     <div className='profile-info-general'>
                         <div className='profile-buttons'>
-                            <button>Novo Natjecanje</button>
-                            <button>Upravljaj prijavama</button>
+                            <button id='novo-natjecanje' onClick={() => setPage('novoNatjecanje')}>Novo Natjecanje</button>
+                            <button id='upr-prijavama'>Upravljaj prijavama</button>
                         </div>
                         <div className='profile-about'>
                             <div>

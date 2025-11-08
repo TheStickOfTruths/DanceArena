@@ -8,7 +8,7 @@ function Login({ setPage }) {
                 <img src="/pictures/logo i tekst.png" alt="Dance Arena Logo With Title" className="login-logo-tekst" />
                 <div className="form-container">
                     <p>Nice to see you again!</p>
-                    <div className="google-login">
+                    <div className="google-login" onClick={() => setPage('profileO')}>
                         <img src="/pictures/Google logo.png" alt="Google Logo" className="google-logo" />
                         <p>Login with Google</p>
                     </div>
