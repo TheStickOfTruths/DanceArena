@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
-from .models import User, Organizer_Subscription
+from .models import User, OrganizerSubscription
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
@@ -23,8 +23,8 @@ class UserAdmin(DjangoUserAdmin):
     ordering = ('id', 'username')
 
 
-@admin.register(Organizer_Subscription)
-class Organizer_SubscriptionAdmin(admin.ModelAdmin):
+@admin.register(OrganizerSubscription)
+class OrganizerSubscriptionAdmin(admin.ModelAdmin):
     list_display = ('id', 'organizer_info', 'paid_subscription', 'end_date')
     list_filter = ('paid_subscription',)
     search_fields = ('id', 'end_date')
