@@ -1,10 +1,11 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .decorators import role_required
 from .models import Role
-from django.views.decorators.csrf import csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!
+from django.views.decorators.csrf import csrf_exempt #FOR POSTMAN !!!!!!!!!!!
+from django.contrib.auth.decorators import login_required
 
 
 @csrf_exempt
@@ -51,3 +52,18 @@ def google_login(request):
 def custom_logout(request):
     logout(request)
     return redirect('/users/google-login/')
+
+def current_user(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+    
+    user = request.user
+    data = {
+        'id': user.id,
+        'username': user.username,
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'role': user.role
+    }
+    return JsonResponse(data)
