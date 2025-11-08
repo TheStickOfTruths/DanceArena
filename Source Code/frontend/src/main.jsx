@@ -1,10 +1,12 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import './index.css'
+
 import NotFoundPage from './pages/notfoundpage.jsx'
 import Login from './pages/login.jsx'
 import Homepage from './pages/homepage.jsx'
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([{
   path: "/homepage",

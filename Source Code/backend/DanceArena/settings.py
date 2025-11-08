@@ -31,7 +31,6 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 SITE_ID = 1
@@ -48,15 +47,17 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'social_django',
     'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.google',
     'multiselectfield',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -67,7 +68,7 @@ MIDDLEWARE = [
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+    # 'allauth.account.auth_backends.AuthenticationBackend',
     'social_core.backends.google.GoogleOAuth2',
 ]
 
@@ -75,6 +76,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', 'profile']
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [config('FRONTEND_URL')]
 SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
@@ -87,7 +89,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
 )
-LOGIN_REDIRECT_URL = config('FRONTEND_URL') + '/dashboard'
+LOGIN_REDIRECT_URL = config('FRONTEND_URL') + '/homepage'
 
 ROOT_URLCONF = 'DanceArena.urls'
 
@@ -172,6 +174,6 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
-ACCOUNT_LOGOUT_REDIRECT_URL = '/users/google-login/'
-LOGIN_REDIRECT_URL = '/users/google-login/'
-LOGOUT_REDIRECT_URL = '/users/google-login/'
+# ACCOUNT_LOGOUT_REDIRECT_URL = '/users/google-login/'
+# LOGIN_REDIRECT_URL = '/users/google-login/'
+# LOGOUT_REDIRECT_URL = '/users/google-login/'
