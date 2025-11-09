@@ -1,12 +1,11 @@
 import '../styles/profile-o.css';
 import Navbar from '../components/navbar';
 
-function ProfileO({setPage}){
+function ProfileO() {
 
-    return(
+    return (
         <div className='profile-container'>
-            <Navbar
-                setPage={setPage} />
+            <Navbar />
 
             <div className='profile-content-container'>
                 <div className='headboard'>
@@ -15,7 +14,7 @@ function ProfileO({setPage}){
                 <div className='profile-info'>
                     <div className='profile-info-main'>
                         <div className='pfp'>
-                            <img src="./pictures/profile-icon.webp" alt="profile-picture"/>
+                            <img src="./pictures/profile-icon.webp" alt="profile-picture" />
                         </div>
                         <p id='ime'>Ime i prezime</p>
                     </div>
@@ -40,7 +39,7 @@ function ProfileO({setPage}){
                 </div>
             </div>
         </div>
-        
+
     );
 }
 

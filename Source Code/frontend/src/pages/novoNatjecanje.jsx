@@ -1,12 +1,11 @@
 import '../styles/novo-natjecanje.css';
 import Navbar from '../components/navbar';
 
-function NovoNatjecanje({setPage}){
+function NovoNatjecanje() {
 
-    return(
+    return (
         <div className='new-comp-container'>
-            <Navbar
-                setPage={setPage} />
+            <Navbar />
 
             <div className='new-comp-form-container'>
                 <div className='headboard'>
@@ -36,10 +35,10 @@ function NovoNatjecanje({setPage}){
                         <div className='stilovi'>
                             <p for='stilovi-form'>Stilovi: </p>
                             <div className='kategorije-form'>
-                                
+
                                 <div className='option'>
                                     <input type="checkbox" id="hiphop" name="hiphop" value="hip hop"></input>
-                                    <label for="hiphop"> Hip Hop</label>            
+                                    <label for="hiphop"> Hip Hop</label>
                                 </div>
                                 <div className='option'>
                                     <input type="checkbox" id="breakdance" name="breakdance" value="breakdance"></input>
@@ -57,10 +56,10 @@ function NovoNatjecanje({setPage}){
                                     <input type="checkbox" id="step" name="step" value="step"></input>
                                     <label for="step"> Step</label>
                                 </div>
-  
+
                             </div>
                         </div>
-                        
+
                         <div className='dobne-kategorije'>
                             <p for='dobne-kategorije-form'>Dobne kategorije: </p>
                             <div className='kategorije-form'>
@@ -78,7 +77,7 @@ function NovoNatjecanje({setPage}){
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div className='velicine'>
                             <p for='velicine-form'>Veličine grupa: </p>
                             <div className='kategorije-form'>
@@ -100,9 +99,9 @@ function NovoNatjecanje({setPage}){
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
-                    <div>
+                    {/* <div>
                         <p id='text-izbor'>Izbor sudaca:</p>
                         <div className='svi-sudci'>
                             <select id='sudac'>
@@ -121,9 +120,9 @@ function NovoNatjecanje({setPage}){
                                 <option value='sudac3'>Sudac 3</option>
                             </select>
                         </div>
-                        
+
                         <p id='noviSudac'>Dodaj novog sudca...</p>
-                    </div>
+                    </div> */}
                     <div>
                         <label for='iznos-kotizacije'>Iznos kotizacije: </label>
                         <input type='text' id='iznos-kotizacije' placeholder='Unesite iznos kotizacije'></input>
@@ -132,7 +131,7 @@ function NovoNatjecanje({setPage}){
                 </form>
             </div>
         </div>
-        
+
     );
 }
 
