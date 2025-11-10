@@ -16,26 +16,25 @@ function ProfileO() {
                         <div className='pfp'>
                             <img src="./pictures/profile-icon.webp" alt="profile-picture" />
                         </div>
-                        <p id='ime'>Ime i prezime</p>
+                        <p className='ime'>Ime i prezime</p>
                     </div>
 
                     <div className='profile-info-general'>
                         <div className='profile-buttons'>
-                            <button id='novo-natjecanje' onClick={() => setPage('novoNatjecanje')}>Novo Natjecanje</button>
-                            <button id='upr-prijavama'>Upravljaj prijavama</button>
+                            <button className='novo-natjecanje'>Novo Natjecanje</button>
+                            <button className='upr-prijavama'>Upravljaj prijavama</button>
                         </div>
                         <div className='profile-about'>
                             <div>
-                                <p id='atribut'>Status članstva:</p>
-                                <p id='value'>Aktivno</p>
+                                <p className='atribut'>Status članstva:</p>
+                                <p className='value'>Aktivno</p>
                             </div>
                             <div>
-                                <p id='atribut'>E-mail:</p>
-                                <p id='value'>ime.prezime@gmail.com</p>
+                                <p className='atribut'>E-mail:</p>
+                                <p className='value'>ime.prezime@gmail.com</p>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

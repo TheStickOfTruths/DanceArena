@@ -1,5 +1,6 @@
 import '../styles/navbar.css';
 import { useState } from 'react';
+import { logoutUser } from '../services/apiService.jsx';
 import { Link } from 'react-router-dom';
 
 function DropdownItem({ icon, text, path, border = "yes", onClick }) {
@@ -18,6 +19,17 @@ function DropdownItem({ icon, text, path, border = "yes", onClick }) {
 
     return <div onClick={onClick}>{itemContent}</div>;
 }
+
+const handleLogout = async () => {
+    try {
+        const response = await logoutUser();
+        if (response) {
+            navigate('/login');
+        }
+    } catch (error) {
+        console.error("Greška pri odjavi:", error);
+    }
+};
 
 function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +52,7 @@ function Navbar() {
                 {isOpen && <div className="dropdown-menu">
                     <DropdownItem icon="bi bi-x-circle" text="Close menu" onClick={() => setIsOpen(!isOpen)} />
                     <DropdownItem icon="bi bi-person-fill" text="Profile" path="/profile-o" />
-                    <DropdownItem border="no" icon="bi bi-escape" text="LogOut" />
+                    <DropdownItem border="no" icon="bi bi-escape" text="LogOut" onClick={handleLogout} />
                 </div>}
             </div>
 

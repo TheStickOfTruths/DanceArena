@@ -1,5 +1,21 @@
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
 export const getCurrentUser = async () => {
     try {
         const response = await fetch(`${apiBaseUrl}/users/me/`, {
@@ -23,6 +39,29 @@ export const getCurrentUser = async () => {
 
     } catch (error) {
         console.error("APIService: Greška pri dohvaćanju trenutnog korisnika:", error);
+        throw error;
+    }
+};
+
+export const logoutUser = async () => {
+    try {
+        const response = await fetch(`${apiBaseUrl}/users/logout/`, { //
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            credentials: 'include',
+        });
+
+        if (!response.ok) {
+            throw new Error(`APIService: HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.error("APIService: Greška pri odjavi korisnika:", error);
         throw error;
     }
 };
