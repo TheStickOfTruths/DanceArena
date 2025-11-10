@@ -6,6 +6,7 @@ from .decorators import role_required
 from .models import Role
 from django.views.decorators.csrf import csrf_exempt #FOR POSTMAN !!!!!!!!!!!
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
 
 @csrf_exempt
@@ -48,10 +49,14 @@ def google_login(request):
         'user_email': user_email,
         'user_name': user_name,
     })
-
+@require_POST
 def custom_logout(request):
-    logout(request)
-    return redirect('/users/google-login/')
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': 'User already logged out.'}, status = 200) #Ako nije nitko prijavljen, vrati OK
+    
+    logout(request) #Logout za Django
+
+    return JsonResponse({'success': "User loged out successfully."}, status = 200) #Vrati JSONRepsonse za logout nakon Django logouta
 
 def current_user(request):
     if not request.user.is_authenticated:
