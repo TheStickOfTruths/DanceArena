@@ -40,7 +40,7 @@ function Homepage() {
 
     return (
         <div className="homepage-container">
-            <Navbar />
+            <Navbar currentUser={currentUser} />
             <div className="homepage-content-container">
                 {currentUser ? (
                     <>

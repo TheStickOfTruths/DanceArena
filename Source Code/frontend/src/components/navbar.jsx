@@ -20,8 +20,7 @@ function DropdownItem({ icon, text, path, border = "yes", onClick }) {
     return <div onClick={onClick}>{itemContent}</div>;
 }
 
-
-function Navbar() {
+function Navbar({ currentUser }) {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
 
@@ -51,11 +50,12 @@ function Navbar() {
                 <img src="/pictures/profile-icon.webp" alt="User Icon" className="user-icon"
                     onClick={() => setIsOpen(!isOpen)} />
 
-                {isOpen && <div className="dropdown-menu">
-                    <DropdownItem icon="bi bi-x-circle" text="Close menu" onClick={() => setIsOpen(!isOpen)} />
-                    <DropdownItem icon="bi bi-person-fill" text="Profile" path="/profile-o" />
-                    <DropdownItem border="no" icon="bi bi-escape" text="LogOut" onClick={handleLogout} />
-                </div>}
+                {isOpen && currentUser &&
+                    <div className="dropdown-menu">
+                        <DropdownItem icon="bi bi-x-circle" text="Close menu" onClick={() => setIsOpen(!isOpen)} />
+                        <DropdownItem icon="bi bi-person-fill" text="Profile" path="/profile-o" />
+                        <DropdownItem border="no" icon="bi bi-escape" text="LogOut" onClick={handleLogout} />
+                    </div>}
             </div>
 
         </div>
