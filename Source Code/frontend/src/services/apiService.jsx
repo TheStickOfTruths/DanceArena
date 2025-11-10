@@ -45,7 +45,7 @@ export const getCurrentUser = async () => {
 
 export const logoutUser = async () => {
     try {
-        const response = await fetch(`${apiBaseUrl}/users/logout/`, { //
+        const response = await fetch(`${apiBaseUrl}/users/logout/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

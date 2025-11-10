@@ -77,6 +77,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', 'profile']
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [config('FRONTEND_URL')]
+CSRF_TRUSTED_ORIGINS = [config('FRONTEND_URL')]
 SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
