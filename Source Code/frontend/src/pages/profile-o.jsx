@@ -49,7 +49,7 @@ function ProfileO() {
             <div className='profile-content-container'>
                 {!currentUser ?
                     (
-                        <div className="">
+                        <div className="not-logged-in">
                             <p>Niste prijavljeni.</p>
                             <Link to="/login">Idi na prijavu</Link>
                         </div>

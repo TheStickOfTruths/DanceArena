@@ -66,12 +66,13 @@ function Homepage() {
                         <p>Niste prijavljeni.</p>
                         <Link to="/login">Idi na prijavu</Link>
                         <div className="competitions-container">
-                            {competitions.length > 0 ? (
-                                competitions.map((competition) => (
-                                    <CompetitionMini key={competition.id} competition={competition} />
-                                ))
-                            ) : (
-                                <p>Nema natjecanja</p>)}
+                            {competitions.length > 0 ?
+                                (
+                                    competitions.map((competition) =>
+                                        (<CompetitionMini key={competition.id} competition={competition} />))
+                                ) : (
+                                    <p>Nema natjecanja</p>
+                                )}
                         </div>
                     </>
                 )}

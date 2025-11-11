@@ -1,9 +1,9 @@
 import '../styles/novo-natjecanje.css';
 import Navbar from '../components/navbar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Select from 'react-select';
-import { createCompetition } from '../services/apiService';
-import { useNavigate } from 'react-router-dom';
+import { createCompetition, getCurrentUser } from '../services/apiService';
+import { useNavigate, Link } from 'react-router-dom';
 
 const stilOptions = [
     { value: 'HIPHOP', label: 'Hip Hop' },
@@ -28,8 +28,9 @@ const velicinaOptions = [
 
 
 function NovoNatjecanje() {
+    const [currentUser, setCurrentUser] = useState(null);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-
     const [formData, setFormData] = useState({
         naziv: '',
         datumStart: '',
@@ -41,6 +42,35 @@ function NovoNatjecanje() {
         velicine: [],
         kotizacija: 0
     });
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await getCurrentUser();
+
+                if (response) {
+                    setCurrentUser(response);
+                }
+            } catch (error) {
+                console.error("Greška u homepage.jsx:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="homepage-container">
+                <Navbar currentUser={currentUser} />
+                <div className="homepage-content-container">
+                    <p>Učitavanje podataka...</p>
+                </div>
+            </div>
+        );
+    }
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -85,133 +115,140 @@ function NovoNatjecanje() {
 
     return (
         <div className='new-comp-container'>
-            <Navbar />
+            <Navbar currentUser={currentUser} />
+            {currentUser ? (
 
-            <div className='new-comp-form-container'>
-                <div className='headboard'>
-                    <p>Novo natjecanje</p>
+                <div className='new-comp-form-container'>
+                    <div className='headboard'>
+                        <p>Novo natjecanje</p>
+                    </div>
+
+                    <form className='new-comp-form' onSubmit={handleSubmit}>
+                        <div className='form-group'>
+                            <label htmlFor='naziv-natjecanja'>Naziv natjecanja:</label>
+                            <input
+                                type='text'
+                                id='naziv-natjecanja'
+                                name='naziv'
+                                placeholder='Unesite naziv natjecanja'
+                                value={formData.naziv}
+                                onChange={handleChange}
+                                className='form-input'
+                                required
+                            />
+                        </div>
+
+                        <div className='form-group-dates'>
+                            <label htmlFor='datum-start'>Početak natjecanja:</label>
+                            <input
+                                type='date'
+                                id='datum-start'
+                                name='datumStart'
+                                value={formData.datumStart}
+                                onChange={handleChange}
+                                className='form-input'
+                                required
+                            />
+                        </div>
+
+                        <div className='form-group'>
+                            <label htmlFor='lokacija-natjecanja'>Lokacija natjecanja:</label>
+                            <input
+                                type='text'
+                                id='lokacija-natjecanja'
+                                name='lokacija'
+                                placeholder='Unesite lokaciju natjecanja'
+                                value={formData.lokacija}
+                                onChange={handleChange}
+                                className='form-input'
+                                required
+                            />
+                        </div>
+
+                        <div className='form-group'>
+                            <label htmlFor='opis-natjecanja'>Opis natjecanja:</label>
+                            <textarea
+                                id='opis-natjecanja'
+                                name='opis'
+                                placeholder='Unesite opis natjecanja'
+                                value={formData.opis}
+                                onChange={handleChange}
+                                className='form-textarea'
+                                required
+                            />
+                        </div>
+
+                        <div className='kategorije-container'>
+                            <div className='form-group'>
+                                <p>Stilovi:</p>
+                                <Select
+                                    isMulti
+                                    name="stilovi"
+                                    options={stilOptions}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                    onChange={(options) => handleSelectChange('stilovi', options)}
+                                    placeholder="Odaberi stilove..."
+                                    required
+                                />
+                            </div>
+
+                            <div className='form-group'>
+                                <p>Dobne kategorije:</p>
+                                <Select
+                                    isMulti
+                                    name="dobneKategorije"
+                                    options={dobOptions}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                    onChange={(options) => handleSelectChange('dobneKategorije', options)}
+                                    placeholder="Odaberi dob..."
+                                    required
+                                />
+                            </div>
+
+                            <div className='form-group'>
+                                <p>Veličine grupa:</p>
+                                <Select
+                                    isMulti
+                                    name="velicine"
+                                    options={velicinaOptions}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                    onChange={(options) => handleSelectChange('velicine', options)}
+                                    placeholder="Odaberi veličine..."
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className='form-group-row'>
+                            <label htmlFor='iznos-kotizacije'>Iznos kotizacije (€):</label>
+                            <input
+                                type='number'
+                                id='iznos-kotizacije'
+                                name='kotizacija'
+                                placeholder='0.00'
+                                value={formData.kotizacija}
+                                onChange={handleChange}
+                                className='form-input'
+                                min="0"
+                                step="0.01"
+                                max="10000"
+                                required
+                            />
+                        </div>
+
+                        <input type='submit' value='Kreiraj natjecanje' className='submit-button' />
+
+                    </form>
                 </div>
-
-                <form className='new-comp-form' onSubmit={handleSubmit}>
-                    <div className='form-group'>
-                        <label htmlFor='naziv-natjecanja'>Naziv natjecanja:</label>
-                        <input
-                            type='text'
-                            id='naziv-natjecanja'
-                            name='naziv'
-                            placeholder='Unesite naziv natjecanja'
-                            value={formData.naziv}
-                            onChange={handleChange}
-                            className='form-input'
-                            required
-                        />
-                    </div>
-
-                    <div className='form-group-dates'>
-                        <label htmlFor='datum-start'>Početak natjecanja:</label>
-                        <input
-                            type='date'
-                            id='datum-start'
-                            name='datumStart'
-                            value={formData.datumStart}
-                            onChange={handleChange}
-                            className='form-input'
-                            required
-                        />
-                    </div>
-
-                    <div className='form-group'>
-                        <label htmlFor='lokacija-natjecanja'>Lokacija natjecanja:</label>
-                        <input
-                            type='text'
-                            id='lokacija-natjecanja'
-                            name='lokacija'
-                            placeholder='Unesite lokaciju natjecanja'
-                            value={formData.lokacija}
-                            onChange={handleChange}
-                            className='form-input'
-                            required
-                        />
-                    </div>
-
-                    <div className='form-group'>
-                        <label htmlFor='opis-natjecanja'>Opis natjecanja:</label>
-                        <textarea
-                            id='opis-natjecanja'
-                            name='opis'
-                            placeholder='Unesite opis natjecanja'
-                            value={formData.opis}
-                            onChange={handleChange}
-                            className='form-textarea'
-                            required
-                        />
-                    </div>
-
-                    <div className='kategorije-container'>
-                        <div className='form-group'>
-                            <p>Stilovi:</p>
-                            <Select
-                                isMulti
-                                name="stilovi"
-                                options={stilOptions}
-                                className="basic-multi-select"
-                                classNamePrefix="select"
-                                onChange={(options) => handleSelectChange('stilovi', options)}
-                                placeholder="Odaberi stilove..."
-                                required
-                            />
-                        </div>
-
-                        <div className='form-group'>
-                            <p>Dobne kategorije:</p>
-                            <Select
-                                isMulti
-                                name="dobneKategorije"
-                                options={dobOptions}
-                                className="basic-multi-select"
-                                classNamePrefix="select"
-                                onChange={(options) => handleSelectChange('dobneKategorije', options)}
-                                placeholder="Odaberi dob..."
-                                required
-                            />
-                        </div>
-
-                        <div className='form-group'>
-                            <p>Veličine grupa:</p>
-                            <Select
-                                isMulti
-                                name="velicine"
-                                options={velicinaOptions}
-                                className="basic-multi-select"
-                                classNamePrefix="select"
-                                onChange={(options) => handleSelectChange('velicine', options)}
-                                placeholder="Odaberi veličine..."
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div className='form-group-row'>
-                        <label htmlFor='iznos-kotizacije'>Iznos kotizacije (€):</label>
-                        <input
-                            type='number'
-                            id='iznos-kotizacije'
-                            name='kotizacija'
-                            placeholder='0.00'
-                            value={formData.kotizacija}
-                            onChange={handleChange}
-                            className='form-input'
-                            min="0"
-                            step="0.01"
-                            max="10000"
-                            required
-                        />
-                    </div>
-
-                    <input type='submit' value='Kreiraj natjecanje' className='submit-button' />
-
-                </form>
-            </div>
+            ) : (
+                <div className="not-logged-in">
+                    <p>Niste prijavljeni.</p>
+                    <Link to="/login">Idi na prijavu</Link>
+                </div>
+            )}
         </div>
     );
 }

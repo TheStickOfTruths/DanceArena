@@ -35,3 +35,9 @@
 .homepage-content-container::-webkit-scrollbar {
     display: none;
 }
+
+.not-logged-in {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
