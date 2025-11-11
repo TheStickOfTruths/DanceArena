@@ -13,8 +13,8 @@ import json
 #@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 def competition_live(request):
     data = []
-    if Competition.objects.filter(status=StatusChoices.ACTIVE):
-        for competition in Competition.objects.filter(status=StatusChoices.ACTIVE):
+    if Competition.objects.exists():
+        for competition in Competition.objects.all():
             data.append({
             'name': competition.name,
             'organizer': competition.organizer.first_name or competition.organizer.username,
@@ -29,7 +29,7 @@ def competition_live(request):
     
         return JsonResponse(data, safe=False, status=200)
     else:
-        return JsonResponse({'message':'Nema aktivnih natjecanja!'}, status=200)
+        return JsonResponse({'message':'Nema natjecanja!'}, status=200)
 
 
 #@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
