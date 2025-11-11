@@ -5,7 +5,7 @@ from .models import User, OrganizerSubscription
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
     model = User
-    list_display = ('id', 'username', 'email', 'role', 'club_name', 'club_location', 'is_staff', 'is_active')
+    list_display = ('id', 'first_name', 'last_name', 'username', 'email', 'role', 'club_name', 'club_location', 'is_staff', 'is_active')
     list_filter = ('role', 'is_staff', 'is_active')
     fieldsets = (
         (None, {'fields': ('username', 'password')}),

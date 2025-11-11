@@ -10,11 +10,23 @@ from django.views.decorators.csrf import csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!
 
 @csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 def competition_live(request):
+    data = []
     if Competition.objects.filter(status=StatusChoices.ACTIVE):
-        return HttpResponse(Competition.objects.filter(status=StatusChoices.ACTIVE))
-
+        for competition in Competition.objects.filter(status=StatusChoices.ACTIVE):
+            data.append({
+            'name': competition.name,
+            'organizer': competition.organizer.first_name or competition.organizer.username,
+            'date': competition.date,
+            'location': competition.location,
+            'registration_fee': competition.registration_fee,
+            'age_categories': list(competition.age_categories.values_list('name', flat=True)),
+            'style_categories': list(competition.style_categories.values_list('name', flat=True)),
+            'group_size_categories': list(competition.group_size_categories.values_list('name', flat=True)),
+        })
+    
+        return JsonResponse(data, safe=False)
     else:
-        return HttpResponse("Nema natjecanja.")
+        return JsonResponse({'fail':'Nema aktivnih natjecanja!'})
 
 
 #@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
