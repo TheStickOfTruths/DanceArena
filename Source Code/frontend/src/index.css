@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
+
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+:root,
+.theme-original {
+  --svijetloplava: #37D2E7ff;
+  --bijela: #FDFEFEff;
+  --roza: #E04594ff;
+  --tamnoplava: #21519Aff;
+  --ljubičasta: #8E45B3ff;
+  --tamnoljubičasta: #8A206Aff;
+}
+
+body {
+  margin: 0;
+}

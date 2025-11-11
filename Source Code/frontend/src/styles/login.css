@@ -1,0 +1,142 @@
+a {
+    text-decoration: none;
+}
+
+.login-container {
+    height: 100vh;
+    max-width: 1920px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.login-form {
+    height: 90%;
+    padding: 2%;
+    flex: 1;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-pozadina {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    flex: 4;
+    height: 100%;
+    overflow: hidden;
+}
+
+.login-logo-tekst {
+    width: 90%;
+    height: auto;
+    display: block;
+}
+
+.login-form p {
+    font-weight: bold;
+    text-align: center;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.google-login {
+    max-height: 40px;
+    width: 100%;
+    color: white;
+    background-color: #333333;
+    border-radius: 10px;
+}
+
+.homepage-button {
+    width: 100%;
+    color: white;
+    background-color: var(--tamnoplava);
+    max-height: 40px;
+    border-radius: 10px;
+}
+
+.credits {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.credits p {
+    font-size: 10px;
+    color: #33333384;
+    font-weight: normal;
+}
+
+.github-link p {
+    color: var(--svijetloplava);
+}
+
+.github-link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.credits p:hover,
+.github-link:hover {
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.github-logo {
+    height: 35px;
+    width: auto;
+}
+
+.google-login {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.homepage-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.homepage-button p,
+.google-login p {
+    font-weight: normal;
+    font-size: 13px;
+}
+
+.google-logo {
+    height: 20px;
+    width: auto;
+    margin-right: 5px;
+}
+
+.google-login:hover,
+.homepage-button:hover {
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+.github-anchor {
+    text-decoration: none;
+    color: inherit;
+}
+
+.google-login-anchor {
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+}

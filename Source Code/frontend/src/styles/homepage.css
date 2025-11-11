@@ -1,0 +1,43 @@
+.homepage-container {
+    display: grid;
+    grid-template-rows: 10vh 90vh;
+    max-width: 1920px;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.homepage-content-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 30px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.competitions-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.homepage-content-container {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.homepage-content-container::-webkit-scrollbar {
+    display: none;
+}
+
+.not-logged-in {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
