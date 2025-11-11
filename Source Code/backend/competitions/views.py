@@ -1,14 +1,16 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
 from django.http import HttpResponseForbidden, HttpResponse, JsonResponse
-from .models import Competition, Appearance, Grade, CompetitionJudge, StatusChoices, AgeCategory, StyleCategory, GroupSizeCategory
+from django.db import transaction
+from .models import Competition, Appearance, Grade, CompetitionJudge, \
+                    StatusChoices, AgeCategory, StyleCategory, GroupSizeCategory
 from .utils import generate_starting_list_pdf, generate_results, generate_grades
 from users.models import User, Role
 from users.decorators import role_required
 import json
-from django.views.decorators.csrf import csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!
+#from django.views.decorators.csrf import csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!
 
 
-@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
+#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 def competition_live(request):
     data = []
     if Competition.objects.filter(status=StatusChoices.ACTIVE):
@@ -33,53 +35,64 @@ def competition_live(request):
 #@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.ORGANIZER)
 def competition_create(request):
-    if request.method == 'POST':
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+    try:
         data = json.loads(request.body)
-        competition = Competition(
-            name=data.get('name'),
-            organizer=request.user,
-            date=data.get('date'),
-            location = data.get('location'),
-            description=data.get('description'),
-            registration_fee=data.get('registration_fee'),
-            status=StatusChoices.DRAFT 
-        )      
-        competition.save()
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
 
-        age_categories = data.get('age_categories', [])
-        age_category_ids = []
-        for cat in age_categories:
-            id = AgeCategory.objects.get(name=cat).id
-            age_category_ids.append(id)
-        competition.age_categories.set(age_category_ids)
+    try:
+        with transaction.atomic():
+            competition = Competition.objects.create(
+                name=data.get('name'),
+                organizer=request.user,
+                date=data.get('date'),
+                location=data.get('location'),
+                description=data.get('description'),
+                registration_fee=data.get('registration_fee'),
+                status=StatusChoices.DRAFT
+            )
 
-        style_categories = data.get('style_categories', [])
-        style_category_ids = []
-        for cat in style_categories:
-            id = StyleCategory.objects.get(name=cat).id
-            style_category_ids.append(id)
-        competition.style_categories.set(style_category_ids)
+            age_categories = data.get('age_categories', []) 
+            age_category_ids = [] 
+            for cat in age_categories: 
+                id = AgeCategory.objects.get(name=cat).id 
+                age_category_ids.append(id) 
+            competition.age_categories.set(age_category_ids) 
+            
+            style_categories = data.get('style_categories', []) 
+            style_category_ids = [] 
+            for cat in style_categories: 
+                id = StyleCategory.objects.get(name=cat).id 
+                style_category_ids.append(id) 
+            competition.style_categories.set(style_category_ids) 
+                
+            group_size_categories = data.get('group_size_categories', []) 
+            group_size_category_ids = [] 
+            for cat in group_size_categories: 
+                id = GroupSizeCategory.objects.get(name=cat).id 
+                group_size_category_ids.append(id) 
+            competition.group_size_categories.set(group_size_category_ids)
 
-        group_size_categories = data.get('group_size_categories', [])
-        group_size_category_ids = []
-        for cat in group_size_categories:
-            id = GroupSizeCategory.objects.get(name=cat).id
-            group_size_category_ids.append(id)
-        competition.group_size_categories.set(group_size_category_ids)
+            return JsonResponse(
+                {'message': 'Competition created successfully', 'id': competition.id},
+                status=201
+            )
 
-        return JsonResponse({'message': 'Competition created successfully', 'id': competition.id}, status=201)
-    
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 
-@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
+#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 def competition_detail(request, id):
     competition = get_object_or_404(Competition, id=id)
     appearances = Appearance.objects.get(competition=competition)
     return HttpResponse(appearances)
 
 
-@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
+#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.ORGANIZER)
 def competition_edit(request, id):
     competition = get_object_or_404(Competition, id=id)
@@ -102,7 +115,7 @@ def competition_edit(request, id):
     return HttpResponse("Prepravi.html")
 
 
-@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
+#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.ORGANIZER)
 def competition_publish(request, id):
     competition = get_object_or_404(Competition, id=id)
@@ -118,7 +131,7 @@ def competition_publish(request, id):
     return HttpResponse("Objavi.html")
 
 
-@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
+#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.ORGANIZER)
 def competition_close_applications(request, id):
     competition = get_object_or_404(Competition, id=id)
@@ -138,7 +151,7 @@ def competition_close_applications(request, id):
     return HttpResponse("Zatvori prijave.html")
 
 
-@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
+#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 def competition_starting_list(request, id):
     competition = get_object_or_404(Competition, id=id)
 
@@ -166,7 +179,7 @@ def competition_starting_list(request, id):
     return redirect(competition.starting_list_pdf.url)
 
 
-@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
+#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.ORGANIZER)
 def competition_invite_judge(request, id):
     competition = get_object_or_404(Competition, id=id)
@@ -194,7 +207,7 @@ def competition_invite_judge(request, id):
     return HttpResponse("Pozovi suca.html")
 
 
-@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
+#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.ORGANIZER)
 def competition_activate(request, id):
     competition = get_object_or_404(Competition, id=id)
@@ -214,7 +227,7 @@ def competition_activate(request, id):
     return HttpResponse("Aktiviraj.html")
 
 
-@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
+#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.ORGANIZER)
 def competition_deactivate(request, id):
     competition = get_object_or_404(Competition, id=id)
@@ -230,7 +243,7 @@ def competition_deactivate(request, id):
     return HttpResponse("Ugasi.html")
 
 
-@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
+#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.JUDGE)
 def competition_grade(request, competition_id, appearance_id):
     competition = get_object_or_404(Competition, id=competition_id)
@@ -256,7 +269,7 @@ def competition_grade(request, competition_id, appearance_id):
     return HttpResponse("Ocijeni.html")
 
 
-@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
+#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.ORGANIZER)
 def competition_complete(request, id):
     competition = get_object_or_404(Competition, id=id)
@@ -272,7 +285,7 @@ def competition_complete(request, id):
     return HttpResponse("Završi.html")
 
 
-@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
+#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 def competition_results(request, id):
     competition = get_object_or_404(Competition, id=id)
     if competition.status != StatusChoices.COMPLETED:
@@ -283,8 +296,8 @@ def competition_results(request, id):
     return JsonResponse(results)
 
 
-@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
-#@role_required(Role.CLUB_MANAGER)
+#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
+@role_required(Role.CLUB_MANAGER)
 def competition_appearance_results(request, competition_id, appearance_id):
     competition = get_object_or_404(Competition, id=competition_id)
     if competition.status != StatusChoices.COMPLETED:
@@ -300,7 +313,7 @@ def competition_appearance_results(request, competition_id, appearance_id):
     return JsonResponse(grades)
 
 
-@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
+#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.CLUB_MANAGER)
 def competition_signup(request, id):
     competition = get_object_or_404(Competition, id=id)

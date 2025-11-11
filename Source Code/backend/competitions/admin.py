@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import AgeCategory, StyleCategory, GroupSizeCategory, Competition, Appearance, Grade, CompetitionJudge
+from .models import AgeCategory, StyleCategory, GroupSizeCategory, \
+                    Competition, Appearance, Grade, CompetitionJudge
 
 
 @admin.register(AgeCategory)

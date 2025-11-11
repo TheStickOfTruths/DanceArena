@@ -71,7 +71,7 @@ export const logoutUser = async () => {
 
 export const createCompetition = async (competitionData) => {
   try {
-    const response = await fetch(`${apiBaseUrl}/competitions/`, {
+    const response = await fetch(`${apiBaseUrl}/competitions/new/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

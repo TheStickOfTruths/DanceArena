@@ -2,6 +2,7 @@ from django.db import models
 from users.models import User
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
+from decimal import Decimal
 
 
 class AgeChoices(models.TextChoices):
@@ -87,7 +88,12 @@ class Competition(models.Model):
         blank=True,
         null=True
     )
-    registration_fee = models.DecimalField(decimal_places=2, max_digits=6, default=0)
+    registration_fee = models.DecimalField(
+        decimal_places=2, 
+        max_digits=6, 
+        default=0,
+        validators=[MinValueValidator(Decimal('0.00')), MaxValueValidator(Decimal('9999.99'))]
+    )
 
     def __str__(self):
         return f"""ID:{self.id}-ORGANIZER:{self.organizer}-  

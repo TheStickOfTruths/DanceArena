@@ -3,7 +3,7 @@ import Navbar from '../components/navbar';
 import { useState } from 'react';
 import Select from 'react-select';
 import { createCompetition } from '../services/apiService';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 
 const stilOptions = [
     { value: 'HIPHOP', label: 'Hip Hop' },
@@ -113,15 +113,6 @@ function NovoNatjecanje() {
                             id='datum-start'
                             name='datumStart'
                             value={formData.datumStart}
-                            onChange={handleChange}
-                            className='form-input'
-                        />
-                        <label htmlFor='datum-end'>Završetak natjecanja:</label>
-                        <input
-                            type='date'
-                            id='datum-end'
-                            name='datumEnd'
-                            value={formData.datumEnd}
                             onChange={handleChange}
                             className='form-input'
                         />
