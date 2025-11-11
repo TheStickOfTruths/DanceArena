@@ -22,11 +22,12 @@ def competition_live(request):
             'age_categories': list(competition.age_categories.values_list('name', flat=True)),
             'style_categories': list(competition.style_categories.values_list('name', flat=True)),
             'group_size_categories': list(competition.group_size_categories.values_list('name', flat=True)),
+            'id': competition.id
         })
     
-        return JsonResponse(data, safe=False)
+        return JsonResponse(data, safe=False, status=200)
     else:
-        return JsonResponse({'fail':'Nema aktivnih natjecanja!'})
+        return JsonResponse({'message':'Nema aktivnih natjecanja!'}, status=200)
 
 
 #@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!

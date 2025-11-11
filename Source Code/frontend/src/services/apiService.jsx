@@ -90,3 +90,23 @@ export const createCompetition = async (competitionData) => {
     throw error;
   }
 };
+
+export const getLiveCompetitions = async () => {
+  try {
+    const response = await fetch(`${apiBaseUrl}/competitions/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error(`APIService: HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("APIService: Greška pri dohvaćanju živih natjecanja:", error);
+    throw error;
+  }
+};

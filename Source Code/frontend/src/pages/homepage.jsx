@@ -2,12 +2,14 @@ import '../styles/homepage.css';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Navbar from '../components/navbar.jsx';
-import { getCurrentUser } from '../services/apiService.jsx';
+import CompetitionMini from '../components/competitionmini.jsx';
+import { getCurrentUser, getLiveCompetitions } from '../services/apiService.jsx';
 
 function Homepage() {
 
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [competitions, setCompetitions] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -16,6 +18,8 @@ function Homepage() {
 
                 if (response) {
                     setCurrentUser(response);
+                    const competitionsResponse = await getLiveCompetitions();
+                    setCompetitions(competitionsResponse);
                 }
             } catch (error) {
                 console.error("Greška u homepage.jsx:", error);
@@ -46,7 +50,14 @@ function Homepage() {
                     <>
                         <p>Uspješno ulogirani!</p>
                         <p>Dobrodošao {currentUser.first_name} ({currentUser.email})!</p>
-                        <img src="/gifs/the greatest dancer of all.gif" alt="Description of your GIF" />
+                        <div className="competitions-container">
+                            {competitions.length > 0 ? (
+                                competitions.map((competition) => (
+                                    <CompetitionMini key={competition.id} competition={competition} />
+                                ))
+                            ) : (
+                                <p>Nema natjecanja</p>)}
+                        </div>
                     </>
                 ) : (
                     <>
