@@ -3,7 +3,7 @@ import Navbar from '../components/navbar';
 import { useState } from 'react';
 import Select from 'react-select';
 import { createCompetition } from '../services/apiService';
-//import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const stilOptions = [
     { value: 'HIPHOP', label: 'Hip Hop' },
@@ -28,7 +28,7 @@ const velicinaOptions = [
 
 
 function NovoNatjecanje() {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         naziv: '',
@@ -49,7 +49,6 @@ function NovoNatjecanje() {
             [name]: value
         }));
     };
-
 
     const handleSelectChange = (name, selectedOptions) => {
         setFormData(prevData => ({
@@ -76,6 +75,7 @@ function NovoNatjecanje() {
             const response = await createCompetition(competitionData);
             if (response) {
                 console.log("Natjecanje uspješno kreirano:", response);
+                navigate('/homepage');
             }
 
         } catch (error) {
@@ -103,6 +103,7 @@ function NovoNatjecanje() {
                             value={formData.naziv}
                             onChange={handleChange}
                             className='form-input'
+                            required
                         />
                     </div>
 
@@ -115,6 +116,7 @@ function NovoNatjecanje() {
                             value={formData.datumStart}
                             onChange={handleChange}
                             className='form-input'
+                            required
                         />
                     </div>
 
@@ -128,6 +130,7 @@ function NovoNatjecanje() {
                             value={formData.lokacija}
                             onChange={handleChange}
                             className='form-input'
+                            required
                         />
                     </div>
 
@@ -140,6 +143,7 @@ function NovoNatjecanje() {
                             value={formData.opis}
                             onChange={handleChange}
                             className='form-textarea'
+                            required
                         />
                     </div>
 
@@ -154,6 +158,7 @@ function NovoNatjecanje() {
                                 classNamePrefix="select"
                                 onChange={(options) => handleSelectChange('stilovi', options)}
                                 placeholder="Odaberi stilove..."
+                                required
                             />
                         </div>
 
@@ -167,6 +172,7 @@ function NovoNatjecanje() {
                                 classNamePrefix="select"
                                 onChange={(options) => handleSelectChange('dobneKategorije', options)}
                                 placeholder="Odaberi dob..."
+                                required
                             />
                         </div>
 
@@ -180,6 +186,7 @@ function NovoNatjecanje() {
                                 classNamePrefix="select"
                                 onChange={(options) => handleSelectChange('velicine', options)}
                                 placeholder="Odaberi veličine..."
+                                required
                             />
                         </div>
                     </div>
@@ -196,6 +203,8 @@ function NovoNatjecanje() {
                             className='form-input'
                             min="0"
                             step="0.01"
+                            max="10000"
+                            required
                         />
                     </div>
 
