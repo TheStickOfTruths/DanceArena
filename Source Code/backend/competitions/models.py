@@ -67,6 +67,7 @@ class StatusChoices(models.TextChoices):
 
 
 class Competition(models.Model):
+    name = models.CharField(max_length=255)
     date = models.DateField()
     location = models.CharField(max_length=255)
     description = models.CharField(max_length=255)

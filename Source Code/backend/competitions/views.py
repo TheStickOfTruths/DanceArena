@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden, HttpResponse, JsonResponse
-from .models import Competition, Appearance, Grade, CompetitionJudge, StatusChoices
+from .models import Competition, Appearance, Grade, CompetitionJudge, StatusChoices, AgeCategory, StyleCategory, GroupSizeCategory
 from .utils import generate_starting_list_pdf, generate_results, generate_grades
 from users.models import User, Role
 from users.decorators import role_required
+import json
 from django.views.decorators.csrf import csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!
 
 
@@ -17,20 +18,45 @@ def competition_live(request):
 
 
 @csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
-@role_required(Role.ORGANIZER)
+#@role_required(Role.ORGANIZER)
 def competition_create(request):
     if request.method == 'POST':
+        data = json.loads(request.body)
         competition = Competition(
+            name=data.get('name'),
             organizer=request.user,
-            date=request.POST.get('date'),
-            location = request.POST.get('location'),
-            description=request.POST.get('description'),
+            date=data.get('date'),
+            location = data.get('location'),
+            description=data.get('description'),
+            registration_fee=data.get('registration_fee'),
             status=StatusChoices.DRAFT 
         )      
         competition.save()
-        return HttpResponse(competition)
+
+        age_categories = data.get('age_categories', [])
+        age_category_ids = []
+        for cat in age_categories:
+            id = AgeCategory.objects.get(name=cat).id
+            age_category_ids.append(id)
+        competition.age_categories.set(age_category_ids)
+
+        style_categories = data.get('style_categories', [])
+        style_category_ids = []
+        for cat in style_categories:
+            id = StyleCategory.objects.get(name=cat).id
+            style_category_ids.append(id)
+        competition.style_categories.set(style_category_ids)
+
+        group_size_categories = data.get('group_size_categories', [])
+        group_size_category_ids = []
+        for cat in group_size_categories:
+            id = GroupSizeCategory.objects.get(name=cat).id
+            group_size_category_ids.append(id)
+        competition.group_size_categories.set(group_size_category_ids)
+
+        return HttpResponse(status=200)
     
-    return HttpResponse("Stvori natjecanje.html")
+    return HttpResponse(status=500)
 
 
 @csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
