@@ -19,9 +19,9 @@ def competition_live(request):
             'date': competition.date,
             'location': competition.location,
             'registration_fee': competition.registration_fee,
-            'age_categories': list(competition.age_categories.values_list('name', flat=True)),
-            'style_categories': list(competition.style_categories.values_list('name', flat=True)),
-            'group_size_categories': list(competition.group_size_categories.values_list('name', flat=True)),
+            'age_categories': [cat.get_name_display() for cat in competition.age_categories.all()],
+            'style_categories': [cat.get_name_display() for cat in competition.style_categories.all()],
+            'group_size_categories': [cat.get_name_display() for cat in competition.group_size_categories.all()],
         })
     
         return JsonResponse(data, safe=False)
