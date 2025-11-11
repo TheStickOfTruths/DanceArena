@@ -20,12 +20,12 @@ class GroupSizeCategoryAdmin(admin.ModelAdmin):
 @admin.register(Competition)
 class CompetitionAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 'date', 'location', 'organizer', 'status', 'registration_fee',
+        'id', 'name', 'date', 'location', 'organizer', 'status', 'registration_fee',
         'get_age_categories', 'get_style_categories', 'get_group_size_categories'
     )
-    search_fields = ('date', 'location', 'description')
-    list_filter = ('date', 'location')
-    ordering = ('date', 'id')
+    search_fields = ('name', 'date', 'location', 'description')
+    list_filter = ('name', 'date', 'location')
+    ordering = ('name', 'date', 'id')
 
     def get_age_categories(self, obj):
         return ", ".join([str(cat) for cat in obj.age_categories.all()])

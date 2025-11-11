@@ -17,7 +17,7 @@ def competition_live(request):
         return HttpResponse("Nema natjecanja.")
 
 
-# @csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
+#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.ORGANIZER)
 def competition_create(request):
     if request.method == 'POST':
