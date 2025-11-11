@@ -1,7 +1,10 @@
 .homepage-container {
-    width: 100%;
+    display: grid;
+    grid-template-rows: 10vh 90vh;
     max-width: 1920px;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .homepage-content-container {
@@ -10,5 +13,25 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    padding-top: 30px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.competitions-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.homepage-content-container {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.homepage-content-container::-webkit-scrollbar {
+    display: none;
 }

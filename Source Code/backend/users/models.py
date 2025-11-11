@@ -17,7 +17,7 @@ class Role(models.TextChoices):
         
 
 class User(AbstractUser):
-    role = models.CharField(max_length=50, choices=Role.choices, default=Role.ADMIN)
+    role = models.CharField(max_length=50, choices=Role.choices, default=Role.ORGANIZER)
     club_name = models.CharField(max_length=50, blank=True, null=True)
     club_location = models.CharField(max_length=50, blank=True, null=True)
     contact = models.CharField(validators=[phone_regex], max_length=20, blank=True, null=True)
