@@ -17,8 +17,8 @@ def competition_live(request):
         return HttpResponse("Nema natjecanja.")
 
 
-@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
-#@role_required(Role.ORGANIZER)
+# @csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
+@role_required(Role.ORGANIZER)
 def competition_create(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -54,9 +54,9 @@ def competition_create(request):
             group_size_category_ids.append(id)
         competition.group_size_categories.set(group_size_category_ids)
 
-        return HttpResponse(status=200)
+        return JsonResponse({'message': 'Competition created successfully', 'id': competition.id}, status=201)
     
-    return HttpResponse(status=500)
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
 @csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!

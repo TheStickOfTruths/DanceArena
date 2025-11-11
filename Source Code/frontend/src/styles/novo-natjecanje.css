@@ -1,262 +1,199 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
+/* --- Glavni spremnici --- */
 .new-comp-container {
     display: grid;
     grid-template-rows: 10vh 90vh;
     width: 100vw;
+    height: 100vh;
+    /* Dodano da se osigura puna visina */
+    overflow: hidden;
+    /* Sprječava dvostruke scrollbarove */
 }
 
 .new-comp-form-container {
-    display: grid;
-    grid-template-rows: auto;
-    margin: 0;
-    padding: 0;
     width: 100%;
+    height: 100%;
+    /* Puna visina roditelja */
+    overflow-y: auto;
+    /* Samo ovaj spremnik se scrolla ako treba */
     position: relative;
-    height: 90vh;
+    background-color: #f9f9f9;
+    /* Lagana pozadina */
 }
 
+/* --- Zaglavlje (Headboard) --- */
 .headboard {
     background-color: var(--svijetloplava);
     height: 10vh;
-    top:0;
     width: 100%;
-    padding: 0;
-    margin: 0;
     display: flex;
     align-items: center;
+    padding: 0 2%;
+    /* Koristi padding umjesto 'padding-left' na djetetu */
+    box-sizing: border-box;
 }
 
 .headboard p {
     font-size: 1.5rem;
     font-weight: bold;
-    padding-left: 1%;
-    color: var(--svijetloplava);
-    color: rgba(255,255,255,0.5)
-}
-
-.new-comp-form {
-    position: absolute;
-    display:grid;
-    gap: 1%;
-    grid-template-rows: auto auto auto auto auto auto auto;
+    color: rgba(255, 255, 255, 0.8);
     margin: 0;
-    padding: 0;
-    width: 50%;
-    left: 50%;
-    transform: translate(-50%);
-    top: 10vh;
-    height: auto;
-    padding-bottom: 20vh;
 }
 
-label{
-    padding: 2%;
+/* --- Glavna forma --- */
+.new-comp-form {
+    width: 60%;
+    /* Malo šira forma */
+    max-width: 800px;
+    /* Postavi max širinu */
+    margin: 4vh auto;
+    /* Centriraj formu i dodaj razmak od vrha/dna */
+    display: flex;
+    flex-direction: column;
+    /* Posloži sve elemente u stupac */
+    gap: 25px;
+    /* Dodaj razmak između svake grupe */
+    padding-bottom: 10vh;
+    /* Osiguraj da ima mjesta na dnu */
 }
 
+/* --- Osnovni gradivni blok forme --- */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    /* Labela iznad inputa */
+    gap: 8px;
+    /* Razmak između labele i inputa */
+    color: var(--tamnoplava);
+    font-size: 0.9rem;
+}
+
+/* Za slučajeve gdje su labela i input u istom redu */
+.form-group-row {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    align-items: center;
+    color: var(--tamnoplava);
+    font-size: 0.9rem;
+}
+
+/* Za datume */
+.form-group-dates {
+    display: flex;
+    flex-wrap: wrap;
+    /* Omogući prelamanje na manjim ekranima */
+    align-items: center;
+    gap: 15px;
+    color: var(--tamnoplava);
+    font-size: 0.9rem;
+}
+
+.form-group-dates label {
+    margin-right: 5px;
+}
+
+/* --- Osnovni stilovi za inpute --- */
+/* Stilovi za sva polja za unos (input, textarea, select) */
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    color: var(--tamnoplava);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    /* Važno za padding */
+}
+
+.form-input:hover,
+.form-textarea:hover,
+.form-input:focus,
+.form-textarea:focus {
+    background-color: #fdfdfd;
+    border-color: var(--tamnoplava);
+    outline: none;
+    /* Makni defaultni focus outline */
+    box-shadow: 0 0 5px rgba(33, 81, 154, 0.2);
+}
+
+.form-textarea {
+    min-height: 120px;
+    resize: vertical;
+    /* Dopusti samo vertikalni resize */
+}
+
+/* Placeholder stilovi */
 ::placeholder {
     color: var(--tamnoplava);
-    opacity: 50%;
-    padding: 1%;
+    opacity: 0.5;
 }
 
-
-/* obicna polja za upis */
-
-.new-comp-form input[type='text'] {
-    height: 80%;
-    color: var(--tamnoplava);
-    border: 1px solid color-mix(in oklab, var(--tamnoplava) 50%, white 0%);
-    border-radius: 8px;
-}
-
-.new-comp-form input[type='text']:hover {
-    background-color: color-mix(in oklab, var(--tamnoplava) 10%, white 100%);
-}
-
-
-.new-comp-form div:nth-child(1),
-.new-comp-form div:nth-child(3),
-.new-comp-form div:nth-child(7) {
+/* --- Stilovi za kategorije (react-select) --- */
+.kategorije-container {
     display: grid;
-    grid-template-columns: 20% 80%;
-    height: 8vh;
-    align-items: center;
-    justify-content: start;
-    color: var(--tamnoplava);
-    font-size: 0.9rem;
+    grid-template-columns: 1fr 1fr;
+    /* 2 stupca */
+    gap: 20px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 20px 0;
 }
 
-
-/* za odabir datuma */
-
-.new-comp-form div:nth-child(2) {
-    display: grid;
-    grid-template-columns: 20% 20% 20% 20%;
-    height: 8vh;
-    justify-content: start;
-    align-items: center;
-    color: var(--tamnoplava);
-    font-size: 0.9rem;
+/* Treći element (veličine) će se protegnuti preko oba stupca */
+.kategorije-container .form-group:nth-child(3) {
+    grid-column: 1 / -1;
 }
 
-.new-comp-form div:nth-child(2) #datum-end-label {
-    margin-left: 2%;
-}
-
-.new-comp-form div:nth-child(2) input {
-    color: var(--tamnoplava);
-    border: 1px solid color-mix(in oklab, var(--tamnoplava) 50%, white 0%);
-    border-radius: 8px;
-    height: 80%;
-    padding-left: 2%;
-    padding-right: 2%;
-    font-size: 1rem;
-}
-
-.new-comp-form div:nth-child(2) input:hover {
-    background-color: color-mix(in oklab, var(--tamnoplava) 10%, white 100%);
-}
-
-
-
-
-/* textarea polje - opis natjecanja */
-.new-comp-form div:nth-child(4){
-    display: grid;
-    grid-template-columns: 20% 80%;
-    height: 11vh;
-    color: var(--tamnoplava);
-    font-size: 0.9rem;
-}
-
-.new-comp-form textarea {
-    font-family: 'Poppins', sans-serif;
-    color: var(--tamnoplava);
-    border: 1px solid color-mix(in oklab, var(--tamnoplava) 50%, white 0%);
-    border-radius: 8px;
-}
-
-.new-comp-form textarea:hover {
-    background-color: color-mix(in oklab, var(--tamnoplava) 10%, white 100%);
-}
-
-/* kategorije i checkboxovi */
-
-.new-comp-form div:nth-child(5) {
-    display: grid;
-    grid-template-columns: 20% 20% 20% 30%;
-    gap: 1%;
-    height: 24vh;
-    color: var(--tamnoplava);
-    font-size: 0.9rem;
-    padding-top: 2%;
-    justify-content: start;
-}
-
-.new-comp-form div:nth-child(5) #text-kategorije {
-    padding-left: 2%;
-    margin: 0;
-}
-
-.new-comp-form div:nth-child(5) div {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    gap: 2%;
-    justify-content: start;
-    align-items: start;
-}
-
-.new-comp-form div:nth-child(5) div p {
+.kategorije-container .form-group p {
     font-weight: bold;
-    padding: 0;
-    margin: 0;
-}
-
-.new-comp-form div:nth-child(5) .kategorije-form {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    flex-direction: column;
-    padding: 0;
-    margin: 0;
-    justify-content: start;
-    align-items: center;
-}
-
-.new-comp-form div:nth-child(5) .kategorije-form .option {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 3vh;
-    justify-content: start;
-    align-items: center;
+    margin: 0 0 8px 0;
     color: var(--tamnoplava);
-    font-size: 0.9rem;
 }
 
-.new-comp-form div:nth-child(5) .kategorije-form .option input {
-    border-radius: 50%;
-}
-
-/* izbor sudaca */
-
-.new-comp-form div:nth-child(6) {
-    display: grid;
-    grid-template-columns: 20% 60% 20%;
-    gap: 1%;
-    justify-items: start;
-    align-items: center;
-    justify-content: space-between;
-    color: var(--tamnoplava);
-    font-size: 0.9rem;
-    height: auto;
-}
-
-.new-comp-form div:nth-child(6) #text-izbor {
-    padding-left: 2%;
-}
-
-.new-comp-form div:nth-child(6) .svi-sudci {
-    display: flex;
-    flex-direction: row;
-    height: 80%;
-    width: 100%;
-}
-
-.new-comp-form div:nth-child(6) .svi-sudci select {
-    margin: 1%;
-    border: 1px solid color-mix(in oklab, var(--tamnoplava) 50%, white 0%);
+/* Osnovno stiliziranje react-select komponente */
+.basic-multi-select .select__control {
+    border-color: #ccc;
     border-radius: 8px;
-    color: var(--tamnoplava)
 }
 
-.new-comp-form div:nth-child(6) #noviSudac {
-    font-style: italic;
-    font-size: 0.8rem;
-    color: color-mix(in oklab, var(--tamnoplava) 60%, white 0%)
+.basic-multi-select .select__control--is-focused {
+    border-color: var(--tamnoplava);
+    box-shadow: 0 0 5px rgba(33, 81, 154, 0.2);
 }
 
-.new-comp-form div:nth-child(6) #noviSudac:hover {
-    cursor: pointer;
-    color: color-mix(in oklab, var(--tamnoplava) 60%, white 80%)
+.basic-multi-select .select__multi-value {
+    background-color: var(--svijetloplava);
+    color: white;
+    border-radius: 4px;
 }
 
-.new-comp-form input[type='submit'] {
-    padding: 0;
-    margin-top: 3%;
-    height: 4.5vh;
-    width: 20%;
+.basic-multi-select .select__multi-value__label {
+    color: white;
+}
+
+/* --- Submit gumb --- */
+.submit-button {
+    padding: 12px 20px;
+    height: auto;
+    /* Makni fiksnu visinu */
+    width: 200px;
+    /* Fiksna širina */
     border-style: none;
     border-radius: 13px;
     background-color: var(--tamnoplava);
-    font-size: 0.7rem;
-    color: white
-}
-
-.new-comp-form input[type='submit']:hover {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: white;
     cursor: pointer;
-    background-color: color-mix(in oklab, var(--tamnoplava) 100%, black 30%)
+    transition: background-color 0.2s ease;
+    align-self: flex-start;
+    /* Pozicioniraj gumb na lijevo */
+    margin-top: 10px;
 }
 
+.submit-button:hover {
+    background-color: color-mix(in oklab, var(--tamnoplava) 80%, black 20%);
+}

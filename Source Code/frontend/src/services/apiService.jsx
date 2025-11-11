@@ -65,3 +65,25 @@ export const logoutUser = async () => {
         throw error;
     }
 };
+
+export const createCompetition = async (competitionData) => {
+    try {
+        const response = await fetch(`${apiBaseUrl}/competitions/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            credentials: 'include',
+            body: JSON.stringify(competitionData)
+        });
+        if (!response.ok) {
+            throw new Error(`APIService: HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("APIService: Greška pri kreiranju natjecanja:", error);
+        throw error;
+    }
+};
