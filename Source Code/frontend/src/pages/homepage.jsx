@@ -14,12 +14,13 @@ function Homepage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                const competitionsData = await getLiveCompetitions();
+                setCompetitions(competitionsData);
+
                 const response = await getCurrentUser();
 
                 if (response) {
                     setCurrentUser(response);
-                    const competitionsResponse = await getLiveCompetitions();
-                    setCompetitions(competitionsResponse);
                 }
             } catch (error) {
                 console.error("Greška u homepage.jsx:", error);
@@ -34,7 +35,7 @@ function Homepage() {
     if (loading) {
         return (
             <div className="homepage-container">
-                <Navbar />
+                <Navbar currentUser={currentUser} />
                 <div className="homepage-content-container">
                     <p>Učitavanje podataka...</p>
                 </div>
@@ -50,6 +51,7 @@ function Homepage() {
                     <>
                         <p>Uspješno ulogirani!</p>
                         <p>Dobrodošao {currentUser.first_name} ({currentUser.email})!</p>
+
                         <div className="competitions-container">
                             {competitions.length > 0 ? (
                                 competitions.map((competition) => (
@@ -63,6 +65,14 @@ function Homepage() {
                     <>
                         <p>Niste prijavljeni.</p>
                         <Link to="/login">Idi na prijavu</Link>
+                        <div className="competitions-container">
+                            {competitions.length > 0 ? (
+                                competitions.map((competition) => (
+                                    <CompetitionMini key={competition.id} competition={competition} />
+                                ))
+                            ) : (
+                                <p>Nema natjecanja</p>)}
+                        </div>
                     </>
                 )}
             </div>
