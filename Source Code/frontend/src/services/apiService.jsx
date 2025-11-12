@@ -1,7 +1,7 @@
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 function getCookie(name) {
-  let cookieValue = null;
+  let cookieValue = "start";
   if (document.cookie && document.cookie !== "") {
     const cookies = document.cookie.split(";");
     for (let i = 0; i < cookies.length; i++) {
@@ -12,10 +12,11 @@ function getCookie(name) {
       }
     }
   }
+  console.log("getcookie:" + cookieValue);
   return cookieValue;
 }
 const csrftoken = getCookie("csrftoken");
-
+console.log("token");
 export const getCurrentUser = async () => {
   try {
     const response = await fetch(`${apiBaseUrl}/users/me/`, {
@@ -48,6 +49,7 @@ export const getCurrentUser = async () => {
 };
 
 export const logoutUser = async () => {
+  console.log("logout:" + csrftoken);
   try {
     const response = await fetch(`${apiBaseUrl}/users/logout/`, {
       method: "POST",
