@@ -27,6 +27,7 @@ def competition_live(request):
             'id': competition.id
         })
     
+        print(data)
         return JsonResponse(data, safe=False, status=200)
     else:
         return JsonResponse({'message':'Nema natjecanja!'}, status=200)
