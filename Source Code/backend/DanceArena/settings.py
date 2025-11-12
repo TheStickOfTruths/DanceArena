@@ -27,8 +27,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = 'RENDER' not in os.environ
 
 ALLOWED_HOSTS = []
 
@@ -36,7 +35,6 @@ RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
-ALLOWED_HOSTS.append('127.0.0.1')
 ALLOWED_HOSTS.append('localhost')
 
 # Application definition
@@ -55,9 +53,9 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'social_django',
     'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.google',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     'multiselectfield',
     'corsheaders',
 ]
@@ -124,21 +122,39 @@ WSGI_APPLICATION = 'DanceArena.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+#deploy konfiguracija
 if 'DATABASE_URL' in os.environ:
     DATABASES = {
         'default': dj_database_url.config(
             conn_max_age=600,
-            ssl_require=True
+            ssl_require=True  
         )
     }
+
+    SITE_ID = 1  
+    ALLOWED_HOSTS = ['https://dancearena-cvxq.onrender.com', '127.0.0.1'] 
 else:
+    
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'ENGINE': 'django.db.backends.postgresql', 
+            'NAME': 'DanceArenaLocal',
+            'USER': 'DanceArenaUser',
+            'PASSWORD': 'dancearena',
+            'HOST': 'localhost',
+            'PORT': '5432',
         }
     }
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+
+#lokalna sqlite baza
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
