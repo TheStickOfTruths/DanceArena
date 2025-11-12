@@ -14,4 +14,4 @@ echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
 echo "Starting Gunicorn server..."
-gunicorn --access-logfile - --error-logfile - dancearena_project.wsgi
+gunicorn --access-logfile - --error-logfile - DanceArena.wsgi
