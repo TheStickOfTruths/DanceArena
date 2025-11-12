@@ -132,7 +132,7 @@ if 'DATABASE_URL' in os.environ:
     }
 
     SITE_ID = 1  
-    ALLOWED_HOSTS = ['https://dancearena-cvxq.onrender.com', '127.0.0.1'] 
+    ALLOWED_HOSTS = ['dancearena-cvxq.onrender.com', '127.0.0.1'] 
 else:
     
     DATABASES = {
