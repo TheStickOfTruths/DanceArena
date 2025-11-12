@@ -101,6 +101,11 @@ SOCIAL_AUTH_PIPELINE = (
 )
 LOGIN_REDIRECT_URL = config('FRONTEND_URL') + '/homepage'
 
+
+#DEPLOY TESTING
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+
 ROOT_URLCONF = 'DanceArena.urls'
 
 TEMPLATES = [
@@ -124,14 +129,14 @@ WSGI_APPLICATION = 'DanceArena.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-if 'DATABASE_URL' in os.environ:
-    DATABASES = {
-        'default': dj_database_url.config(
-            conn_max_age=600,
-            ssl_require=True
-        )
-    }
-else:
+DATABASES = {
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL'),
+        conn_max_age=600,
+        ssl_require=True
+    )
+}
+if not DATABASES['default']:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -173,6 +178,14 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
+
+if not config('DEBUG', default=False, cast=bool):
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'None'
+    CSRF_COOKIE_SAMESITE = 'None'
+    SOCIAL_AUTH_SAMESITE = 'None'
+    SOCIAL_AUTH_SECURE_COOKIES = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'

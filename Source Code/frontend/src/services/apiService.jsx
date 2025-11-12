@@ -1,20 +1,8 @@
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
-function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== "") {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.substring(0, name.length + 1) === name + "=") {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
-  }
-  return cookieValue;
-}
-const csrftoken = getCookie("csrftoken");
+let csrfToken = null;
+
+export const getCsrfToken = () => csrfToken;
 
 export const getCurrentUser = async () => {
   try {
@@ -37,6 +25,9 @@ export const getCurrentUser = async () => {
     }
 
     const userData = await response.json();
+    if (userData.csrf_token) {
+      csrfToken = userData.csrf_token;
+    }
     return userData;
   } catch (error) {
     console.error(
@@ -53,7 +44,7 @@ export const logoutUser = async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRFToken": csrftoken,
+        "X-CSRFToken": csrfToken,
       },
       credentials: "include",
     });
@@ -75,7 +66,7 @@ export const createCompetition = async (competitionData) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRFToken": csrftoken,
+        "X-CSRFToken": csrfToken,
       },
       credentials: "include",
       body: JSON.stringify(competitionData),

@@ -7,7 +7,7 @@ from .models import Role
 from django.views.decorators.csrf import csrf_exempt #FOR POSTMAN !!!!!!!!!!!
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-
+from django.middleware.csrf import get_token
 
 @csrf_exempt
 def login_user(req):
@@ -69,6 +69,7 @@ def current_user(request):
         'email': user.email,
         'first_name': user.first_name,
         'last_name': user.last_name,
-        'role': user.role
+        'role': user.role,
+        'csrf_token': get_token(request)
     }
     return JsonResponse(data)
