@@ -156,40 +156,9 @@
   },
   {
     "model": "sites.site",
-    "fields": { "domain": "example.com", "name": "example.com" }
-  },
-  {
-    "model": "social_django.usersocialauth",
-    "pk": 1,
     "fields": {
-      "user": ["roko.cacija"],
-      "provider": "google-oauth2",
-      "uid": "roko.cacija@gmail.com",
-      "extra_data": {
-        "auth_time": 1762946004,
-        "expires": 3598,
-        "token_type": "Bearer",
-        "access_token": "ya29.A0ATi6K2sHg0SNIx7xX-eI6imrppxf3wxPe8JF0eFLjgY2wVIJn3vrkBO1ol8Lkh9lcv7F1M-dB1yGYYiV03wIlhXHSu0nxSpwNO4WwuaRAVAuzVM5BAXwnLqsSQfOLEF1TyyA225Zx0aDMJJgdGqplrFDETMRSqjLRpgP3ywjKXNB182r69sE6NRbIqx003mDUmDIO5KqbB85UqiRP83JVcOOWCDkC3IibAwP1-hmBGX-gkFNSDfXvRC5UrR-plMtfbWQWZAS0InW34YakvEB-ZU_A46k5fcaCgYKAekSARISFQHGX2MiOlqc62XHjQCWV7mx3eMQPA0294"
-      },
-      "created": "2025-11-11T14:06:29.741Z",
-      "modified": "2025-11-12T11:13:24.209Z"
-    }
-  },
-  {
-    "model": "social_django.usersocialauth",
-    "pk": 2,
-    "fields": {
-      "user": ["dancearenaa"],
-      "provider": "google-oauth2",
-      "uid": "dancearenaa@gmail.com",
-      "extra_data": {
-        "auth_time": 1762946626,
-        "expires": 3599,
-        "token_type": "Bearer",
-        "access_token": "ya29.a0ATi6K2u8yIrYbXo_kzB7s1EXLiNwUU3MdP_I-cf5ddGWLfhbAmwNT9m0pux1Mumed1o4ZGJVy6PJk2mOpDQYG39OG9Njro5x3vZJijshdtucZr3VnVO2OMOox3EUJt5rbliXTqHHfwLXIlbsbddcYcOxVIdfw5zhU7DlDsdE_KbBfyBW1CXRF1mm-KpMIWG9S5citUwaCgYKAWESARYSFQHGX2MiIs2jqmjclJ4BmC1mpo4vGg0206"
-      },
-      "created": "2025-11-12T11:23:46.310Z",
-      "modified": "2025-11-12T11:23:46.317Z"
+      "domain": "dancearena-cvxq.onrender.com",
+      "name": "dancearenabackend"
     }
   },
   {
