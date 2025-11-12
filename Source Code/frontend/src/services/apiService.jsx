@@ -15,7 +15,7 @@ function getCookie(name) {
   console.log("getcookie:" + cookieValue);
   return cookieValue;
 }
-const csrftoken = getCookie("csrftoken");
+var csrftoken = getCookie("csrftoken");
 console.log("token");
 export const getCurrentUser = async () => {
   try {
@@ -49,6 +49,7 @@ export const getCurrentUser = async () => {
 };
 
 export const logoutUser = async () => {
+  csrftoken = getCookie("csrftoken");
   console.log("logout:" + csrftoken);
   try {
     const response = await fetch(`${apiBaseUrl}/users/logout/`, {
