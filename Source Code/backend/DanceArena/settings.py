@@ -14,7 +14,6 @@ import os
 import dj_database_url
 from pathlib import Path
 from decouple import config
-import secrets
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,14 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config(
-    'SECRET_KEY',
-    default=secrets.token_urlsafe(50)  # fallback strong key for dev
-)
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+#DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -37,9 +36,11 @@ RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
-ALLOWED_HOSTS.extend(['127.0.0.1', 'localhost'])
+ALLOWED_HOSTS.append('127.0.0.1')
+ALLOWED_HOSTS.append('localhost')
 
 # Application definition
+
 SITE_ID = 1
 
 INSTALLED_APPS = [
@@ -83,11 +84,9 @@ AUTHENTICATION_BACKENDS = [
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', 'profile']
-
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [config('FRONTEND_URL')]
 CSRF_TRUSTED_ORIGINS = [config('FRONTEND_URL')]
-
 SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
@@ -100,7 +99,6 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
 )
-
 LOGIN_REDIRECT_URL = config('FRONTEND_URL') + '/homepage'
 
 
@@ -127,6 +125,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'DanceArena.wsgi.application'
 
+
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -145,18 +144,35 @@ if not DATABASES['default']:
         }
     }
 
+
 # Password validation
+# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+    {
+       'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
+
 # Internationalization
+# https://docs.djangoproject.com/en/5.2/topics/i18n/
+
 LANGUAGE_CODE = 'en-us'
+
 TIME_ZONE = 'UTC'
+
 USE_I18N = True
+
 USE_TZ = True
 
 
@@ -175,26 +191,12 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Security settings for production
-if not DEBUG:
-    # Force HTTPS
-    SECURE_SSL_REDIRECT = True
-
-    # HSTS settings
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-
-    # Cookies
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SAMESITE = 'None'
-    CSRF_COOKIE_SAMESITE = 'None'
-    SOCIAL_AUTH_SAMESITE = 'None'
-    SOCIAL_AUTH_SECURE_COOKIES = True
 
 # Default primary key field type
+# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 AUTH_USER_MODEL = 'users.User'
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -206,3 +208,6 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+# ACCOUNT_LOGOUT_REDIRECT_URL = '/users/google-login/'
+# LOGIN_REDIRECT_URL = '/users/google-login/'
+# LOGOUT_REDIRECT_URL = '/users/google-login/'
