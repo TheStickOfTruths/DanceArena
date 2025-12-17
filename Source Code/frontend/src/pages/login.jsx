@@ -1,12 +1,31 @@
 import "../styles/login.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useGoogleLogin } from "@react-oauth/google";
+import { loginWithGoogle } from "../services/apiService.jsx";
 
 function Login() {
-  const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-  const GOOGLE_REDIRECT_URI = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
-  const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=${GOOGLE_REDIRECT_URI}
-    &prompt=consent&response_type=code&client_id=${GOOGLE_CLIENT_ID}&scope=openid%20email%20profile`;
-  console.log("Full Login URL:", googleLoginUrl);
+  const navigate = useNavigate();
+
+  // Funkcija koja se pokreće kada korisnik klikne "Login with Google"
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        console.log("Google success, šaljem token backendu...");
+        // Šaljemo access_token (koji nam je Google dao) našem API-ju
+        const data = await loginWithGoogle(tokenResponse.access_token);
+
+        if (data) {
+          console.log("Prijava uspješna!");
+          navigate("/homepage"); // Preusmjeri na homepage nakon prijave
+        }
+      } catch (error) {
+        console.error("Greška pri prijavi na backend:", error);
+        alert("Prijava nije uspjela. Provjerite konzolu.");
+      }
+    },
+    onError: (error) => console.log("Google Login Failed:", error),
+  });
+
   return (
     <div className="login-container">
       <img
@@ -23,7 +42,18 @@ function Login() {
         <div className="form-container">
           <p>Nice to see you again!</p>
 
-          <a href={googleLoginUrl} className="google-login-anchor">
+          {/* ZAMIJENJENO: Umjesto <a> koristimo gumb koji pokreće Google Popup */}
+          <button
+            onClick={() => handleGoogleLogin()}
+            className="google-login-button"
+            style={{
+              border: "none",
+              background: "none",
+              padding: 0,
+              cursor: "pointer",
+              width: "100%",
+            }}
+          >
             <div className="google-login">
               <img
                 src="/pictures/Google logo.png"
@@ -32,7 +62,7 @@ function Login() {
               />
               <p>Login with Google</p>
             </div>
-          </a>
+          </button>
 
           <p>
             Don't want to login? Head to the homepage to see the results from

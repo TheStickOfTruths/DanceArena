@@ -1,139 +1,75 @@
+import axios from "axios";
+
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
-// function getCookie(name) {
-//   let cookieValue = "start";
-//   if (document.cookie && document.cookie !== "") {
-//     const cookies = document.cookie.split(";");
-//     for (let i = 0; i < cookies.length; i++) {
-//       const cookie = cookies[i].trim();
-//       if (cookie.substring(0, name.length + 1) === name + "=") {
-//         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-//         break;
-//       }
-//     }
-//   }
-//   console.log("getcookie:" + cookieValue);
-//   return cookieValue;
-// }
-//const csrftoken = getCookie("csrftoken");
+const api = axios.create({
+  baseURL: apiBaseUrl,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-export const exchangeCodeForToken = async (code) => {
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("access_token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export const loginWithGoogle = async (googleAccessToken) => {
   try {
-    const response = await fetch(`${apiBaseUrl}/api/auth/google/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ code: code }),
+    const response = await api.post("/users/auth/google/", {
+      access_token: googleAccessToken,
     });
-
-    if (!response.ok) {
-      throw new Error(
-        `Failed to exchange code for token. Status: ${response.status}`
-      );
-    }
-
-    const data = await response.json();
-    return data;
+    localStorage.setItem("access_token", response.data.access);
+    localStorage.setItem("refresh_token", response.data.refresh);
+    return response.data;
   } catch (error) {
-    console.error("APIService: Error exchanging code for token:", error);
+    console.error("Greška pri Google prijavi:", error);
     throw error;
   }
 };
 
 export const getCurrentUser = async () => {
-  const accessToken = localStorage.getItem("accessToken");
+  try {
+    const response = await api.get("/users/auth/me/");
 
-  if (!accessToken) {
-    console.log("APIService: No access token found.");
+    if (response.data.authenticated) {
+      return response.data;
+    }
     return null;
-  }
-
-  try {
-    const response = await fetch(`${apiBaseUrl}/api/users/me/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    if (!response.ok) {
-      if (response.status === 401 || response.status === 403) {
-        console.log("APIService: Token is invalid or expired.");
-        localStorage.removeItem("accessToken");
-        return null;
-      }
-      throw new Error(`APIService: HTTP error! status: ${response.status}`);
-    }
-
-    return await response.json();
   } catch (error) {
-    console.error("APIService: Error fetching current user:", error);
-    throw error;
+    console.error("Greška pri dohvaćanju podataka:", error);
   }
 };
 
-export const logoutUser = () => {
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
-
-  console.log("Tokens removed from storage. User logged out.");
-  return Promise.resolve();
-};
-
-export const createCompetition = async (competitionData) => {
-  const accessToken = localStorage.getItem("accessToken");
-
-  if (!accessToken) {
-    const error = new Error(
-      "APIService: No access token found. User is not authenticated."
-    );
-    console.error(error);
-    throw error;
-  }
-
+export const logoutUser = async () => {
   try {
-    const response = await fetch(`${apiBaseUrl}/competitions/new/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify(competitionData),
-    });
-
-    if (!response.ok) {
-      if (response.status === 401 || response.status === 403) {
-        console.log("APIService: Token is invalid or expired.");
-        logoutUser();
-      }
-      throw new Error(`APIService: HTTP error! status: ${response.status}`);
-    }
-
-    return await response.json();
+    await api.post("/users/auth/logout/");
+    return true;
   } catch (error) {
-    console.error("APIService: Greška pri kreiranju natjecanja:", error);
-    throw error;
+    console.warn("Greška pri backend logoutu:", error);
+    return true;
+  } finally {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
   }
 };
 
 export const getLiveCompetitions = async () => {
   try {
-    const response = await fetch(`${apiBaseUrl}/competitions/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-    if (!response.ok) {
-      throw new Error(`APIService: HTTP error! status: ${response.status}`);
-    }
-
-    return await response.json();
+    const response = await api.get("/competitions/");
+    return response.data;
   } catch (error) {
-    console.error("APIService: Greška pri dohvaćanju živih natjecanja:", error);
-    throw error;
+    console.error("Greška pri dohvaćanju natjecanja:", error);
+    return [];
   }
 };
+
+export const createCompetition = async (competitionData) => {
+  const response = await api.post("/competitions/new/", competitionData);
+  return response.data;
+};
+
+export default api;

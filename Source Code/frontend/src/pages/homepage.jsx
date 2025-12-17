@@ -1,13 +1,11 @@
 import "../styles/homepage.css";
-import { Link, useLocation, useNavigate } from "react-router-dom"; // Import useLocation and useNavigate
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Navbar from "../components/navbar.jsx";
 import CompetitionMini from "../components/competitionmini.jsx";
-// Import your new service function
 import {
   getCurrentUser,
   getLiveCompetitions,
-  exchangeCodeForToken,
 } from "../services/apiService.jsx";
 
 function Homepage() {
@@ -15,49 +13,26 @@ function Homepage() {
   const [loading, setLoading] = useState(true);
   const [competitions, setCompetitions] = useState([]);
 
-  const location = useLocation(); // Hook to access URL details
-  const navigate = useNavigate(); // Hook to change URL
-
   useEffect(() => {
-    const handleAuthAndFetchData = async () => {
-      const code = new URLSearchParams(location.search).get("code");
-      console.log("handleauthandfetch code?" + code);
-
-      if (code) {
-        console.log("handleauthandfetch postoji code");
-        try {
-          const tokenData = await exchangeCodeForToken(code);
-
-          localStorage.setItem("accessToken", tokenData.access_token);
-          localStorage.setItem("refreshToken", tokenData.refresh_token);
-
-          navigate("/homepage", { replace: true });
-        } catch (error) {
-          console.error("Greška pri razmjeni koda za token:", error);
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          navigate("/", { replace: true });
-          setLoading(false);
-          return;
-        }
-      }
-
+    const fetchData = async () => {
       try {
-        const userData = await getCurrentUser();
-        if (userData) {
-          setCurrentUser(userData);
-        }
         const competitionsData = await getLiveCompetitions();
         setCompetitions(competitionsData);
+
+        const response = await getCurrentUser();
+
+        if (response) {
+          setCurrentUser(response);
+        }
       } catch (error) {
-        console.error("Greška u homepage.jsx fetchData:", error);
+        console.error("Greška u homepage.jsx:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    handleAuthAndFetchData();
-  }, [location, navigate]);
+    fetchData();
+  }, []);
 
   if (loading) {
     return (
