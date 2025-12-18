@@ -1,6 +1,9 @@
 import '../styles/login.css';
+import { Link } from 'react-router-dom';
 
-function Login({ setPage }) {
+function Login() {
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
     return (
         <div className="login-container">
             <img src="/pictures/login pozadina.jpg" alt="Login Pozadina" className="login-pozadina" />
@@ -8,14 +11,18 @@ function Login({ setPage }) {
                 <img src="/pictures/logo i tekst.png" alt="Dance Arena Logo With Title" className="login-logo-tekst" />
                 <div className="form-container">
                     <p>Nice to see you again!</p>
-                    <div className="google-login" onClick={() => setPage('profileO')}>
-                        <img src="/pictures/Google logo.png" alt="Google Logo" className="google-logo" />
-                        <p>Login with Google</p>
-                    </div>
+
+                    <a href={apiBaseUrl + "/users/auth/login/google-oauth2/"} className="google-login-anchor">
+                        <div className="google-login">
+                            <img src="/pictures/Google logo.png" alt="Google Logo" className="google-logo" />
+                            <p>Login with Google</p>
+                        </div>
+                    </a>
+
                     <p>Don't want to login? Head to the homepage to see the results from your favourite dancers!</p>
-                    <div className="homepage-button" onClick={() => setPage('homepage')}>
+                    <Link to="/homepage" className="homepage-button">
                         <p>Homepage</p>
-                    </div>
+                    </Link>
                 </div>
                 <div className="credits">
                     <a href="https://github.com/TheStickOfTruths/DanceArena" target="_blank" rel="noopener noreferrer" className="github-anchor">

@@ -17,7 +17,7 @@ class Role(models.TextChoices):
         
 
 class User(AbstractUser):
-    role = models.CharField(max_length=50, choices=Role.choices, default=Role.ADMIN)
+    role = models.CharField(max_length=50, choices=Role.choices, default=Role.ORGANIZER)
     club_name = models.CharField(max_length=50, blank=True, null=True)
     club_location = models.CharField(max_length=50, blank=True, null=True)
     contact = models.CharField(validators=[phone_regex], max_length=20, blank=True, null=True)
@@ -29,7 +29,7 @@ class User(AbstractUser):
         super().save(*args, **kwargs)
 
 
-class Organizer_Subscription(models.Model):
+class OrganizerSubscription(models.Model):
     organizer = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         limit_choices_to={'role': 'ORGANIZER'},

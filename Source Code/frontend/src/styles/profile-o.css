@@ -18,7 +18,7 @@
 .headboard {
     background-color: var(--secondary);
     height: 10vh;
-    top:0;
+    top: 0;
     width: 100%;
     padding: 0;
     margin: 0;
@@ -37,9 +37,9 @@
 .profile-info {
     display: grid;
     grid-template-rows: auto auto;
-    position:absolute;
+    position: absolute;
     align-content: start;
-    left:50%;
+    left: 50%;
     transform: translate(-50%);
     height: 60%;
     width: 50%;
@@ -74,10 +74,11 @@
     height: 20vh;
     border-radius: 20px;
     border: 5px solid var(--secondary);
+    overflow: hidden;
 }
 
 .pfp img {
-    object-fit:fill;
+    object-fit: fill;
     width: 20vh;
     height: 20vh;
     z-index: -1;
@@ -126,14 +127,14 @@
 
 .profile-about .atribut {
     font-size: 0.8rem;
-    color: rgba(0,0,0,0.4);
-    margin:0;
-    padding:0;
+    color: rgba(0, 0, 0, 0.4);
+    margin: 0;
+    padding: 0;
 }
 
 .profile-about .value {
     font-size: 0.8rem;
-    color: rgb(0,0,0);
-    margin:0;
-    padding:0;
+    color: rgb(0, 0, 0);
+    margin: 0;
+    padding: 0;
 }

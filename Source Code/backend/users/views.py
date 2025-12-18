@@ -1,11 +1,13 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .decorators import role_required
 from .models import Role
-from django.views.decorators.csrf import csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!
-
+from django.views.decorators.csrf import csrf_exempt #FOR POSTMAN !!!!!!!!!!!
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from django.middleware.csrf import get_token
 
 @csrf_exempt
 def login_user(req):
@@ -47,7 +49,27 @@ def google_login(request):
         'user_email': user_email,
         'user_name': user_name,
     })
-
+@require_POST
 def custom_logout(request):
-    logout(request)
-    return redirect('/users/google-login/')
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': 'User already logged out.'}, status = 200) #Ako nije nitko prijavljen, vrati OK
+    
+    logout(request) #Logout za Django
+
+    return JsonResponse({'success': "User loged out successfully."}, status = 200) #Vrati JSONRepsonse za logout nakon Django logouta
+
+def current_user(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+    
+    user = request.user
+    data = {
+        'id': user.id,
+        'username': user.username,
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'role': user.role,
+        'csrf_token': get_token(request)
+    }
+    return JsonResponse(data)

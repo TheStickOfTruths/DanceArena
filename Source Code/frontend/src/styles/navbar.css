@@ -61,3 +61,61 @@
     height: 35px;
     width: auto;
 }
+
+.dropdown-menu {
+    border: 3px solid var(--tamnoljubičasta);
+    border-radius: 10px;
+    background-color: var(--bijela);
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 20px;
+    right: 3px;
+    width: 20vw;
+    max-width: 300px;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    width: 100%;
+    padding: 5px 10px 5px 10px;
+    border-bottom: 2px solid var(--tamnoljubičasta);
+    box-sizing: border-box;
+}
+
+.dropdown-item:hover {
+    background-color: var(--svijetloplava);
+    cursor: pointer;
+}
+
+.dropdown-item.no {
+    border-bottom: none;
+}
+
+.dropdown-item div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--svijetloplava);
+    color: var(--bijela);
+    border-radius: 50%;
+    width: 3vh;
+    height: 3vh;
+}
+
+.dropdown-item p {
+    margin-left: 15px;
+    color: var(--tamnoljubičasta);
+}
+
+.dropdown-item i {
+    font-size: 1.2rem;
+}
+
+.dropdown-menu a {
+    text-decoration: none;
+}
