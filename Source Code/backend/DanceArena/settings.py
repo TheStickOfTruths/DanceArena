@@ -204,6 +204,11 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
+
+#DEPLOY TESTING
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+
 ROOT_URLCONF = 'DanceArena.urls'
 
 TEMPLATES = [
@@ -245,6 +250,14 @@ USE_I18N = True
 USE_TZ = True
 
 SITE_ID = 1
+
+if not config('DEBUG', default=False, cast=bool):
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'None'
+    CSRF_COOKIE_SAMESITE = 'None'
+    SOCIAL_AUTH_SAMESITE = 'None'
+    SOCIAL_AUTH_SECURE_COOKIES = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
