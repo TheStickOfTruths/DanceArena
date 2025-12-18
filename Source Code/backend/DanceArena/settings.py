@@ -16,12 +16,11 @@ from pathlib import Path
 from decouple import config
 from datetime import timedelta
 
+DEBUG = config('DEBUG')
 
-#LOKALNO TESTIRANJE
-DEBUG = True
+if DEBUG:
 
-#lokalna pgadmin baza po potrebi
-DATABASES = {
+    DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql', 
             'NAME': 'DanceArenaLocal',
@@ -32,53 +31,56 @@ DATABASES = {
         }
     }
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-FRONTEND_URL = config('FRONTEND_URL')
-LOGIN_REDIRECT_URL = FRONTEND_URL + '/homepage'
-# #KRAJ LOKALNOG TESTIRANJA
-#
-#
-#
-# #DEPLOY KOMANDE
-# DEBUG = False
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#         },
-#     },
-#     'root': {
-#         'handlers': ['console'],
-#         'level': 'INFO',
-#     },
-# }
+    FRONTEND_URL = config('FRONTEND_URL')
+    LOGIN_REDIRECT_URL = FRONTEND_URL + '/homepage'
 
-# ALLOWED_HOSTS = []
-# RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-# if RENDER_EXTERNAL_HOSTNAME:
-#     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+else:
 
-# WSGI_APPLICATION = 'DanceArena.wsgi.application'
+    if 'DATABASE_URL' in os.environ:
+        DATABASES = {
+            'default': dj_database_url.config(
+                conn_max_age=600,
+                ssl_require=True  
+            )
+        }
+
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
+        },
+        'root': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+    }
+
+    ALLOWED_HOSTS = []
+    RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+    if RENDER_EXTERNAL_HOSTNAME:
+        ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+    WSGI_APPLICATION = 'DanceArena.wsgi.application'
 
 
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
-# SESSION_COOKIE_SAMESITE = 'None'
-# CSRF_COOKIE_SAMESITE = 'None'
-# SOCIAL_AUTH_SAMESITE = 'None'
-# SOCIAL_AUTH_SECURE_COOKIES = True
-# SECURE_SSL_REDIRECT = True
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'None'
+    CSRF_COOKIE_SAMESITE = 'None'
+    SOCIAL_AUTH_SAMESITE = 'None'
+    SOCIAL_AUTH_SECURE_COOKIES = True
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# LOGIN_REDIRECT_URL = config('FRONTEND_URL') + '/homepage'
-# #KRAJ DEPLOY KOMANDI
-#
-#
-#
-#ZAJEDNICKE KOMANDE
+    LOGIN_REDIRECT_URL = config('FRONTEND_URL') + '/homepage'
+
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 MEDIA_URL = '/media/'
@@ -157,7 +159,7 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 
-    "TOKEN_OBTAIN_SERIALIZER": "users.serializers.MyTokenObtainPairSerializer",
+    "TOKEN_OBTAIN_SERIALIZER": "users.views.MyTokenObtainPairSerializer",
     "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
     "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
     "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
@@ -258,21 +260,3 @@ SOCIALACCOUNT_ADAPTER = 'allauth.socialaccount.adapter.DefaultSocialAccountAdapt
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
-
-#po defaultu se koristi bp u renderu za deploy i sqlite u backend folderu za lokalno
-if 'DATABASE_URL' in os.environ:
-    DATABASES = {
-        'default': dj_database_url.config(
-            conn_max_age=600,
-            ssl_require=True  
-        )
-    }
-# else:
-#     DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#         }
-#     }
-#KRAJ ZAJEDNICKIH KOMANDI
-
