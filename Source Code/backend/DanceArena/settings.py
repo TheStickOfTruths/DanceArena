@@ -57,7 +57,7 @@ else:
         },
         'root': {
             'handlers': ['console'],
-            'level': 'INFO',
+            'level': 'DEBUG',
         },
     }
 
@@ -124,6 +124,8 @@ REST_FRAMEWORK = {
 REST_AUTH = {
     'USE_JWT': True,
     'JWT_AUTH_HTTPONLY': False,
+    'SESSION_LOGIN': False, 
+    'OLD_PASSWORD_FIELD_ENABLED': False,
 }
 
 SIMPLE_JWT = {
