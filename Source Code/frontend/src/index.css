@@ -10,12 +10,13 @@
 
 :root,
 .theme-original {
-  --svijetloplava: #37D2E7ff;
+  --primary: #E04594ff;
+  --secondary: #37D2E7ff;
+  --primary-darker: #8A206Aff;
+  --secondary-darker: #21519Aff;
   --bijela: #FDFEFEff;
-  --roza: #E04594ff;
-  --tamnoplava: #21519Aff;
   --ljubičasta: #8E45B3ff;
-  --tamnoljubičasta: #8A206Aff;
+  
 }
 
 body {

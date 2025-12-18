@@ -4,7 +4,6 @@
     width: 100vw;
 }
 
-
 .profile-content-container {
     display: grid;
     grid-template-rows: auto;
@@ -15,8 +14,8 @@
     height: 90vh;
 }
 
-.headboard {
-    background-color: var(--secondary);
+.headboard-v {
+    background-color: var(--primary);
     height: 10vh;
     top:0;
     width: 100%;
@@ -26,15 +25,15 @@
     align-items: center;
 }
 
-.headboard p {
+.headboard-v p {
     font-size: 1.5rem;
     font-weight: bold;
     padding-left: 1%;
-    color: var(--secondary);
+    color: var(--primary);
     color: rgba(255,255,255,0.5)
 }
 
-.profile-info {
+.profile-info-v {
     display: grid;
     grid-template-rows: auto auto;
     position:absolute;
@@ -46,34 +45,34 @@
     z-index: 2;
 }
 
-.profile-info-main {
+.profile-info-v .profile-info-main {
     display: flex;
     flex-direction: row;
     align-items: end;
     justify-content: left;
     width: 100%;
-    border-bottom: 1px solid var(--secondary-darker);
+    border-bottom: 1px solid var(--primary-darker);
     padding-bottom: 20px;
 }
 
-.profile-info-main .ime {
+.profile-info-v .profile-info-main .ime {
     padding: 0;
     margin: 0;
     font-size: 1.7rem;
     font-weight: bold;
     padding-left: 5%;
     margin-bottom: 2%;
-    color: var(--secondary-darker)
+    color: var(--primary-darker)
 }
 
-.pfp {
+.profile-info-v .pfp {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 20vh;
     height: 20vh;
     border-radius: 20px;
-    border: 5px solid var(--secondary);
+    border: 5px solid var(--primary);
 }
 
 .pfp img {
@@ -98,27 +97,27 @@
     margin-top: -4%;
 }
 
-.profile-buttons button {
+.profile-info-v .profile-buttons button {
     padding: 0;
     height: 4.5vh;
     width: 90%;
     border-style: none;
     border-radius: 13px;
-    background-color: var(--secondary-darker);
+    background-color: var(--primary-darker);
     margin-top: 11%;
     font-size: 0.7rem;
     color: white
 }
 
-.profile-buttons :hover {
+.profile-info-v .profile-buttons :hover {
     cursor: pointer;
-    background-color: color-mix(in oklab, var(--secondary-darker) 100%, black 30%)
+    background-color: color-mix(in oklab, var(--primary-darker) 100%, black 30%)
 }
 
-.profile-about div {
+.profile-info-v .profile-about div {
     display: grid;
     grid-template-columns: 20% 70%;
-    border-bottom: 1px solid var(--secondary-darker);
+    border-bottom: 1px solid var(--primary-darker);
     height: 7vh;
     align-content: center;
     align-items: center;

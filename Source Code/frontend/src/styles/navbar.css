@@ -1,6 +1,6 @@
 .navbar {
     padding: 5px 20px;
-    background-color: rgb(255, 255, 255);
+    background-color: var(--bijela);
     width: 100%;
     height: 10vh;
     display: flex;
@@ -49,7 +49,7 @@
     display: flex;
     align-items: center;
     flex-direction: row;
-    background-color: var(--tamnoljubičasta);
+    background-color: var(--primary-darker);
     padding: 3px;
     border-radius: 50%;
     height: 35px;

@@ -17,7 +17,7 @@
 }
 
 .headboard {
-    background-color: var(--svijetloplava);
+    background-color: var(--secondary);
     height: 10vh;
     top:0;
     width: 100%;
@@ -31,7 +31,7 @@
     font-size: 1.5rem;
     font-weight: bold;
     padding-left: 1%;
-    color: var(--svijetloplava);
+    color: var(--secondary);
     color: rgba(255,255,255,0.5)
 }
 
@@ -55,7 +55,7 @@ label{
 }
 
 ::placeholder {
-    color: var(--tamnoplava);
+    color: var(--secondary-darker);
     opacity: 50%;
     padding: 1%;
 }
@@ -65,13 +65,13 @@ label{
 
 .new-comp-form input[type='text'] {
     height: 80%;
-    color: var(--tamnoplava);
-    border: 1px solid color-mix(in oklab, var(--tamnoplava) 50%, white 0%);
+    color: var(--secondary-darker);
+    border: 1px solid color-mix(in oklab, var(--secondary-darker) 50%, white 0%);
     border-radius: 8px;
 }
 
 .new-comp-form input[type='text']:hover {
-    background-color: color-mix(in oklab, var(--tamnoplava) 10%, white 100%);
+    background-color: color-mix(in oklab, var(--secondary-darker) 10%, white 100%);
 }
 
 
@@ -83,7 +83,7 @@ label{
     height: 8vh;
     align-items: center;
     justify-content: start;
-    color: var(--tamnoplava);
+    color: var(--secondary-darker);
     font-size: 0.9rem;
 }
 
@@ -96,7 +96,7 @@ label{
     height: 8vh;
     justify-content: start;
     align-items: center;
-    color: var(--tamnoplava);
+    color: var(--secondary-darker);
     font-size: 0.9rem;
 }
 
@@ -105,8 +105,8 @@ label{
 }
 
 .new-comp-form div:nth-child(2) input {
-    color: var(--tamnoplava);
-    border: 1px solid color-mix(in oklab, var(--tamnoplava) 50%, white 0%);
+    color: var(--secondary-darker);
+    border: 1px solid color-mix(in oklab, var(--secondary-darker) 50%, white 0%);
     border-radius: 8px;
     height: 80%;
     padding-left: 2%;
@@ -115,7 +115,7 @@ label{
 }
 
 .new-comp-form div:nth-child(2) input:hover {
-    background-color: color-mix(in oklab, var(--tamnoplava) 10%, white 100%);
+    background-color: color-mix(in oklab, var(--secondary-darker) 10%, white 100%);
 }
 
 
@@ -126,19 +126,19 @@ label{
     display: grid;
     grid-template-columns: 20% 80%;
     height: 11vh;
-    color: var(--tamnoplava);
+    color: var(--secondary-darker);
     font-size: 0.9rem;
 }
 
 .new-comp-form textarea {
     font-family: 'Poppins', sans-serif;
-    color: var(--tamnoplava);
-    border: 1px solid color-mix(in oklab, var(--tamnoplava) 50%, white 0%);
+    color: var(--secondary-darker);
+    border: 1px solid color-mix(in oklab, var(--secondary-darker) 50%, white 0%);
     border-radius: 8px;
 }
 
 .new-comp-form textarea:hover {
-    background-color: color-mix(in oklab, var(--tamnoplava) 10%, white 100%);
+    background-color: color-mix(in oklab, var(--secondary-darker) 10%, white 100%);
 }
 
 /* kategorije i checkboxovi */
@@ -148,7 +148,7 @@ label{
     grid-template-columns: 20% 20% 20% 30%;
     gap: 1%;
     height: 24vh;
-    color: var(--tamnoplava);
+    color: var(--secondary-darker);
     font-size: 0.9rem;
     padding-top: 2%;
     justify-content: start;
@@ -192,7 +192,7 @@ label{
     height: 3vh;
     justify-content: start;
     align-items: center;
-    color: var(--tamnoplava);
+    color: var(--secondary-darker);
     font-size: 0.9rem;
 }
 
@@ -209,7 +209,7 @@ label{
     justify-items: start;
     align-items: center;
     justify-content: space-between;
-    color: var(--tamnoplava);
+    color: var(--secondary-darker);
     font-size: 0.9rem;
     height: auto;
 }
@@ -227,20 +227,20 @@ label{
 
 .new-comp-form div:nth-child(6) .svi-sudci select {
     margin: 1%;
-    border: 1px solid color-mix(in oklab, var(--tamnoplava) 50%, white 0%);
+    border: 1px solid color-mix(in oklab, var(--secondary-darker) 50%, white 0%);
     border-radius: 8px;
-    color: var(--tamnoplava)
+    color: var(--secondary-darker)
 }
 
 .new-comp-form div:nth-child(6) #noviSudac {
     font-style: italic;
     font-size: 0.8rem;
-    color: color-mix(in oklab, var(--tamnoplava) 60%, white 0%)
+    color: color-mix(in oklab, var(--secondary-darker) 60%, white 0%)
 }
 
 .new-comp-form div:nth-child(6) #noviSudac:hover {
     cursor: pointer;
-    color: color-mix(in oklab, var(--tamnoplava) 60%, white 80%)
+    color: color-mix(in oklab, var(--secondary-darker) 60%, white 80%)
 }
 
 .new-comp-form input[type='submit'] {
@@ -250,13 +250,13 @@ label{
     width: 20%;
     border-style: none;
     border-radius: 13px;
-    background-color: var(--tamnoplava);
+    background-color: var(--secondary-darker);
     font-size: 0.7rem;
     color: white
 }
 
 .new-comp-form input[type='submit']:hover {
     cursor: pointer;
-    background-color: color-mix(in oklab, var(--tamnoplava) 100%, black 30%)
+    background-color: color-mix(in oklab, var(--secondary-darker) 100%, black 30%)
 }
 
