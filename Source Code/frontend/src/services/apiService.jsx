@@ -7,6 +7,7 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: false,
 });
 
 api.interceptors.request.use((config) => {
@@ -20,6 +21,16 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("access_token");
+    }
+    return Promise.reject(error);
+  }
+);
 
 export const loginWithGoogle = async (googleAccessToken) => {
   try {
