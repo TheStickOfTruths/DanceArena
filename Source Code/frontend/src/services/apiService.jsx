@@ -1,115 +1,75 @@
+import axios from "axios";
+
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
-function getCookie(name) {
-  let cookieValue = "start";
-  if (document.cookie && document.cookie !== "") {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.substring(0, name.length + 1) === name + "=") {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
+const api = axios.create({
+  baseURL: apiBaseUrl,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("access_token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-  console.log("getcookie:" + cookieValue);
-  return cookieValue;
-}
-var csrftoken = getCookie("csrftoken");
-console.log("token");
+  return config;
+});
+
+export const loginWithGoogle = async (googleAccessToken) => {
+  try {
+    const response = await api.post("/users/auth/google/", {
+      access_token: googleAccessToken,
+    });
+    localStorage.setItem("access_token", response.data.access);
+    localStorage.setItem("refresh_token", response.data.refresh);
+    return response.data;
+  } catch (error) {
+    console.error("Greška pri Google prijavi:", error);
+    throw error;
+  }
+};
+
 export const getCurrentUser = async () => {
   try {
-    const response = await fetch(`${apiBaseUrl}/users/me/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    const response = await api.get("/users/auth/me/");
 
-    if (!response.ok) {
-      if (response.status === 401 || response.status === 403) {
-        console.log(
-          "APIService: Korisnik nije prijavljen ili nije autoriziran."
-        );
-        return null;
-      }
-      throw new Error(`APIService: HTTP error! status: ${response.status}`);
+    if (response.data.authenticated) {
+      return response.data;
     }
-
-    const userData = await response.json();
-    return userData;
+    return null;
   } catch (error) {
-    console.error(
-      "APIService: Greška pri dohvaćanju trenutnog korisnika:",
-      error
-    );
-    throw error;
+    console.error("Greška pri dohvaćanju podataka:", error);
   }
 };
 
 export const logoutUser = async () => {
-  csrftoken = getCookie("csrftoken");
-  console.log("logout:" + csrftoken);
   try {
-    const response = await fetch(`${apiBaseUrl}/users/logout/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": csrftoken,
-      },
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      throw new Error(`APIService: HTTP error! status: ${response.status}`);
-    }
-
-    return await response.json();
+    await api.post("/users/auth/logout/");
+    return true;
   } catch (error) {
-    console.error("APIService: Greška pri odjavi korisnika:", error);
-    throw error;
-  }
-};
-
-export const createCompetition = async (competitionData) => {
-  try {
-    const response = await fetch(`${apiBaseUrl}/competitions/new/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": csrftoken,
-      },
-      credentials: "include",
-      body: JSON.stringify(competitionData),
-    });
-    if (!response.ok) {
-      throw new Error(`APIService: HTTP error! status: ${response.status}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("APIService: Greška pri kreiranju natjecanja:", error);
-    throw error;
+    console.warn("Greška pri backend logoutu:", error);
+    return true;
+  } finally {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
   }
 };
 
 export const getLiveCompetitions = async () => {
   try {
-    const response = await fetch(`${apiBaseUrl}/competitions/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-    if (!response.ok) {
-      throw new Error(`APIService: HTTP error! status: ${response.status}`);
-    }
-
-    return await response.json();
+    const response = await api.get("/competitions/");
+    return response.data;
   } catch (error) {
-    console.error("APIService: Greška pri dohvaćanju živih natjecanja:", error);
-    throw error;
+    console.error("Greška pri dohvaćanju natjecanja:", error);
+    return [];
   }
 };
+
+export const createCompetition = async (competitionData) => {
+  const response = await api.post("/competitions/new/", competitionData);
+  return response.data;
+};
+
+export default api;
