@@ -16,9 +16,10 @@ from pathlib import Path
 from decouple import config
 from datetime import timedelta
 
-DEBUG = config('DEBUG')
+IS_RENDER = 'RENDER' in os.environ
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-if DEBUG:
+if not IS_RENDER:
 
     DATABASES = {
         'default': {
