@@ -1,31 +1,41 @@
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
-from .decorators import role_required
-from .models import Role
+from django.shortcuts import render
+from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_exempt #FOR POSTMAN !!!!!!!!!!!
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
-from django.middleware.csrf import get_token
+from django.conf import settings
+from .decorators import role_required
+from .models import Role
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from dj_rest_auth.registration.views import SocialLoginView
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
-@csrf_exempt
-def login_user(req):
-    if req.method == "POST":
-        username = req.POST['username']
-        password = req.POST['password']
-        user = authenticate(req, username=username, password=password)
-    else:
-        return HttpResponse("Login.html")
-    if user is not None:
-        role = user.role
-        print(Role.CLUB_MANAGER)
-        print(role)
-        login(req, user)
-        if role.lower() == 'admin':
-            return redirect('/admin')
-        else:
-            return redirect('/users/' + role.lower())
+
+class GoogleLogin(SocialLoginView): 
+    adapter_class = GoogleOAuth2Adapter
+    callback_url = settings.LOGIN_REDIRECT_URL
+    client_class = OAuth2Client
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['email'] = user.email
+        
+        return token
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
 
 @role_required(Role.ORGANIZER)
 def organizers(req):
@@ -39,37 +49,37 @@ def club_managers(req):
 def judges(req):
     return HttpResponse('Judge.html')
 
-def google_login(request):
-    user_email = None
-    user_name = None
-    if request.user.is_authenticated:
-        user_email = request.user.email
-        user_name = request.user.get_full_name() or request.user.username
-    return render(request, 'users/google_login.html', {
-        'user_email': user_email,
-        'user_name': user_name,
-    })
-@require_POST
-def custom_logout(request):
-    if not request.user.is_authenticated:
-        return JsonResponse({'success': 'User already logged out.'}, status = 200) #Ako nije nitko prijavljen, vrati OK
-    
-    logout(request) #Logout za Django
-
-    return JsonResponse({'success': "User loged out successfully."}, status = 200) #Vrati JSONRepsonse za logout nakon Django logouta
-
+@api_view(['GET'])
+@permission_classes([AllowAny]) # Dopusti pristup da se provjeri ima li sesije
 def current_user(request):
+    # """
+    # Ova funkcija služi kao 'handshake'.
+    # Ako korisnik ima valjanu Django sesiju (od Google logina),
+    # generiraj mu JWT token i vrati podatke.
+    # """
     if not request.user.is_authenticated:
-        return JsonResponse({'error': 'Not authenticated'}, status=401)
+        return JsonResponse({'authenticated': False}, status=200)
     
     user = request.user
+    
+    # Generiranje JWT tokena
+    refresh = RefreshToken.for_user(user)
+    
     data = {
+        'authenticated': True,
         'id': user.id,
         'username': user.username,
         'email': user.email,
         'first_name': user.first_name,
         'last_name': user.last_name,
         'role': user.role,
-        'csrf_token': get_token(request)
+        # Ključni dio: Vraćamo tokene
+        'access': str(refresh.access_token),
+        'refresh': str(refresh),
     }
     return JsonResponse(data)
+
+@api_view(['POST'])
+def custom_logout(request):
+    logout(request)
+    return JsonResponse({'success': "Logged out successfully."}, status=200)
