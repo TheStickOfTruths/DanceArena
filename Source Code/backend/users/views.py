@@ -50,19 +50,13 @@ def judges(req):
     return HttpResponse('Judge.html')
 
 @api_view(['GET'])
-@permission_classes([AllowAny]) # Dopusti pristup da se provjeri ima li sesije
+@permission_classes([AllowAny]) 
 def current_user(request):
-    # """
-    # Ova funkcija služi kao 'handshake'.
-    # Ako korisnik ima valjanu Django sesiju (od Google logina),
-    # generiraj mu JWT token i vrati podatke.
-    # """
     if not request.user.is_authenticated:
         return JsonResponse({'authenticated': False}, status=200)
     
     user = request.user
     
-    # Generiranje JWT tokena
     refresh = RefreshToken.for_user(user)
     
     data = {
@@ -73,7 +67,6 @@ def current_user(request):
         'first_name': user.first_name,
         'last_name': user.last_name,
         'role': user.role,
-        # Ključni dio: Vraćamo tokene
         'access': str(refresh.access_token),
         'refresh': str(refresh),
     }

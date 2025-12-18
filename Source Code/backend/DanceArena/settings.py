@@ -81,7 +81,6 @@ else:
     LOGIN_REDIRECT_URL = config('FRONTEND_URL') + '/homepage'
 
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 MEDIA_URL = '/media/'
@@ -206,7 +205,6 @@ CORS_ALLOW_HEADERS = [
 ]
 
 
-#DEPLOY TESTING
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
 
@@ -240,13 +238,6 @@ USE_I18N = True
 USE_TZ = True
 
 SITE_ID = 1
-
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = 'None'
-CSRF_COOKIE_SAMESITE = 'None'
-SOCIAL_AUTH_SAMESITE = 'None'
-SOCIAL_AUTH_SECURE_COOKIES = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
