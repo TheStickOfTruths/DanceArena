@@ -7,7 +7,10 @@ from .utils import generate_starting_list_pdf, generate_results, generate_grades
 from users.models import User, Role
 from users.decorators import role_required
 import json
-#from django.views.decorators.csrf import csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!
+from django.views.decorators.csrf import csrf_exempt 
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 
 #@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
@@ -32,11 +35,12 @@ def competition_live(request):
         return JsonResponse({'message':'Nema natjecanja!'}, status=200)
 
 
-#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
-@role_required(Role.ORGANIZER)
+@csrf_exempt
+@api_view(['POST']) 
+@permission_classes([IsAuthenticated]) 
 def competition_create(request):
-    if request.method != 'POST':
-        return JsonResponse({'error': 'Invalid request method'}, status=405)
+    if request.user.role != 'ORGANIZER':
+        return Response({"error": "Samo organizatori mogu kreirati natjecanja"}, status=403)
 
     try:
         data = json.loads(request.body)
@@ -76,13 +80,10 @@ def competition_create(request):
                 group_size_category_ids.append(id) 
             competition.group_size_categories.set(group_size_category_ids)
 
-            return JsonResponse(
-                {'message': 'Competition created successfully', 'id': competition.id},
-                status=201
-            )
-
+            return Response({'message': 'Natjecanje kreirano!', 'id': competition.id}, status=201)
+        
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return Response({'error': str(e)}, status=500)
 
 
 #@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
