@@ -22,6 +22,7 @@ class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
     callback_url = settings.LOGIN_REDIRECT_URL
     client_class = OAuth2Client
+    permission_classes = [AllowAny]
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
