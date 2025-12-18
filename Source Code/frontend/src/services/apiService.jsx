@@ -10,8 +10,12 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
+  const isAuthRequest =
+    config.url.includes("auth/google") || config.url.includes("login");
+
   const token = localStorage.getItem("access_token");
-  if (token) {
+
+  if (token && !isAuthRequest) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
