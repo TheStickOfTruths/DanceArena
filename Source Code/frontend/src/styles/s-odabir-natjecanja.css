@@ -1,0 +1,78 @@
+.page-container {
+    display: grid;
+    grid-template-rows: 10vh 90vh;
+    width: 100vw;
+}
+
+.page-content-container {
+    display: grid;
+    grid-template-rows: auto;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    position: relative;
+    height: 90vh;
+}
+
+.headboard-s {
+    background-color: var(--primary);
+    height: 10vh;
+    top:0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.headboard-s p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-left: 1%;
+    color: var(--primary);
+    color: rgba(255,255,255,0.5)
+}
+
+.competition-list-container {
+    position:absolute;
+    top:10vh;
+    left: 50%;
+    transform: translate(-50%);
+    display: grid;
+    grid-template-rows: auto;
+    gap: 10px;
+    padding: 10px;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.competition {
+    border: 1px solid var(--primary-darker);
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.competition p {
+    font-size: 1.1rem;
+    color: var(--primary-darker);
+}
+
+.competition .prijava-button {
+    padding: 0;
+    height: 60%;
+    width: 12%;
+    border-style: none;
+    border-radius: 18px;
+    background-color: var(--primary-darker);
+    font-size: 0.9rem;
+    color: white;
+}
+
+.competition .prijava-button:hover {
+    cursor: pointer;
+    background-color: color-mix(in oklab, var(--primary-darker) 100%, black 30%)
+}

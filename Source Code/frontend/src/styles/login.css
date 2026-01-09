@@ -58,7 +58,7 @@ a {
 .homepage-button {
     width: 100%;
     color: white;
-    background-color: var(--tamnoplava);
+    background-color: var(--secondary-darker);
     max-height: 40px;
     border-radius: 10px;
 }
@@ -78,7 +78,7 @@ a {
 }
 
 .github-link p {
-    color: var(--svijetloplava);
+    color: var(--secondary);
 }
 
 .github-link {
