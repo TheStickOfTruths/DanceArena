@@ -16,21 +16,19 @@ from pathlib import Path
 from decouple import config
 from datetime import timedelta
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 IS_RENDER = 'RENDER' in os.environ
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 if not IS_RENDER:
 
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql', 
-            'NAME': 'DanceArenaLocal',
-            'USER': 'DanceArenaUser',
-            'PASSWORD': 'dancearena',
-            'HOST': 'localhost',
-            'PORT': '5432',
-        }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
 
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
@@ -255,3 +253,12 @@ SOCIALACCOUNT_ADAPTER = 'allauth.socialaccount.adapter.DefaultSocialAccountAdapt
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
+
+#Automatic email invites
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'dancearenaa@gmail.com'
+EMAIL_HOST_PASSWORD = 'arktwdzbzwubvvjh'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = 'Dance Arena <dancearenaa@gmail.com>'
