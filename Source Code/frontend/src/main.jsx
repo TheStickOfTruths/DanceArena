@@ -17,6 +17,10 @@ import ProfileO from "./pages/profile-o.jsx";
 import ProfileS from "./pages/profile-s.jsx";
 import SodabirNatjecanja from "./pages/SodabirNatjecanja.jsx";
 import SocijeniNatjecanje from "./pages/SocijeniNatjecanje.jsx";
+import ProfileV from "./pages/profile-v.jsx";
+import VprijavaNastupaOdabir from "./pages/VprijavaNastupaOdabir.jsx";
+import VprijavaNastupa from "./pages/VprijavaNastupa.jsx";
+import VpregledNatjecanja from "./pages/VpregledNatjecanja.jsx";
 
 // Dohvati Client ID iz .env datoteke
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -53,6 +57,22 @@ const router = createBrowserRouter([
   {
     path: "/sudac/ocijeni-natjecanje",
     element: <SocijeniNatjecanje />,
+  },
+  {
+    path: "/voditelj",
+    element: <ProfileV />,
+  },
+  {
+    path: "/voditelj/prijava-nastupa-odabir",
+    element: <VprijavaNastupaOdabir />,
+  },
+  {
+    path: "/voditelj/prijava-nastupa",
+    element: <VprijavaNastupa />,
+  },
+  {
+    path: "/voditelj/pregled-natjecanja",
+    element: <VpregledNatjecanja />,
   },
   {
     path: "*",
