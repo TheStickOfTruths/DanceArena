@@ -1,6 +1,6 @@
 .navbar {
     padding: 5px 20px;
-    background-color: rgb(255, 255, 255);
+    background-color: var(--bijela);
     width: 100%;
     height: 10vh;
     display: flex;
@@ -49,7 +49,7 @@
     display: flex;
     align-items: center;
     flex-direction: row;
-    background-color: var(--tamnoljubičasta);
+    background-color: var(--primary-darker);
     padding: 3px;
     border-radius: 50%;
     height: 35px;
@@ -63,7 +63,7 @@
 }
 
 .dropdown-menu {
-    border: 3px solid var(--tamnoljubičasta);
+    border: 3px solid var(--primary-darker);
     border-radius: 10px;
     background-color: var(--bijela);
     display: flex;
@@ -83,12 +83,12 @@
     font-size: 1rem;
     width: 100%;
     padding: 5px 10px 5px 10px;
-    border-bottom: 2px solid var(--tamnoljubičasta);
+    border-bottom: 2px solid var(--primary-darker);
     box-sizing: border-box;
 }
 
 .dropdown-item:hover {
-    background-color: var(--svijetloplava);
+    background-color: var(--secondary);
     cursor: pointer;
 }
 
@@ -100,7 +100,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--svijetloplava);
+    background-color: var(--secondary);
     color: var(--bijela);
     border-radius: 50%;
     width: 3vh;
@@ -109,7 +109,7 @@
 
 .dropdown-item p {
     margin-left: 15px;
-    color: var(--tamnoljubičasta);
+    color: var(--primary-darker);
 }
 
 .dropdown-item i {

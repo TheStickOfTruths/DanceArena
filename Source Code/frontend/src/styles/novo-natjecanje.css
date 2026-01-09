@@ -13,11 +13,11 @@
     height: 100%;
     overflow-y: auto;
     position: relative;
-    background-color: #f9f9f9;
+    background-color: var(--bijela);
 }
 
 .headboard {
-    background-color: var(--svijetloplava);
+    background-color: var(--secondary);
     height: 10vh;
     width: 100%;
     display: flex;
@@ -47,7 +47,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    color: var(--tamnoplava);
+    color: var(--secondary-darker);
     font-size: 0.9rem;
 }
 
@@ -55,7 +55,7 @@
     display: grid;
     grid-template-columns: 20% 80%;
     align-items: center;
-    color: var(--tamnoplava);
+    color: var(--secondary-darker);
     font-size: 0.9rem;
 }
 
@@ -64,7 +64,7 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 15px;
-    color: var(--tamnoplava);
+    color: var(--secondary-darker);
     font-size: 0.9rem;
 }
 
@@ -78,7 +78,7 @@
     padding: 10px 12px;
     font-family: 'Poppins', sans-serif;
     font-size: 0.9rem;
-    color: var(--tamnoplava);
+    color: var(--secondary-darker);
     border: 1px solid #ccc;
     border-radius: 8px;
     box-sizing: border-box;
@@ -89,7 +89,7 @@
 .form-input:focus,
 .form-textarea:focus {
     background-color: #fdfdfd;
-    border-color: var(--tamnoplava);
+    border-color: var(--secondary-darker);
     outline: none;
     box-shadow: 0 0 5px rgba(33, 81, 154, 0.2);
 }
@@ -100,7 +100,7 @@
 }
 
 ::placeholder {
-    color: var(--tamnoplava);
+    color: var(--secondary-darker);
     opacity: 0.5;
 }
 
@@ -120,7 +120,7 @@
 .kategorije-container .form-group p {
     font-weight: bold;
     margin: 0 0 8px 0;
-    color: var(--tamnoplava);
+    color: var(--secondary-darker);
 }
 
 .basic-multi-select .select__control {
@@ -129,12 +129,12 @@
 }
 
 .basic-multi-select .select__control--is-focused {
-    border-color: var(--tamnoplava);
+    border-color: var(--secondary-darker);
     box-shadow: 0 0 5px rgba(33, 81, 154, 0.2);
 }
 
 .basic-multi-select .select__multi-value {
-    background-color: var(--svijetloplava);
+    background-color: var(--secondary);
     color: white;
     border-radius: 4px;
 }
@@ -149,7 +149,7 @@
     width: 200px;
     border-style: none;
     border-radius: 13px;
-    background-color: var(--tamnoplava);
+    background-color: var(--secondary-darker);
     font-size: 0.9rem;
     font-weight: bold;
     color: white;
@@ -160,5 +160,5 @@
 }
 
 .submit-button:hover {
-    background-color: color-mix(in oklab, var(--tamnoplava) 80%, black 20%);
+    background-color: color-mix(in oklab, var(--secondary-darker) 80%, black 20%);
 }
