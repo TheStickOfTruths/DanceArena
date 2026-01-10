@@ -8,7 +8,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib.units import cm
 import itertools
 from collections import defaultdict
-from .models import Appearance, Grade
+from .models import Appearance, Grade, MediaFile
 from datetime import datetime, date, time, timedelta
 
 
@@ -42,7 +42,6 @@ def generate_starting_list_pdf(competition):
 
     elements = []
 
-    # Header section
     elements.append(Paragraph(f"<b>Startna lista</b>", styles['Heading']))
     elements.append(Paragraph(f"Datum: {competition.date.strftime('%d.%m.%Y')}", styles['Normal']))
     elements.append(Paragraph(f"Lokacija: {competition.location}", styles['Normal']))
@@ -50,11 +49,10 @@ def generate_starting_list_pdf(competition):
     elements.append(Paragraph(f"Opis: {competition.description}", styles['Normal']))
     elements.append(Spacer(1, 12))
 
-    # Generate category triplets
     triplets = list(itertools.product(
-        competition.age_categories,
-        competition.style_categories,
-        competition.group_size_categories
+        competition.age_categories.all(),
+        competition.style_categories.all(),
+        competition.group_size_categories.all()
     ))
 
     start_time = time(8, 0)
@@ -112,13 +110,19 @@ def generate_starting_list_pdf(competition):
     doc.build(elements)
     buffer.seek(0)
 
-    pdf_filename = f"{competition.id}_starting_list.pdf"
-    competition.starting_list_pdf.save(pdf_filename, ContentFile(buffer.read()))
+    new_media = MediaFile(
+        title=f"List for {competition.id}",
+        file_type='pdf'
+    )
+
+    new_media.file.save(f"list_{competition.id}.pdf", ContentFile(buffer.getvalue()))
+    new_media.save()
     buffer.close()
 
+    competition.starting_list = new_media
     competition.save()
 
-    return competition.starting_list_pdf.url
+    return new_media
     
 
 def generate_results(competition):
