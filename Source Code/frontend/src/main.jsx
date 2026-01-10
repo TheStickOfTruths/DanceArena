@@ -21,6 +21,8 @@ import ProfileV from "./pages/profile-v.jsx";
 import VprijavaNastupaOdabir from "./pages/VprijavaNastupaOdabir.jsx";
 import VprijavaNastupa from "./pages/VprijavaNastupa.jsx";
 import VpregledNatjecanja from "./pages/VpregledNatjecanja.jsx";
+import OupravljanjePrijavamaOdabir from "./pages/OupravljanjePrijavamaOdabir.jsx";
+import OupravljanjePrijavama from "./pages/OupravljanjePrijavama.jsx";
 
 // Dohvati Client ID iz .env datoteke
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -45,6 +47,14 @@ const router = createBrowserRouter([
   {
     path: "/profile-o",
     element: <ProfileO />,
+  },
+  {
+    path: "/organizator/upravljanje-prijavama-odabir",
+    element: <OupravljanjePrijavamaOdabir />,
+  },
+  {
+    path: "/organizator/upravljanje-prijavama",
+    element: <OupravljanjePrijavama />,
   },
   {
     path: "/sudac",
