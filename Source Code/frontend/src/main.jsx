@@ -23,6 +23,11 @@ import VprijavaNastupa from "./pages/VprijavaNastupa.jsx";
 import VpregledNatjecanja from "./pages/VpregledNatjecanja.jsx";
 import OupravljanjePrijavamaOdabir from "./pages/OupravljanjePrijavamaOdabir.jsx";
 import OupravljanjePrijavama from "./pages/OupravljanjePrijavama.jsx";
+import RegOdabirUloga from "./pages/RegOdabirUloga.jsx";
+import Oregistracija from "./pages/Oregistracija.jsx";
+import Vregistracija from "./pages/Vregistracija.jsx";
+import Sregistracija from "./pages/Sregistracija.jsx";
+
 
 // Dohvati Client ID iz .env datoteke
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -35,6 +40,22 @@ const router = createBrowserRouter([
   {
     path: "/homepage",
     element: <Homepage />,
+  },
+  {
+    path: "/registracija",
+    element: <RegOdabirUloga />,
+  },
+  {
+    path: "/registracija/organzator",
+    element: <Oregistracija />,
+  },
+  {
+    path: "/registracija/voditelj",
+    element: <Vregistracija />,
+  },
+  {
+    path: "/registracija/sudac",
+    element: <Sregistracija />,
   },
   {
     path: "/login",
