@@ -16,6 +16,12 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from .paypal import get_paypal_access_token
+from .models import OrganizerSubscriptionPrice, OrganizerSubscription
+import requests
+from django.shortcuts import redirect
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 
 class GoogleLogin(SocialLoginView): 
@@ -77,3 +83,61 @@ def current_user(request):
 def custom_logout(request):
     logout(request)
     return JsonResponse({'success': "Logged out successfully."}, status=200)
+
+@csrf_exempt
+@csrf_exempt
+def create_subscription(request):
+    price_obj = OrganizerSubscriptionPrice.objects.first()
+    if not price_obj:
+        return JsonResponse({"error": "Subscription price not set"}, status=400)
+
+    access_token = get_paypal_access_token()
+
+    payload = {
+        "plan_id": price_obj.paypal_plan_id,
+        "application_context": {
+            "return_url": settings.PAYPAL_RETURN_URL,
+            "cancel_url": settings.PAYPAL_CANCEL_URL,
+        },
+    }
+
+    response = requests.post(
+        f"{settings.PAYPAL_API_BASE}/v1/billing/subscriptions",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json",
+        },
+        json=payload,
+    )
+
+    # NEW: debug instead of plain raise_for_status
+    print("PayPal subscription status:", response.status_code)
+    print("PayPal subscription body:", response.text)
+
+    try:
+        response.raise_for_status()
+    except requests.HTTPError:
+        return JsonResponse(
+            {"paypal_error": response.json()},
+            status=response.status_code,
+        )
+
+    return JsonResponse(response.json())
+
+
+@csrf_exempt  # dev only
+def paypal_success(request):
+    subscription_id = request.GET.get("subscription_id")
+    if not subscription_id:
+        return JsonResponse({"error": "Missing subscription ID"}, status=400)
+
+    access_token = get_paypal_access_token()
+    resp = requests.get(
+        f"{settings.PAYPAL_API_BASE}/v1/billing/subscriptions/{subscription_id}",
+        headers={"Authorization": f"Bearer {access_token}"}
+    )
+    resp.raise_for_status()
+    data = resp.json()
+
+    return JsonResponse(data)  # just show what PayPal says
+
