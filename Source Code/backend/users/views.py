@@ -60,10 +60,6 @@ def current_user(request):
     
     user = request.user
 
-    flag = False
-    if user.role == Role.ANONYMOUS:
-        flag = True
-
     refresh = RefreshToken.for_user(user)
     
     data = {
