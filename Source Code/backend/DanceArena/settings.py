@@ -21,10 +21,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 IS_RENDER = 'RENDER' in os.environ
 DEBUG = config('DEBUG', default=False, cast=bool)
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 if not IS_RENDER:
 
     DATABASES = {
     'default': {
+            'ENGINE': 'django.db.backends.postgresql', 
+            'NAME': 'DanceArenaLocal',
+            'USER': 'DanceArenaUser',
+            'PASSWORD': 'dancearena',
+            'HOST': 'localhost',
+            'PORT': '5432',
+    },
+    'sqlite': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
@@ -32,7 +42,7 @@ if not IS_RENDER:
 
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-    FRONTEND_URL = config('FRONTEND_URL')
+    FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:3000')
     LOGIN_REDIRECT_URL = FRONTEND_URL + '/homepage'
 
 else:
@@ -79,7 +89,7 @@ else:
     LOGIN_REDIRECT_URL = config('FRONTEND_URL') + '/homepage'
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

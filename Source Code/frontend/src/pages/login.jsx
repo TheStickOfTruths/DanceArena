@@ -1,30 +1,33 @@
 import "../styles/login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
-import { loginWithGoogle } from "../services/apiService.jsx";
+import { loginWithGoogle, getCurrentUser } from "../services/apiService";
 
 function Login() {
   const navigate = useNavigate();
 
   // Funkcija koja se pokreće kada korisnik klikne "Login with Google"
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      try {
-        console.log("Google success, šaljem token backendu...");
-        // Šaljemo access_token (koji nam je Google dao) našem API-ju
-        const data = await loginWithGoogle(tokenResponse.access_token);
+  const handleGoogleLogin = async (credentialResponse) => {
+    try {
+      // 1. Šalješ token na backend (isto kao prije)
+      await loginWithGoogle(credentialResponse.credential);
 
-        if (data) {
-          console.log("Prijava uspješna!");
-          navigate("/homepage"); // Preusmjeri na homepage nakon prijave
-        }
-      } catch (error) {
-        console.error("Greška pri prijavi na backend:", error);
-        alert("Prijava nije uspjela. Provjerite konzolu.");
+      // 2. KLJUČNA PROMJENA: Odmah pitaš backend "Tko je ovaj korisnik?"
+      const user = await getCurrentUser();
+
+      // 3. Logika odlučivanja (Traffic Cop)
+      if (!user.role) {
+        // Ako nema uloge -> Idi na registraciju
+        navigate("/reg-odabir-uloga");
+      } else {
+        // Ako ima ulogu -> Idi na homepage
+        navigate("/homepage");
       }
-    },
-    onError: (error) => console.log("Google Login Failed:", error),
-  });
+
+    } catch (error) {
+      console.error("Greška:", error);
+    }
+  };
 
   return (
     <div className="login-container">
@@ -42,7 +45,6 @@ function Login() {
         <div className="form-container">
           <p>Nice to see you again!</p>
 
-          {/* ZAMIJENJENO: Umjesto <a> koristimo gumb koji pokreće Google Popup */}
           <button
             onClick={() => handleGoogleLogin()}
             className="google-login-button"
