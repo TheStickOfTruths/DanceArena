@@ -27,6 +27,7 @@ import RegOdabirUloga from "./pages/RegOdabirUloga.jsx";
 import Oregistracija from "./pages/Oregistracija.jsx";
 import Vregistracija from "./pages/Vregistracija.jsx";
 import Sregistracija from "./pages/Sregistracija.jsx";
+import Oplacanje from "./pages/Oplacanje.jsx";
 
 
 // Dohvati Client ID iz .env datoteke
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
   {
     path: "/registracija/organzator",
     element: <Oregistracija />,
+  },
+  {
+    path: "/organizator/placanje",
+    element: <Oplacanje />,
   },
   {
     path: "/registracija/voditelj",

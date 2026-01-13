@@ -41,7 +41,7 @@ function VprijavaNastupaOdabir(){
 
 
     function handleVprijavaNastupa() {
-        navigate('/sudac/prijava-nastupa');
+        navigate('/voditelj/prijava-nastupa');
     }
 
     return(
