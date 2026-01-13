@@ -10,6 +10,11 @@ from users.decorators import role_required
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.core.mail import send_mail
+from django.conf import settings
+from rest_framework import status
+import uuid
+from rest_framework.permissions import AllowAny
 import json
 import boto3
 
@@ -336,6 +341,38 @@ def competition_signup(request, id):
     return HttpResponse("Prijavi nastup.html")
 
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def send_judge_invite(request):
+    email = request.data.get('email')
+
+    if not email:
+        return Response(
+            {"detail": "Email is required"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    token = uuid.uuid4()
+    invite_link = "https://dancearena.netlify.app/login"
+
+    send_mail(
+        subject="Judge Registration Invitation",
+        message=(
+            "Hello,\n\n"
+            "You have been invited to register as a judge on Dance Arena.\n"
+            "Please use the link below to register:\n\n"
+            f"{invite_link}\n\n"
+            "Best regards,\n"
+            "Dance Arena Team"
+        ),
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[email],
+    )
+
+    return Response(
+        {"detail": "Invitation email sent"},
+        status=status.HTTP_200_OK
+    )
 def generate_s3_url(file_path, link_type='view'):
     s3_client = boto3.client(
         's3',
