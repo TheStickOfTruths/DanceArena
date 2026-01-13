@@ -260,8 +260,8 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 PAYPAL_CLIENT_ID = "AZ6qVqFLGvKfcP0DYsZcHvTrWhTNbS4rP0qNBPLjZIHjrd7fsv-V0GK7fo49eI6QuLYrbLUqDfY4op13"
 PAYPAL_CLIENT_SECRET = "EP9NyG3QHUMSeWKF5wb02JHbXGe9kj0DaKz5F7IZxsnNzmocR7yebQm345h-LG76pzMn2lCGSkIgEXVB"
 PAYPAL_API_BASE = "https://api-m.sandbox.paypal.com"
-PAYPAL_RETURN_URL = "http://localhost:8000/users/paypal/success/"
-PAYPAL_CANCEL_URL = "http://localhost:8000/users/paypal/cancel/"
+PAYPAL_RETURN_URL = FRONTEND_URL + "/paypal-return"
+PAYPAL_CANCEL_URL = FRONTEND_URL + "/paypal-cancel"
 #Automatic email invites
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = ''
