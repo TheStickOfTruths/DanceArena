@@ -1,10 +1,10 @@
-import '../styles/v-prijava-nastupa-odabir.css';
+import '../styles/o-upravljanje-prijavama-odabir.css';
 import Navbar from '../components/navbar';
-import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from '../services/apiService.jsx';
+import { Link, useNavigate } from 'react-router-dom';
 
-function VprijavaNastupaOdabir(){
+function OupravljanjePrijavamaOdabir(){
 
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -39,28 +39,27 @@ function VprijavaNastupaOdabir(){
         );
     }
 
-
-    function handleVprijavaNastupa() {
-        navigate('/voditelj/prijava-nastupa');
+    function handleOupravljanjePrijavama() {
+        navigate('/organizator/upravljanje-prijavama');
     }
 
     return(
         <div className='page-container'>
-           <Navbar currentUser={currentUser} />
+            <Navbar currentUser={currentUser} />
 
             <div className='page-content-container'>
-                <div className='headboard-v'>
-                    <p>Prijava Timova</p>
+                <div className='headboard'>
+                    <p>Upravljanje prijavama</p>
                 </div>
 
                 <div className='competition-list-container'>
-                    <div className='competition'>
-                        <p>Natjecanje 1</p>
-                        <button className='prijava-button' label="1" onClick={handleVprijavaNastupa}>Prijavi se</button>
-                    </div>
-                    <div className='competition'>
-                        <p>Natjecanje 2</p>
-                        <button className='prijava-button' label="2" onClick={handleVprijavaNastupa}>Prijavi se</button>
+                    <div className='competition-o'>
+                        <p>Natjecanje</p>
+                        <div className='btn-container'>
+                            <button className='prijava-button' label="1" onClick={handleOupravljanjePrijavama}>Upravljaj prijavama</button>
+                            <button className='prijava-button' label="2">Zaključaj prijave</button>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -69,4 +68,4 @@ function VprijavaNastupaOdabir(){
     );
 }
 
-export default VprijavaNastupaOdabir
+export default OupravljanjePrijavamaOdabir

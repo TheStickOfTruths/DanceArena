@@ -1,13 +1,12 @@
 from django.shortcuts import redirect, get_object_or_404
+from django.conf import settings
 from django.http import HttpResponseForbidden, HttpResponse, JsonResponse
 from django.db import transaction
 from .models import Competition, Appearance, Grade, CompetitionJudge, \
-                    StatusChoices, AgeCategory, StyleCategory, GroupSizeCategory
+                    StatusChoices, AgeCategory, StyleCategory, GroupSizeCategory, MediaFile
 from .utils import generate_starting_list_pdf, generate_results, generate_grades
 from users.models import User, Role
 from users.decorators import role_required
-import json
-from django.views.decorators.csrf import csrf_exempt 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -16,9 +15,10 @@ from django.conf import settings
 from rest_framework import status
 import uuid
 from rest_framework.permissions import AllowAny
+import json
+import boto3
 
 
-#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 def competition_live(request):
     data = []
     if Competition.objects.exists():
@@ -40,7 +40,6 @@ def competition_live(request):
         return JsonResponse({'message':'Nema natjecanja!'}, status=200)
 
 
-@csrf_exempt
 @api_view(['POST']) 
 @permission_classes([IsAuthenticated]) 
 def competition_create(request):
@@ -91,14 +90,12 @@ def competition_create(request):
         return Response({'error': str(e)}, status=500)
 
 
-#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 def competition_detail(request, id):
     competition = get_object_or_404(Competition, id=id)
     appearances = Appearance.objects.get(competition=competition)
     return HttpResponse(appearances)
 
 
-#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.ORGANIZER)
 def competition_edit(request, id):
     competition = get_object_or_404(Competition, id=id)
@@ -121,11 +118,11 @@ def competition_edit(request, id):
     return HttpResponse("Prepravi.html")
 
 
-#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
-@role_required(Role.ORGANIZER)
+@api_view(['POST']) 
+@permission_classes([IsAuthenticated]) 
 def competition_publish(request, id):
     competition = get_object_or_404(Competition, id=id)
-
+    print(request.user)
     if competition.organizer != request.user:
         return HttpResponseForbidden("Pristup zabranjen.")
 
@@ -137,8 +134,8 @@ def competition_publish(request, id):
     return HttpResponse("Objavi.html")
 
 
-#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
-@role_required(Role.ORGANIZER)
+@api_view(['POST']) 
+@permission_classes([IsAuthenticated]) 
 def competition_close_applications(request, id):
     competition = get_object_or_404(Competition, id=id)
 
@@ -151,13 +148,14 @@ def competition_close_applications(request, id):
     if request.method == 'POST':
         competition.status = StatusChoices.CLOSED_APPLICATIONS
         competition.save()
-        url = generate_starting_list_pdf(competition)
-        return HttpResponse(url)
+        name = generate_starting_list_pdf(competition)
+        return HttpResponse(name)
 
     return HttpResponse("Zatvori prijave.html")
 
 
-#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
+@api_view(['GET']) 
+@permission_classes([IsAuthenticated])
 def competition_starting_list(request, id):
     competition = get_object_or_404(Competition, id=id)
 
@@ -182,10 +180,9 @@ def competition_starting_list(request, id):
     if request.user.id not in allowed_users:
         return HttpResponseForbidden("Pristup zabranjen.")
 
-    return redirect(competition.starting_list_pdf.url)
+    return redirect(competition.starting_list.file.url)
 
 
-#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.ORGANIZER)
 def competition_invite_judge(request, id):
     competition = get_object_or_404(Competition, id=id)
@@ -213,7 +210,6 @@ def competition_invite_judge(request, id):
     return HttpResponse("Pozovi suca.html")
 
 
-#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.ORGANIZER)
 def competition_activate(request, id):
     competition = get_object_or_404(Competition, id=id)
@@ -233,7 +229,6 @@ def competition_activate(request, id):
     return HttpResponse("Aktiviraj.html")
 
 
-#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.ORGANIZER)
 def competition_deactivate(request, id):
     competition = get_object_or_404(Competition, id=id)
@@ -249,7 +244,6 @@ def competition_deactivate(request, id):
     return HttpResponse("Ugasi.html")
 
 
-#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.JUDGE)
 def competition_grade(request, competition_id, appearance_id):
     competition = get_object_or_404(Competition, id=competition_id)
@@ -275,7 +269,6 @@ def competition_grade(request, competition_id, appearance_id):
     return HttpResponse("Ocijeni.html")
 
 
-#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.ORGANIZER)
 def competition_complete(request, id):
     competition = get_object_or_404(Competition, id=id)
@@ -291,7 +284,6 @@ def competition_complete(request, id):
     return HttpResponse("Završi.html")
 
 
-#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 def competition_results(request, id):
     competition = get_object_or_404(Competition, id=id)
     if competition.status != StatusChoices.COMPLETED:
@@ -302,7 +294,6 @@ def competition_results(request, id):
     return JsonResponse(results)
 
 
-#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.CLUB_MANAGER)
 def competition_appearance_results(request, competition_id, appearance_id):
     competition = get_object_or_404(Competition, id=competition_id)
@@ -319,7 +310,6 @@ def competition_appearance_results(request, competition_id, appearance_id):
     return JsonResponse(grades)
 
 
-#@csrf_exempt #FOR POSTMAN !!!!!!!!!!!!!!!!!!
 @role_required(Role.CLUB_MANAGER)
 def competition_signup(request, id):
     competition = get_object_or_404(Competition, id=id)
@@ -383,3 +373,44 @@ def send_judge_invite(request):
         {"detail": "Invitation email sent"},
         status=status.HTTP_200_OK
     )
+def generate_s3_url(file_path, link_type='view'):
+    s3_client = boto3.client(
+        's3',
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        region_name=settings.AWS_S3_REGION_NAME,
+    )
+
+    if link_type == 'download':
+        disposition = 'attachment'
+    else:
+        disposition = 'inline' 
+
+    try:
+        url = s3_client.generate_presigned_url(
+            'get_object',
+            Params={
+                'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
+                'Key': file_path,
+                'ResponseContentDisposition': disposition,
+            },
+            ExpiresIn=3600 
+        )
+        return url
+    except Exception as e:
+        print(f"Error generating URL: {e}")
+        return None
+
+
+def download_media(request, file_id):
+    media_item = get_object_or_404(MediaFile, id=file_id)
+    
+    action_type = 'view' 
+    if media_item.file_type == 'mp3':
+        action_type = 'download'
+    elif request.GET.get('force_download'):
+        action_type = 'download'
+
+    s3_url = generate_s3_url(media_item.file.name, link_type=action_type)
+
+    return redirect(s3_url)

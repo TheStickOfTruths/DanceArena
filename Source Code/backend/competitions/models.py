@@ -67,6 +67,21 @@ class StatusChoices(models.TextChoices):
     COMPLETED = "COMPLETED", "Completed"
 
 
+class MediaFile(models.Model):
+    FILE_TYPES = (
+        ('mp3', 'Music'),
+        ('pdf', 'Document'),
+    )
+    
+    title = models.CharField(max_length=255)
+    file_type = models.CharField(max_length=10, choices=FILE_TYPES)
+    file = models.FileField(upload_to='uploads/') 
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+
 class Competition(models.Model):
     name = models.CharField(max_length=255)
     date = models.DateField()
@@ -83,10 +98,12 @@ class Competition(models.Model):
     group_size_categories = models.ManyToManyField(GroupSizeCategory, related_name='competitions')
     status = models.CharField(choices=StatusChoices, max_length=20, default=StatusChoices.DRAFT)
     judges = models.ManyToManyField(User, through='CompetitionJudge', related_name='judged_competitions')
-    starting_list_pdf = models.FileField(
-        upload_to='starting_lists/',
+    starting_list = models.OneToOneField(
+        MediaFile, 
+        on_delete=models.SET_NULL, 
+        null=True, 
         blank=True,
-        null=True
+        related_name='competition_starting_list'
     )
     registration_fee = models.DecimalField(
         decimal_places=2, 
@@ -96,12 +113,7 @@ class Competition(models.Model):
     )
 
     def __str__(self):
-        return f"""ID:{self.id}-ORGANIZER:{self.organizer}-  
-                AGE CATEGORIES:{self.age_categories}-
-                STYLE CATEGORIES:{self.style_categories}-
-                GROUP SIZE CATEGORIES:{self.group_size_categories}
-                ====================
-                """
+        return f"ID:{self.id} - ORGANIZER:{self.organizer}"
 
 
 class CompetitionJudge(models.Model):
@@ -135,7 +147,7 @@ class Appearance(models.Model):
     )
     club_manager = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        limit_choices_to={'role': 'CLUB MANAGER'},
+        limit_choices_to={'role': 'CLUB_MANAGER'},
         on_delete=models.CASCADE,
         related_name='appearances',
         null=True
@@ -143,7 +155,13 @@ class Appearance(models.Model):
     choreography = models.CharField(max_length=50)
     length = models.DurationField()
     choreograph = models.CharField(max_length=50)
-    music = models.FileField(null=True, blank=True)
+    music = models.OneToOneField(
+        MediaFile, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        related_name='appearance_music'
+    )
     age_category = models.ForeignKey(
         AgeCategory, 
         on_delete=models.PROTECT
@@ -190,7 +208,4 @@ class Grade(models.Model):
         ]
 
     def __str__(self):
-        return f"""{self.judge.username}->{self.appearance.id}:{self.grade}
-                ===================="""
-
-
+        return f"{self.judge.username}->{self.appearance.id}:{self.grade}"

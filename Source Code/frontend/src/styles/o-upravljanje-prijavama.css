@@ -1,0 +1,86 @@
+.page-container {
+    display: grid;
+    grid-template-rows: 10vh 90vh;
+    width: 100vw;
+}
+
+.page-content-container {
+    display: grid;
+    grid-template-rows: auto;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    position: relative;
+    height: 90vh;
+}
+
+.headboard {
+    background-color: var(--secondary);
+    height: 10vh;
+    top:0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.headboard p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-left: 1%;
+    color: var(--secondary);
+    color: rgba(255,255,255,0.5)
+}
+
+.competitors-list-container {
+    position:absolute;
+    top:10vh;
+    left: 50%;
+    transform: translate(-50%);
+    display: grid;
+    grid-template-rows: auto;
+    gap: 10px;
+    padding: 10px;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.competitors-o {
+    border: 1px solid var(--secondary-darker);
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.competitors-o p {
+    font-size: 1.1rem;
+    color: var(--secondary-darker);
+}
+
+.competitors-o .btn-container {
+    padding: 1%;
+    width: 40%;
+    height: 60%;
+    justify-content: space-between;
+    display: flex;
+    gap: 10px;
+}
+
+.competitors-o .prijava-button {
+    height: 100%;
+    width: 50%;
+    border-style: none;
+    border-radius: 18px;
+    background-color: var(--secondary-darker);
+    font-size: 0.9rem;
+    color: white;
+}
+
+.competitors-o .prijava-button:hover {
+    cursor: pointer;
+    background-color: color-mix(in oklab, var(--secondary-darker) 100%, black 30%)
+}

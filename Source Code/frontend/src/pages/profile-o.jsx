@@ -42,6 +42,10 @@ function ProfileO() {
         navigate('/novo-natjecanje');
     }
 
+    function handleOupravljanjePrijavamaOdabir() {
+        navigate('/organizator/upravljanje-prijavama-odabir');
+    }
+
     return (
         <div className='profile-container'>
             <Navbar currentUser={currentUser} />
@@ -71,7 +75,7 @@ function ProfileO() {
                                 <div className='profile-info-general'>
                                     <div className='profile-buttons'>
                                         <button className='novo-natjecanje' onClick={handleNovoNatjecanje}>Novo Natjecanje</button>
-                                        <button className='upr-prijavama'>Upravljaj prijavama</button>
+                                        <button className='upr-prijavama' onClick={handleOupravljanjePrijavamaOdabir}>Upravljaj prijavama</button>
                                     </div>
                                     <div className='profile-about'>
                                         <div>

@@ -1,0 +1,14 @@
+.homepage-container {
+    width: 100%;
+    max-width: 1920px;
+    height: 100%;
+}
+
+.homepage-content-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

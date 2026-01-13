@@ -1,14 +1,12 @@
-import '../styles/v-prijava-nastupa-odabir.css';
+import '../styles/o-upravljanje-prijavama.css';
 import Navbar from '../components/navbar';
-import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from '../services/apiService.jsx';
 
-function VprijavaNastupaOdabir(){
+function OupravljanjePrijavama(){
 
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -39,28 +37,24 @@ function VprijavaNastupaOdabir(){
         );
     }
 
-
-    function handleVprijavaNastupa() {
-        navigate('/voditelj/prijava-nastupa');
-    }
-
     return(
         <div className='page-container'>
-           <Navbar currentUser={currentUser} />
+            <Navbar currentUser={currentUser} />
 
             <div className='page-content-container'>
-                <div className='headboard-v'>
-                    <p>Prijava Timova</p>
+                <div className='headboard'>
+                    <p>Upravljanje prijavama</p>
                 </div>
 
-                <div className='competition-list-container'>
-                    <div className='competition'>
-                        <p>Natjecanje 1</p>
-                        <button className='prijava-button' label="1" onClick={handleVprijavaNastupa}>Prijavi se</button>
-                    </div>
-                    <div className='competition'>
-                        <p>Natjecanje 2</p>
-                        <button className='prijava-button' label="2" onClick={handleVprijavaNastupa}>Prijavi se</button>
+                <div className='competitors-list-container'>
+                    <div className='competitors-o'>
+                        <p>Ime koreografije</p>
+                        <div className='btn-container'>
+                            <button className='prijava-button' label="1">Prihvati</button>
+                            <button className='prijava-button' label="2">Odbij</button>
+                            <button className='prijava-button' label="3">Uredi</button>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -69,4 +63,4 @@ function VprijavaNastupaOdabir(){
     );
 }
 
-export default VprijavaNastupaOdabir
+export default OupravljanjePrijavama

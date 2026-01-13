@@ -21,6 +21,14 @@ import ProfileV from "./pages/profile-v.jsx";
 import VprijavaNastupaOdabir from "./pages/VprijavaNastupaOdabir.jsx";
 import VprijavaNastupa from "./pages/VprijavaNastupa.jsx";
 import VpregledNatjecanja from "./pages/VpregledNatjecanja.jsx";
+import OupravljanjePrijavamaOdabir from "./pages/OupravljanjePrijavamaOdabir.jsx";
+import OupravljanjePrijavama from "./pages/OupravljanjePrijavama.jsx";
+import RegOdabirUloga from "./pages/RegOdabirUloga.jsx";
+import Oregistracija from "./pages/Oregistracija.jsx";
+import Vregistracija from "./pages/Vregistracija.jsx";
+import Sregistracija from "./pages/Sregistracija.jsx";
+import Oplacanje from "./pages/Oplacanje.jsx";
+
 
 // Dohvati Client ID iz .env datoteke
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -35,6 +43,26 @@ const router = createBrowserRouter([
     element: <Homepage />,
   },
   {
+    path: "/registracija",
+    element: <RegOdabirUloga />,
+  },
+  {
+    path: "/registracija/organzator",
+    element: <Oregistracija />,
+  },
+  {
+    path: "/organizator/placanje",
+    element: <Oplacanje />,
+  },
+  {
+    path: "/registracija/voditelj",
+    element: <Vregistracija />,
+  },
+  {
+    path: "/registracija/sudac",
+    element: <Sregistracija />,
+  },
+  {
     path: "/login",
     element: <Login />,
   },
@@ -45,6 +73,14 @@ const router = createBrowserRouter([
   {
     path: "/profile-o",
     element: <ProfileO />,
+  },
+  {
+    path: "/organizator/upravljanje-prijavama-odabir",
+    element: <OupravljanjePrijavamaOdabir />,
+  },
+  {
+    path: "/organizator/upravljanje-prijavama",
+    element: <OupravljanjePrijavama />,
   },
   {
     path: "/sudac",

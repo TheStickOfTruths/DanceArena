@@ -14,10 +14,11 @@ class Role(models.TextChoices):
     ORGANIZER = "ORGANIZER", "Organizer"
     CLUB_MANAGER = "CLUB_MANAGER", "Club Manager"
     JUDGE = "JUDGE", "Judge"
+    ANONYMOUS = "ANONYMOUS", "Anonymous"
         
 
 class User(AbstractUser):
-    role = models.CharField(max_length=50, choices=Role.choices, default=Role.ORGANIZER)
+    role = models.CharField(max_length=50, choices=Role.choices, default=Role.ANONYMOUS)
     club_name = models.CharField(max_length=50, blank=True, null=True)
     club_location = models.CharField(max_length=50, blank=True, null=True)
     contact = models.CharField(validators=[phone_regex], max_length=20, blank=True, null=True)
@@ -38,3 +39,26 @@ class OrganizerSubscription(models.Model):
     )
     paid_subscription = models.BooleanField(default=False)
     end_date = models.DateField(null=True, blank=True, default=None)
+
+    price_paid = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+
+
+class OrganizerSubscriptionPrice(models.Model):
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Organizer Subscription Price"
+        verbose_name_plural = "Organizer Subscription Price"
+
+    def save(self, *args, **kwargs):
+        OrganizerSubscriptionPrice.objects.exclude(pk=self.pk).delete()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.price}"
