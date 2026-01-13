@@ -25,8 +25,12 @@ if not IS_RENDER:
 
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / "db.sqlite3",
+            'ENGINE': 'django.db.backends.postgresql', 
+            'NAME': 'DanceArenaLocal',
+            'USER': 'DanceArenaUser',
+            'PASSWORD': 'dancearena',
+            'HOST': 'localhost',
+            'PORT': '5432',
         }
     }
 
