@@ -16,25 +16,25 @@ from pathlib import Path
 from decouple import config
 from datetime import timedelta
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 IS_RENDER = 'RENDER' in os.environ
 DEBUG = config('DEBUG', default=False, cast=bool)
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 if not IS_RENDER:
 
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql', 
-            'NAME': 'DanceArenaLocal',
-            'USER': 'DanceArenaUser',
-            'PASSWORD': 'dancearena',
-            'HOST': 'localhost',
-            'PORT': '5432',
-        }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
 
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-    FRONTEND_URL = config('FRONTEND_URL')
+    FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:3000')
     LOGIN_REDIRECT_URL = FRONTEND_URL + '/homepage'
 
 else:
@@ -81,7 +81,7 @@ else:
     LOGIN_REDIRECT_URL = config('FRONTEND_URL') + '/homepage'
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -256,6 +256,20 @@ SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
 
+
+PAYPAL_CLIENT_ID = "AZ6qVqFLGvKfcP0DYsZcHvTrWhTNbS4rP0qNBPLjZIHjrd7fsv-V0GK7fo49eI6QuLYrbLUqDfY4op13"
+PAYPAL_CLIENT_SECRET = "EP9NyG3QHUMSeWKF5wb02JHbXGe9kj0DaKz5F7IZxsnNzmocR7yebQm345h-LG76pzMn2lCGSkIgEXVB"
+PAYPAL_API_BASE = "https://api-m.sandbox.paypal.com"
+PAYPAL_RETURN_URL = "http://localhost:8000/users/paypal/success/"
+PAYPAL_CANCEL_URL = "http://localhost:8000/users/paypal/cancel/"
+#Automatic email invites
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = 'Dance Arena <dancearenaa@gmail.com>'
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'dancearena-file-bucket'
