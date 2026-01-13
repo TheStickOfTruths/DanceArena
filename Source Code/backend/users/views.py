@@ -67,7 +67,6 @@ def current_user(request):
     refresh = RefreshToken.for_user(user)
     
     data = {
-        'flag': flag,
         'authenticated': True,
         'id': user.id,
         'username': user.username,
@@ -75,15 +74,18 @@ def current_user(request):
         'first_name': user.first_name,
         'last_name': user.last_name,
         'role': user.role,
+        'contact': user.contact,
+        'club_name': user.club_name,
+        'club_location': user.club_location,
         'access': str(refresh.access_token),
         'refresh': str(refresh),
     }
     return JsonResponse(data)
 
 
-@api_view(['POST'])
+@api_view(['PUT'])
 @permission_classes([AllowAny]) 
-def user_info(request):
+def put_user_info(request):
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
@@ -120,4 +122,83 @@ def user_info(request):
 @api_view(['POST'])
 def custom_logout(request):
     logout(request)
-    return JsonResponse({'success': "Izlogiran"}, status=200)
+    return JsonResponse({'success': "Logged out successfully."}, status=200)
+
+
+@csrf_exempt
+def create_subscription(request):
+    price_obj = OrganizerSubscriptionPrice.objects.first()
+    if not price_obj:
+        return JsonResponse({"error": "Subscription price not set"}, status=400)
+
+    access_token = get_paypal_access_token()
+
+    payload = {
+        "plan_id": price_obj.paypal_plan_id,
+        "application_context": {
+            "return_url": settings.PAYPAL_RETURN_URL,
+            "cancel_url": settings.PAYPAL_CANCEL_URL,
+        },
+    }
+
+    response = requests.post(
+        f"{settings.PAYPAL_API_BASE}/v1/billing/subscriptions",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json",
+        },
+        json=payload,
+    )
+
+    # NEW: debug instead of plain raise_for_status
+    print("PayPal subscription status:", response.status_code)
+    print("PayPal subscription body:", response.text)
+
+    try:
+        response.raise_for_status()
+    except requests.HTTPError:
+        return JsonResponse(
+            {"paypal_error": response.json()},
+            status=response.status_code,
+        )
+
+    return JsonResponse(response.json())
+
+
+@login_required
+def paypal_success(request):
+    subscription_id = request.GET.get("subscription_id")
+    if not subscription_id:
+        return JsonResponse({"error": "Missing subscription ID"}, status=400)
+
+    access_token = get_paypal_access_token()
+    resp = requests.get(
+        f"{settings.PAYPAL_API_BASE}/v1/billing/subscriptions/{subscription_id}",
+        headers={"Authorization": f"Bearer {access_token}"},
+    )
+    resp.raise_for_status()
+    data = resp.json()
+
+    # Expect ACTIVE after successful approval
+    if data.get("status") != "ACTIVE":
+        return JsonResponse({"error": "Subscription not active", "paypal_status": data.get("status")}, status=400)
+
+    # Get or create subscription record for this organizer
+    subscription, _ = OrganizerSubscription.objects.get_or_create(
+        organizer=request.user
+    )
+
+    current_price_obj = OrganizerSubscriptionPrice.objects.first()
+    current_price = current_price_obj.price if current_price_obj else None
+
+    subscription.paid_subscription = True
+    subscription.paypal_subscription_id = subscription_id
+    subscription.paypal_status = data.get("status")
+    subscription.price_paid = current_price
+    # Assuming your plan is yearly; change to months=1 if monthly
+    subscription.end_date = date.today() + relativedelta(years=1)
+    subscription.save()
+
+    # Redirect back to frontend success page
+    return redirect("http://localhost:3000/subscription-success")
+
