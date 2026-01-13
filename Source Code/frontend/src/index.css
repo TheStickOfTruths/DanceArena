@@ -10,14 +10,28 @@
 
 :root,
 .theme-original {
-  --svijetloplava: #37D2E7ff;
+  --primary: #E04594ff;
+  --secondary: #37D2E7ff;
+  --primary-darker: #8A206Aff;
+  --secondary-darker: #21519Aff;
   --bijela: #FDFEFEff;
-  --roza: #E04594ff;
-  --tamnoplava: #21519Aff;
+  --crna: black;
   --ljubičasta: #8E45B3ff;
-  --tamnoljubičasta: #8A206Aff;
+  
 }
+
+/* :root,
+.theme-dark {
+  --primary: #8A206Aff;
+  --secondary: #21519Aff;
+  --primary-darker: #E04594ff;
+  --secondary-darker: #37D2E7ff;
+  --bijela: #2C3E50ff;
+  --crna: #ECF0F1ff;
+  --ljubičasta: #5D3375ff;
+} */
 
 body {
   margin: 0;
+  background-color: var(--bijela);
 }

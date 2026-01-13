@@ -1,10 +1,11 @@
-import '../styles/profile-o.css';
+import '../styles/profile-s.css';
 import Navbar from '../components/navbar';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from '../services/apiService.jsx';
 
-function ProfileO() {
+function ProfileS(){
+
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -38,19 +39,18 @@ function ProfileO() {
         );
     }
 
-    function handleNovoNatjecanje() {
-        navigate('/novo-natjecanje');
+
+    function handleSodabirNatjecanja() {
+        navigate('/sudac/odabir-natjecanja');
     }
 
-    function handleOupravljanjePrijavamaOdabir() {
-        navigate('/organizator/upravljanje-prijavama-odabir');
-    }
-
-    return (
+    return(
         <div className='profile-container'>
-            <Navbar currentUser={currentUser} />
+             <Navbar currentUser={currentUser} />
 
             <div className='profile-content-container'>
+
+
                 {!currentUser ?
                     (
                         <div className="not-logged-in">
@@ -61,40 +61,38 @@ function ProfileO() {
                     :
                     (
                         <>
-                            <div className='headboard'>
-                                <p>Profil (Organizator)</p>
+                            <div className='headboard-s'>
+                                <p>Profil (Sudac)</p>
                             </div>
-                            <div className='profile-info'>
+                            <div className='profile-info-s'>
                                 <div className='profile-info-main'>
                                     <div className='pfp'>
-                                        <img src="./pictures/profile-icon.webp" alt="profile-picture" />
+                                        <img src="./pictures/profile-icon.webp" alt="profile-picture"/>
                                     </div>
                                     <p className='ime'>{`${currentUser.first_name} ${currentUser.last_name}`}</p>
                                 </div>
 
                                 <div className='profile-info-general'>
                                     <div className='profile-buttons'>
-                                        <button className='novo-natjecanje' onClick={handleNovoNatjecanje}>Novo Natjecanje</button>
-                                        <button className='upr-prijavama' onClick={handleOupravljanjePrijavamaOdabir}>Upravljaj prijavama</button>
+                                        <button className='prijavi-nastup' onClick={handleSodabirNatjecanja}>Ocijeni nastupe</button>
+                                        
                                     </div>
                                     <div className='profile-about'>
-                                        <div>
-                                            <p className='atribut'>Status članstva:</p>
-                                            <p className='value'>Aktivno</p>
-                                        </div>
                                         <div>
                                             <p className='atribut'>E-mail:</p>
                                             <p className='value'>{currentUser.email}</p>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
                         </>
                     )}
+                
             </div>
         </div>
-
+        
     );
 }
 
-export default ProfileO
+export default ProfileS

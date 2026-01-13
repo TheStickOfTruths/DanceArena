@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+.organizator-reg-container {
+    display: grid;
+    grid-template-rows: 10vh 90vh;
+    width: 100vw;
+}
+
+.organizator-reg-form-container {
+    display: grid;
+    grid-template-rows: auto;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    position: relative;
+    height: 90vh;
+}
+
+.headboard-v {
+    background-color: var(--secondary);
+    height: 10vh;
+    top:0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.headboard-v p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-left: 1%;
+    color: var(--secondary);
+    color: rgba(255,255,255,0.5)
+}
+
+.organizator-reg-form {
+    position: absolute;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5%;
+    margin: 0;
+    padding: 0;
+    width: 35%;
+    left: 50%;
+    transform: translate(-50%);
+    top: 20vh;
+    height: auto;
+}
+
+
+.organizator-reg-form input::placeholder {
+    color: var(--secondary-darker);
+    opacity: 50%;
+    padding: 1%;
+}
+
+.organizator-reg-form input[type='text'] {
+    height: 100%;
+    width: 60%;
+    color: var(--secondary-darker);
+    border: 1px solid color-mix(in oklab, var(--secondary-darker) 50%, white 0%);
+    border-radius: 8px;
+}
+
+.organizator-reg-form input[type='text']:hover {
+    background-color: color-mix(in oklab, var(--secondary-darker) 10%, white 100%);
+}
+
+.organizator-reg-form div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 2%;
+    height: 4vh;
+    width: 100%;
+}
+
+
+.organizator-reg-form div label {
+    color: var(--secondary-darker);
+    font-size: 0.9rem;
+    padding-bottom: 2px;
+    padding: 0;
+    padding-left: 1%;
+}
+
+
+.organizator-reg-form div:nth-child(3) {
+    padding-top: 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 2%;
+    height: 15vh;
+    width: 100%;
+}
+.organizator-reg-form div:nth-child(3) label{
+    color: color-mix(in oklab, var(--secondary-darker) 70%, white 30%);
+}
+
+.organizator-reg-form div:nth-child(3) button{
+    margin-top: 2%;
+    height: 8vh;
+    width: 20%;
+    border-style: none;
+    border-radius: 15px;
+    background-color: var(--secondary-darker);
+    font-size: 0.9rem;
+    color: white;
+}
+
+.organizator-reg-form div:nth-child(3) button:hover {
+    cursor: pointer;
+    background-color: color-mix(in oklab, var(--secondary-darker) 100%, black 30%)
+}
+
+.organizator-reg-form input[type='submit'] {
+    margin-top: 7%;
+    height: 4.5vh;
+    width: 30%;
+    border-style: none;
+    border-radius: 20px;
+    background-color: var(--secondary-darker);
+    font-size: 0.8rem;
+    color: white
+}
+
+.organizator-reg-form input[type='submit']:hover {
+    cursor: pointer;
+    background-color: color-mix(in oklab, var(--secondary-darker) 100%, black 30%)
+}

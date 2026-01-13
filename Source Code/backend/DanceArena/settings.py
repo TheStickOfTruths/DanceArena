@@ -16,6 +16,8 @@ from pathlib import Path
 from decouple import config
 from datetime import timedelta
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 IS_RENDER = 'RENDER' in os.environ
 DEBUG = config('DEBUG', default=False, cast=bool)
 
@@ -24,15 +26,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 if not IS_RENDER:
 
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql', 
-            'NAME': 'DanceArenaLocal',
-            'USER': 'DanceArenaUser',
-            'PASSWORD': 'dancearena',
-            'HOST': 'localhost',
-            'PORT': '5432',
-        }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
 
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
@@ -131,7 +129,7 @@ REST_AUTH = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=180),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
@@ -264,3 +262,30 @@ PAYPAL_CLIENT_SECRET = "EP9NyG3QHUMSeWKF5wb02JHbXGe9kj0DaKz5F7IZxsnNzmocR7yebQm3
 PAYPAL_API_BASE = "https://api-m.sandbox.paypal.com"
 PAYPAL_RETURN_URL = "http://localhost:8000/users/paypal/success/"
 PAYPAL_CANCEL_URL = "http://localhost:8000/users/paypal/cancel/"
+#Automatic email invites
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = 'Dance Arena <dancearenaa@gmail.com>'
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = 'dancearena-file-bucket'
+
+AWS_S3_REGION_NAME = 'eu-north-1' 
+AWS_S3_ADDRESSING_STYLE = "virtual"
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+AWS_DEFAULT_ACL = None 
+
+AWS_QUERYSTRING_AUTH = True 
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}

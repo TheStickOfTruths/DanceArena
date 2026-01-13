@@ -15,10 +15,11 @@ class Role(models.TextChoices):
     ORGANIZER = "ORGANIZER", "Organizer"
     CLUB_MANAGER = "CLUB_MANAGER", "Club Manager"
     JUDGE = "JUDGE", "Judge"
+    ANONYMOUS = "ANONYMOUS", "Anonymous"
         
 
 class User(AbstractUser):
-    role = models.CharField(max_length=50, choices=Role.choices, default=Role.ORGANIZER)
+    role = models.CharField(max_length=50, choices=Role.choices, default=Role.ANONYMOUS)
     club_name = models.CharField(max_length=50, blank=True, null=True)
     club_location = models.CharField(max_length=50, blank=True, null=True)
     contact = models.CharField(validators=[phone_regex], max_length=20, blank=True, null=True)

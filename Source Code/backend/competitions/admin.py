@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import AgeCategory, StyleCategory, GroupSizeCategory, \
-                    Competition, Appearance, Grade, CompetitionJudge
+                    Competition, Appearance, Grade, CompetitionJudge, MediaFile
 
 
 @admin.register(AgeCategory)
@@ -16,6 +16,13 @@ class StyleCategoryAdmin(admin.ModelAdmin):
 @admin.register(GroupSizeCategory)
 class GroupSizeCategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
+
+
+@admin.register(MediaFile)
+class MediaFileAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 'title', 'file_type', 'file', 'uploaded_at'
+    )
 
 
 @admin.register(Competition)
@@ -58,7 +65,7 @@ class AppearanceAdmin(admin.ModelAdmin):
     ordering = ('club_manager', 'id')
 
     def competition_info(self, obj):
-        return f"{obj.competition.id} - {obj.competition.location}"
+        return f"ID:{obj.competition.id} - ORGANIZER:{obj.competition.organizer}"
     competition_info.short_description = 'Competition'
 
 @admin.register(Grade)
@@ -97,5 +104,5 @@ class CompetitionJudgeAdmin(admin.ModelAdmin):
     judge_info.short_description = 'Judge'
 
     def competition_info(self, obj):
-        return f"{obj.competition.id} - {obj.competition.location}"
+        return f"ID:{obj.competition.id} - ORGANIZER:{obj.competition.organizer}"
     competition_info.short_description = 'Competition'

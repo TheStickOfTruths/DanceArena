@@ -18,4 +18,5 @@ urlpatterns = [
     path('auth/logout/', views.custom_logout, name='logout'),
     path("create-subscription/", create_subscription, name='paypal_success'),
     path("paypal/success/", paypal_success, name='create_subcription'),
+    path('auth/user_info/', views.user_info, name='user_info')
 ]

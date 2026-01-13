@@ -5,6 +5,7 @@ set -e
 echo "Starting deployment script..."
 
 echo "Applying database migrations..."
+python manage.py makemigrations
 python manage.py migrate
 
 echo "Seeding database if empty..."
