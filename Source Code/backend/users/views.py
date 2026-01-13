@@ -125,7 +125,7 @@ def create_subscription(request):
     return JsonResponse(response.json())
 
 
-@csrf_exempt  # dev only
+@login_required
 def paypal_success(request):
     subscription_id = request.GET.get("subscription_id")
     if not subscription_id:
@@ -134,10 +134,31 @@ def paypal_success(request):
     access_token = get_paypal_access_token()
     resp = requests.get(
         f"{settings.PAYPAL_API_BASE}/v1/billing/subscriptions/{subscription_id}",
-        headers={"Authorization": f"Bearer {access_token}"}
+        headers={"Authorization": f"Bearer {access_token}"},
     )
     resp.raise_for_status()
     data = resp.json()
 
-    return JsonResponse(data)  # just show what PayPal says
+    # Expect ACTIVE after successful approval
+    if data.get("status") != "ACTIVE":
+        return JsonResponse({"error": "Subscription not active", "paypal_status": data.get("status")}, status=400)
+
+    # Get or create subscription record for this organizer
+    subscription, _ = OrganizerSubscription.objects.get_or_create(
+        organizer=request.user
+    )
+
+    current_price_obj = OrganizerSubscriptionPrice.objects.first()
+    current_price = current_price_obj.price if current_price_obj else None
+
+    subscription.paid_subscription = True
+    subscription.paypal_subscription_id = subscription_id
+    subscription.paypal_status = data.get("status")
+    subscription.price_paid = current_price
+    # Assuming your plan is yearly; change to months=1 if monthly
+    subscription.end_date = date.today() + relativedelta(years=1)
+    subscription.save()
+
+    # Redirect back to frontend success page
+    return redirect("http://localhost:3000/subscription-success")
 
