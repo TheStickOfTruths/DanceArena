@@ -39,3 +39,26 @@ class OrganizerSubscription(models.Model):
     )
     paid_subscription = models.BooleanField(default=False)
     end_date = models.DateField(null=True, blank=True, default=None)
+
+    price_paid = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+
+
+class OrganizerSubscriptionPrice(models.Model):
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Organizer Subscription Price"
+        verbose_name_plural = "Organizer Subscription Price"
+
+    def save(self, *args, **kwargs):
+        OrganizerSubscriptionPrice.objects.exclude(pk=self.pk).delete()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.price}"
