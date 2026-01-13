@@ -203,6 +203,7 @@ def paypal_success(request):
     subscription.end_date = date.today() + relativedelta(years=1)
     subscription.save()
 
-    # Redirect back to frontend success page
-    return redirect("http://localhost:3000/subscription-success")
+    
+    return JsonResponse({"success": True, "paypal_status": data.get("status")})
+    
 
