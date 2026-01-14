@@ -264,8 +264,8 @@ PAYPAL_RETURN_URL = FRONTEND_URL + "/paypal-return"
 PAYPAL_CANCEL_URL = FRONTEND_URL + "/paypal-cancel"
 #Automatic email invites
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = 'dancearenaa@gmail.com'
+EMAIL_HOST_PASSWORD = 'arktwdzbzwubvvjh'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
