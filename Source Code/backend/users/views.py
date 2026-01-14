@@ -87,6 +87,8 @@ def put_user_info(request):
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Nevazeci JSON'}, status=400)
 
+    print("Primljeni podaci za ažuriranje korisnika:", data)
+
     role = data.get('role')
     try:
         with transaction.atomic():
