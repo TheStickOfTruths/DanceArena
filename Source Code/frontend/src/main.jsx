@@ -24,9 +24,6 @@ import VpregledNatjecanja from "./pages/VpregledNatjecanja.jsx";
 import OupravljanjePrijavamaOdabir from "./pages/OupravljanjePrijavamaOdabir.jsx";
 import OupravljanjePrijavama from "./pages/OupravljanjePrijavama.jsx";
 import RegOdabirUloga from "./pages/RegOdabirUloga.jsx";
-import Oregistracija from "./pages/Oregistracija.jsx";
-import Vregistracija from "./pages/Vregistracija.jsx";
-import Sregistracija from "./pages/Sregistracija.jsx";
 import Oplacanje from "./pages/Oplacanje.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
@@ -51,20 +48,8 @@ const router = createBrowserRouter([
       </ProtectedRoute>,
   },
   {
-    path: "/registracija/organzator",
-    element: <Oregistracija />,
-  },
-  {
     path: "/organizator/placanje",
     element: <Oplacanje />,
-  },
-  {
-    path: "/registracija/voditelj",
-    element: <Vregistracija />,
-  },
-  {
-    path: "/registracija/sudac",
-    element: <Sregistracija />,
   },
   {
     path: "/login",
@@ -122,7 +107,6 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    {/* GoogleOAuthProvider omogućuje korištenje Google logina u svim komponentama unutar routera */}
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <RouterProvider router={router} />
     </GoogleOAuthProvider>

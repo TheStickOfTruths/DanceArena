@@ -90,9 +90,6 @@ function RegOdabirUloga() {
         }));
     };
 
-    const isVoditelj = newUser.uloga === 'voditelj';
-    const isAnyRoleSelected = !!newUser.uloga;
-
     return (
         <div className="role-selection-container">
             <div className="role-selection-content-container">
@@ -120,7 +117,7 @@ function RegOdabirUloga() {
                 </div>
 
                 <form className='registration-form' onSubmit={handleSubmit}>
-                    {isAnyRoleSelected && (
+                    {(!!newUser.uloga) && (
                         <div className='ime'>
                             <label htmlFor='ime'>Ime i prezime: </label>
                             <input
@@ -130,11 +127,11 @@ function RegOdabirUloga() {
                                 placeholder='Unesite vaše ime i prezime'
                                 value={newUser.ime}
                                 onChange={handleChange}
-                                required={isAnyRoleSelected}
+                                required={true}
                             />
                         </div>
                     )}
-                    {isVoditelj && (
+                    {(newUser.uloga === 'voditelj') && (
                         <>
                             <div className='ime-klub'>
                                 <label htmlFor='ime-klub'>Naziv plesnog kluba: </label>
@@ -145,7 +142,7 @@ function RegOdabirUloga() {
                                     placeholder='Unesite naziv plesnog kluba'
                                     value={newUser.klub}
                                     onChange={handleChange}
-                                    required={isVoditelj}
+                                    required={newUser.uloga === 'voditelj'}
                                 />
                             </div>
                             <div className='mjesto-klub'>
@@ -157,32 +154,32 @@ function RegOdabirUloga() {
                                     placeholder='Unesite mjesto djelovanja kluba'
                                     value={newUser.mjesto}
                                     onChange={handleChange}
-                                    required={isVoditelj}
-                                />
-                            </div>
-                            <div className='telefon'>
-                                <label htmlFor='telefon'>Broj telefona: </label>
-                                <input
-                                    type='text'
-                                    id='telefon'
-                                    name='telefon'
-                                    placeholder='Unesite broj telefona'
-                                    value={newUser.telefon}
-                                    onChange={handleChange}
-                                    required={isVoditelj}
+                                    required={newUser.uloga === 'voditelj'}
                                 />
                             </div>
                         </>
                     )}
-
-                    {isAnyRoleSelected && (
+                    {(newUser.uloga === 'voditelj' || newUser.uloga === 'organizator') && (
+                        <div className='telefon'>
+                            <label htmlFor='telefon'>Broj telefona: </label>
+                            <input
+                                type='text'
+                                id='telefon'
+                                name='telefon'
+                                placeholder='Unesite broj telefona'
+                                value={newUser.telefon}
+                                onChange={handleChange}
+                                required={newUser.uloga === 'voditelj' || newUser.uloga === 'organizator'}
+                            />
+                        </div>
+                    )}
+                    {!!newUser.uloga && (
                         <input
                             type='submit'
                             className='submit-btn'
                             value='Registriraj se'
                         />
                     )}
-
                 </form>
             </div>
         </div>
