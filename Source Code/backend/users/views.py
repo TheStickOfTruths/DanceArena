@@ -60,14 +60,9 @@ def current_user(request):
     
     user = request.user
 
-    flag = False
-    if user.role == Role.ANONYMOUS:
-        flag = True
-
     refresh = RefreshToken.for_user(user)
     
     data = {
-        'flag': flag,
         'authenticated': True,
         'id': user.id,
         'username': user.username,
@@ -75,19 +70,24 @@ def current_user(request):
         'first_name': user.first_name,
         'last_name': user.last_name,
         'role': user.role,
+        'contact': user.contact,
+        'club_name': user.club_name,
+        'club_location': user.club_location,
         'access': str(refresh.access_token),
         'refresh': str(refresh),
     }
     return JsonResponse(data)
 
 
-@api_view(['POST'])
+@api_view(['PUT'])
 @permission_classes([AllowAny]) 
-def user_info(request):
+def put_user_info(request):
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Nevazeci JSON'}, status=400)
+
+    print("Primljeni podaci za ažuriranje korisnika:", data)
 
     role = data.get('role')
     try:

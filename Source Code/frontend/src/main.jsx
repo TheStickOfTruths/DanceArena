@@ -28,6 +28,7 @@ import Oregistracija from "./pages/Oregistracija.jsx";
 import Vregistracija from "./pages/Vregistracija.jsx";
 import Sregistracija from "./pages/Sregistracija.jsx";
 import Oplacanje from "./pages/Oplacanje.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 
 // Dohvati Client ID iz .env datoteke
@@ -36,7 +37,7 @@ const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/homepage" replace />, // Automatski preusmjeri s / na /homepage
+    element: <Navigate to="/homepage" replace />,
   },
   {
     path: "/homepage",
@@ -44,7 +45,10 @@ const router = createBrowserRouter([
   },
   {
     path: "/registracija",
-    element: <RegOdabirUloga />,
+    element:
+      <ProtectedRoute>
+        <RegOdabirUloga />
+      </ProtectedRoute>,
   },
   {
     path: "/registracija/organzator",
