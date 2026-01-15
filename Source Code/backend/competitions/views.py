@@ -19,7 +19,7 @@ import json
 import boto3
 
 
-def competition_live(request):
+def competition_published(request):
     data = []
     if Competition.objects.exists():
         for competition in Competition.objects.all():
@@ -88,34 +88,52 @@ def competition_create(request):
         
     except Exception as e:
         return Response({'error': str(e)}, status=500)
+    
+
+@api_view(['GET']) 
+@permission_classes([IsAuthenticated]) 
+def my_competitions(request):
+    data = []
+    if Competition.objects.filter(organizer=request.user).exists():
+        for competition in Competition.objects.filter(organizer=request.user):
+            data.append({
+            'name': competition.name,
+            'organizer': competition.organizer.first_name or competition.organizer.username,
+            'date': competition.date,
+            'location': competition.location,
+            'registration_fee': competition.registration_fee,
+            'age_categories': [cat.get_name_display() for cat in competition.age_categories.all()],
+            'style_categories': [cat.get_name_display() for cat in competition.style_categories.all()],
+            'group_size_categories': [cat.get_name_display() for cat in competition.group_size_categories.all()],
+            'status': competition.status,
+            'id': competition.id
+        })
+    
+        return JsonResponse(data, safe=False, status=200)
+    else:
+        return JsonResponse({'message':'Nema natjecanja!'}, status=200)
 
 
-def competition_detail(request, id):
-    competition = get_object_or_404(Competition, id=id)
-    appearances = Appearance.objects.get(competition=competition)
-    return HttpResponse(appearances)
-
-
-@role_required(Role.ORGANIZER)
+@api_view(['PUT']) 
+@permission_classes([IsAuthenticated]) 
 def competition_edit(request, id):
     competition = get_object_or_404(Competition, id=id)
 
     if competition.organizer != request.user:
-        return HttpResponseForbidden("Pristup zabranjen.")
+        return HttpResponseForbidden("Nisi vlasnik natjecanja.")
+    
+    if competition.status != StatusChoices.DRAFT:
+        return HttpResponseForbidden("Natjecanje nije draft.")
 
-    if request.method == 'POST':
-        for field in Competition._meta.fields:
-            attr = field.name  
-            if attr in ['id', 'status']:
-                continue
-            if request.POST.get(attr):
-                setattr(competition, attr, request.POST.get(attr))
-
-        competition.status = StatusChoices.DRAFT       
+    for field in Competition._meta.fields:
+        attr = field.name  
+        if attr in ['id', 'status']:
+            continue
+        if request.POST.get(attr):
+            setattr(competition, attr, request.POST.get(attr))
+     
         competition.save()
-        return HttpResponse(competition)
-
-    return HttpResponse("Prepravi.html")
+    return JsonResponse({"success":"Spremljene promjene"}, status=200)
 
 
 @api_view(['POST']) 
