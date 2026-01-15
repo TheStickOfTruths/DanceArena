@@ -29,12 +29,13 @@ def competition_published(request):
             data.append({
             'name': competition.name,
             'organizer': competition.organizer.first_name or competition.organizer.username,
+            'description': competition.description,
             'date': competition.date,
             'location': competition.location,
             'registration_fee': competition.registration_fee,
-            'age_categories': [cat.get_name_display() for cat in competition.age_categories.all()],
-            'style_categories': [cat.get_name_display() for cat in competition.style_categories.all()],
-            'group_size_categories': [cat.get_name_display() for cat in competition.group_size_categories.all()],
+            'age_categories': [cat.name for cat in competition.age_categories.all()],
+            'style_categories': [cat.name for cat in competition.style_categories.all()],
+            'group_size_categories': [cat.name for cat in competition.group_size_categories.all()],
             'id': competition.id
         })
     
@@ -123,12 +124,13 @@ def competition_id(request, id):
     data = {
             'name': competition.name,
             'organizer': competition.organizer.first_name or competition.organizer.username,
+            'description': competition.description,
             'date': competition.date,
             'location': competition.location,
             'registration_fee': competition.registration_fee,
-            'age_categories': [cat.get_name_display() for cat in competition.age_categories.all()],
-            'style_categories': [cat.get_name_display() for cat in competition.style_categories.all()],
-            'group_size_categories': [cat.get_name_display() for cat in competition.group_size_categories.all()],
+            'age_categories': [cat.name for cat in competition.age_categories.all()],
+            'style_categories': [cat.name for cat in competition.style_categories.all()],
+            'group_size_categories': [cat.name for cat in competition.group_size_categories.all()],
             'status': competition.status,
             'id': competition.id
         }
