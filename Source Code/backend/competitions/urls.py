@@ -3,7 +3,7 @@ from . import views
 from .views import send_judge_invite 
 
 urlpatterns = [
-    path('published/', views.competition_live, name='competition_published'),
+    path('published/', views.competition_published, name='competition_published'),
     path('new/', views.competition_create, name='competition_create'),
     path('my_competitions/', views.my_competitions, name='my_competitions'),
     path('<int:id>/edit/', views.competition_edit, name='competition_edit'),
