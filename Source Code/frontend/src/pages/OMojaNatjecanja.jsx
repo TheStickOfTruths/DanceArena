@@ -16,7 +16,6 @@ function OMojaNatjecanja() {
         const fetchData = async () => {
             try {
                 const response = await getMyCompetitions();
-                console.log("Moja natjecanja:", response);
                 setCompetitions(response);
             } catch (error) {
                 console.error("Greška pri dohvaćanju mojih natjecanja:", error);

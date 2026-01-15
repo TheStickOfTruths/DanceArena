@@ -1,12 +1,15 @@
 import React from 'react';
 import '../styles/competitionmicro.css';
 import { publishCompetition } from '../services/apiService';
+import { useNavigate } from 'react-router-dom';
 
 const CompetitionMicro = ({ competition, onUpdate }) => {
 
+    const navigate = useNavigate();
+
     const handleEdit = (e) => {
         e.stopPropagation();
-        console.log("Uredi natjecanje:", competition.name);
+        navigate(`/organizator/natjecanje/uredi/${competition.id}`);
     };
 
     const handlePublish = async (e) => {
