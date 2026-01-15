@@ -74,7 +74,7 @@ export const logoutUser = async () => {
 
 export const getLiveCompetitions = async () => {
     try {
-        const response = await api.get("/competitions/");
+        const response = await api.get("/competitions/published/");
         return response.data;
     } catch (error) {
         console.error("Greška pri dohvaćanju natjecanja:", error);
@@ -93,6 +93,28 @@ export const createNewUser = async (userData) => {
         return response.data;
     } catch (error) {
         console.error("Greška pri ažuriranju profila:", error);
+        throw error;
+    }
+};
+
+export const getMyCompetitions = async () => {
+    try {
+        const response = await api.get("/competitions/my_competitions/");
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri dohvaćanju natjecanja:", error);
+        return [];
+    }
+};
+
+export const publishCompetition = async (competitionId) => {
+    try {
+        const response = await api.post(
+            `/competitions/${competitionId}/publish/`
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri objavi natjecanja:", error);
         throw error;
     }
 };

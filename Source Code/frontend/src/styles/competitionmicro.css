@@ -1,0 +1,169 @@
+.comp-micro-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bijela);
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-left: 6px solid transparent;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.comp-micro-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+}
+
+.comp-micro-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.comp-micro-name {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--crna);
+    font-weight: 700;
+}
+
+.status-badge {
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 12px;
+    display: inline-block;
+    width: fit-content;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--bijela);
+}
+
+.status-draft {
+    background-color: var(--secondary-darker);
+}
+
+.status-draft-border {
+    border-left-color: var(--secondary-darker);
+}
+
+.status-published {
+    background-color: var(--secondary);
+    color: var(--crna);
+}
+
+.status-published-border {
+    border-left-color: var(--secondary);
+}
+
+.status-closed {
+    background-color: var(--primary-darker);
+}
+
+.status-closed-border {
+    border-left-color: var(--primary-darker);
+}
+
+.status-active {
+    background-color: var(--primary);
+}
+
+.status-active-border {
+    border-left-color: var(--primary);
+}
+
+.status-completed {
+    background-color: var(--ljubičasta);
+}
+
+.status-completed-border {
+    border-left-color: var(--ljubičasta);
+}
+
+
+.comp-micro-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.micro-btn {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: filter 0.3s ease, transform 0.1s;
+    color: var(--bijela);
+}
+
+.micro-btn:hover {
+    filter: brightness(1.1);
+}
+
+.micro-btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background-color: var(--primary);
+}
+
+.btn-primary-darker {
+    background-color: var(--primary-darker);
+}
+
+.btn-secondary {
+    background-color: var(--secondary);
+    color: var(--crna);
+}
+
+.btn-secondary-darker {
+    background-color: var(--secondary-darker);
+}
+
+.btn-purple {
+    background-color: var(--ljubičasta);
+}
+
+@media (max-width: 600px) {
+    .comp-micro-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        border-left: none;
+        border-top: 6px solid transparent;
+    }
+
+    .status-draft-border {
+        border-top-color: var(--secondary-darker);
+    }
+
+    .status-published-border {
+        border-top-color: var(--secondary);
+    }
+
+    .status-closed-border {
+        border-top-color: var(--primary-darker);
+    }
+
+    .status-active-border {
+        border-top-color: var(--primary);
+    }
+
+    .status-completed-border {
+        border-top-color: var(--ljubičasta);
+    }
+
+    .comp-micro-actions {
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .micro-btn {
+        width: 100%;
+    }
+}

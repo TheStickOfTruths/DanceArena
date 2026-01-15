@@ -19,12 +19,12 @@ import SocijeniNatjecanje from "./pages/SocijeniNatjecanje.jsx";
 import VprijavaNastupaOdabir from "./pages/VprijavaNastupaOdabir.jsx";
 import VprijavaNastupa from "./pages/VprijavaNastupa.jsx";
 import VpregledNatjecanja from "./pages/VpregledNatjecanja.jsx";
-import OupravljanjePrijavamaOdabir from "./pages/OupravljanjePrijavamaOdabir.jsx";
 import OupravljanjePrijavama from "./pages/OupravljanjePrijavama.jsx";
 import RegOdabirUloga from "./pages/RegOdabirUloga.jsx";
 import Oplacanje from "./pages/Oplacanje.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import ProfileWrapper from "./components/ProfileWrapper.jsx";
+import OMojaNatjecanja from "./pages/OMojaNatjecanja.jsx";
 
 
 // Dohvati Client ID iz .env datoteke
@@ -76,10 +76,10 @@ const router = createBrowserRouter([
       </ProtectedRoute>,
   },
   {
-    path: "/organizator/upravljanje-prijavama-odabir",
+    path: "/organizator/moja-natjecanja",
     element:
       <ProtectedRoute>
-        <OupravljanjePrijavamaOdabir />
+        <OMojaNatjecanja />
       </ProtectedRoute>,
   },
   {

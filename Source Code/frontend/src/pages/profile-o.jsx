@@ -22,6 +22,10 @@ function ProfileO() {
         navigate('/organizator/novo-natjecanje');
     }
 
+    function handleOMojaNatjecanja() {
+        navigate('/organizator/moja-natjecanja');
+    }
+
     function handleOupravljanjePrijavamaOdabir() {
         navigate('/organizator/upravljanje-prijavama-odabir');
     }
@@ -46,7 +50,8 @@ function ProfileO() {
                     <div className='profile-info-general'>
                         <div className='profile-buttons'>
                             <button className='novo-natjecanje' onClick={handleNovoNatjecanje}>Novo Natjecanje</button>
-                            <button className='upr-prijavama' onClick={handleOupravljanjePrijavamaOdabir}>Upravljaj prijavama</button>
+                            <button className='upr-prijavama' onClick={handleOMojaNatjecanja}>Moja Natjecanja</button>
+                            <button className='upr-prijavama' onClick={handleOupravljanjePrijavamaOdabir}>Objavljena natjecanja</button>
                         </div>
                         <div className='profile-about'>
                             <div>
