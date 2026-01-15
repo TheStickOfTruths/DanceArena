@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, get_object_or_404
 from django.conf import settings
-from django.http import HttpResponseForbidden, HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.db import transaction
 from .models import Competition, Appearance, Grade, CompetitionJudge, \
                     StatusChoices, AgeCategory, StyleCategory, GroupSizeCategory, MediaFile
@@ -9,7 +9,6 @@ from users.models import User, Role
 from users.decorators import role_required
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework import status
@@ -19,6 +18,7 @@ import json
 import boto3
 
 
+@api_view(['GET'])
 def competition_published(request):
     data = []
     publishedStatuses = [StatusChoices.PUBLISHED, StatusChoices.CLOSED_APPLICATIONS]
@@ -67,10 +67,8 @@ def my_competitions(request):
 
 @api_view(['POST']) 
 @permission_classes([IsAuthenticated]) 
+@role_required(Role.ORGANIZER)
 def competition_create(request):
-    if request.user.role != 'ORGANIZER':
-        return JsonResponse({"error": "Samo organizatori mogu kreirati natjecanja"}, status=403)
-
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
@@ -145,7 +143,7 @@ def competition_edit(request, id):
         return JsonResponse({"error":"Nisi vlasnik natjecanja."}, status=403)
     
     if competition.status != StatusChoices.DRAFT:
-        return JsonResponse({"error":"Natjecanje nije draft."}, status=403)
+        return JsonResponse({"error":"Natjecanje nije draft."}, status=401)
 
     for field in Competition._meta.fields:
         attr = field.name  
@@ -156,10 +154,10 @@ def competition_edit(request, id):
      
         competition.save()
 
-    return JsonResponse({"success":"Spremljene promjene"}, status=200)
+    return JsonResponse({"success":"Spremljene promjene"}, status=201)
 
 
-@api_view(['POST']) 
+@api_view(['PUT']) 
 @permission_classes([IsAuthenticated]) 
 def competition_publish(request, id):
     competition = get_object_or_404(Competition, id=id)
@@ -167,8 +165,8 @@ def competition_publish(request, id):
     if competition.organizer != request.user:
         return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
 
-    if competition.status != StatusChoices.PUBLISHED:
-        return JsonResponse({"error": "Natjecanje nije objavljeno."}, status=403)
+    if competition.status != StatusChoices.DRAFT:
+        return JsonResponse({"error": "Natjecanje nije draft."}, status=401)
 
     competition.status = StatusChoices.PUBLISHED
     competition.save()
@@ -194,13 +192,13 @@ def competition_close_applications(request, id):
     return JsonResponse({"success":"Zatvorene prijave.", "starting_list":link}, status=200)
 
 
-@api_view(['POST']) 
+@api_view(['PUT']) 
 @permission_classes([IsAuthenticated])
 def competition_activate(request, id):
     competition = get_object_or_404(Competition, id=id)
-
-    if competition.organizer != request.user:
-        return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
+    
+    if competition.status != StatusChoices.CLOSED_APPLICATIONS:
+        return JsonResponse({"error": "Nisu završile prijave."}, status=403)
 
     if not CompetitionJudge.objects.filter(competition=competition).exists():
         return JsonResponse({"error":"Nema sudaca."}, status=401)
@@ -250,7 +248,7 @@ def invite_judge(request, id):
         return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
     
     if competition.status != StatusChoices.PUBLISHED:
-        return JsonResponse({"error": "Natjecanje nije objavljeno."}, status=403)
+        return JsonResponse({"error": "Natjecanje nije objavljeno."}, status=401)
 
     email = request.POST.get('email')
     if not User.objects.filter(email=email).exists():
@@ -291,76 +289,80 @@ def competition_grade(request, competition_id, appearance_id):
     return JsonResponse({"success": "Nastup ocijenjen."}, status=201)
 
 
-@role_required(Role.ORGANIZER)
+@api_view(['POST']) 
+@permission_classes([IsAuthenticated])
 def competition_complete(request, id):
     competition = get_object_or_404(Competition, id=id)
 
     if competition.organizer != request.user:
-        return HttpResponseForbidden("Pristup zabranjen.")
+        return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
 
-    if request.method == 'POST':
-        competition.status = StatusChoices.COMPLETED
-        competition.save()
-        return HttpResponse(competition)
+    if competition.status != StatusChoices.ACTIVE:
+        return JsonResponse({"error": "Natjecanje nije aktivno."}, status=401)
+    
+    competition.status = StatusChoices.COMPLETED
+    competition.save()
 
-    return HttpResponse("Završi.html")
+    return JsonResponse({"success": "Natjecanje završeno"}, status=201)
 
 
 def competition_results(request, id):
     competition = get_object_or_404(Competition, id=id)
     if competition.status != StatusChoices.COMPLETED:
-        return HttpResponseForbidden("Natjecanje nije gotovo.")
-    
+        return JsonResponse({"error": "Natjecanje nije gotovo."}, status=401)
+
     results = generate_results(competition)
 
     return JsonResponse(results)
 
 
-@role_required(Role.CLUB_MANAGER)
+@api_view(['GET']) 
+@permission_classes([IsAuthenticated])
 def competition_appearance_results(request, competition_id, appearance_id):
     competition = get_object_or_404(Competition, id=competition_id)
+
     if competition.status != StatusChoices.COMPLETED:
-        return HttpResponseForbidden("Natjecanje nije gotovo.")
+        return JsonResponse({"error": "Natjecanje nije gotovo"}, status=401)
     
     appearance = get_object_or_404(Appearance, id=appearance_id)
     
-    #if appearance.club_manager != request.user:
-    #    return HttpResponseForbidden("Pristup zabranjen")
+    if appearance.club_manager != request.user:
+        return JsonResponse({"error": "Nije tvoj nastup"}, status=403)
     
     grades = generate_grades(appearance)
 
     return JsonResponse(grades)
 
 
+@api_view(['POST']) 
+@permission_classes([IsAuthenticated])
 @role_required(Role.CLUB_MANAGER)
 def competition_signup(request, id):
     competition = get_object_or_404(Competition, id=id)
 
-    if request.method == 'POST':
-        if competition.status != StatusChoices.PUBLISHED:
-            return HttpResponseForbidden("Prijava nije moguća.")
+    if competition.status != StatusChoices.PUBLISHED:
+        return JsonResponse({"error": "Natjecanje nije objavljeno"}, status=401)
         
-        appearance = Appearance()
-        for field in Appearance._meta.fields:
-            attr = field.name  
-            if attr in ['id', 'club_manager', 'competition']:
-                continue
-            if request.POST.get(attr):
-                setattr(appearance, attr, request.POST.get(attr))
-            else:
-                return HttpResponseForbidden("Nepotpuna prijava.")
+    appearance = Appearance()
+    for field in Appearance._meta.fields:
+        attr = field.name  
+        if attr in ['id', 'club_manager', 'competition']:
+            continue
+        elif request.POST.get(attr):
+            setattr(appearance, attr, request.POST.get(attr))
+        else:
+            return JsonResponse({"error": "Nepotpuna prijava."}, status=401)
 
-        if appearance.age_category not in competition.age_categories\
-            or appearance.style_category not in competition.style_categories\
-            or appearance.group_size_category not in competition.group_size_categories:
-            return HttpResponseForbidden("Nepodrzana kategorija.")
-        appearance.club_manager = request.user
-        appearance.competition = competition
-        appearance.save()
-
-        return HttpResponse(appearance)
+    if appearance.age_category not in competition.age_categories\
+        or appearance.style_category not in competition.style_categories\
+        or appearance.group_size_category not in competition.group_size_categories:
+        return JsonResponse({"error": "Nepodrzana kategorija."}, status=401)
     
-    return HttpResponse("Prijavi nastup.html")
+    appearance.club_manager = request.user
+    appearance.competition = competition
+    appearance.save()
+
+    return JsonResponse({"success": "Prijavljen nastup"}, status=201)
 
 
 @api_view(['PUT']) 
@@ -368,6 +370,9 @@ def competition_signup(request, id):
 def competition_accept_appearance(request, competition_id, appearance_id):
     competition = get_object_or_404(Competition, id=competition_id)
     appearance = get_object_or_404(Appearance, id=appearance_id)
+
+    if competition.organizer != request.user:
+        return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
 
     if competition.status != StatusChoices.PUBLISHED:
         return JsonResponse({"error":"Natjecanje nije objavljeno."}, status=403)
