@@ -131,7 +131,7 @@ def competition_id(request, id):
             'id': competition.id
         }
     
-    return JsonResponse({"success": "Poslano natjecanje."}, data)
+    return JsonResponse(data, status=200)
 
 
 @api_view(['PUT']) 
