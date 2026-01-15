@@ -2,9 +2,11 @@ import "../styles/login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import { loginWithGoogle, getCurrentUser } from "../services/apiService";
+import { useAuth } from "../context/AuthContext.jsx";
 
 function Login() {
 	const navigate = useNavigate();
+	const { refreshUser } = useAuth();
 
 	const login = useGoogleLogin({
 		onSuccess: async (tokenResponse) => {
@@ -12,6 +14,8 @@ function Login() {
 				console.log("Google response:", tokenResponse);
 
 				await loginWithGoogle(tokenResponse.access_token);
+
+				await refreshUser();
 
 				const user = await getCurrentUser();
 

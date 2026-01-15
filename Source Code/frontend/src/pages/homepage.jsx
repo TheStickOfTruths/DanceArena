@@ -3,13 +3,11 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Navbar from "../components/navbar.jsx";
 import CompetitionMini from "../components/competitionmini.jsx";
-import {
-  getCurrentUser,
-  getLiveCompetitions,
-} from "../services/apiService.jsx";
+import { getLiveCompetitions } from "../services/apiService.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 function Homepage() {
-  const [currentUser, setCurrentUser] = useState(null);
+  const { user: currentUser } = useAuth();
   const [loading, setLoading] = useState(true);
   const [competitions, setCompetitions] = useState([]);
 
@@ -18,12 +16,6 @@ function Homepage() {
       try {
         const competitionsData = await getLiveCompetitions();
         setCompetitions(competitionsData);
-
-        const response = await getCurrentUser();
-
-        if (response) {
-          setCurrentUser(response);
-        }
       } catch (error) {
         console.error("Greška u homepage.jsx:", error);
       } finally {

@@ -1,10 +1,12 @@
 import '../styles/reg-odabir-uloga.css';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getCurrentUser, createNewUser } from '../services/apiService';
+import { createNewUser } from '../services/apiService';
+import { useAuth } from "../context/AuthContext.jsx";
 
 function RegOdabirUloga() {
     const navigate = useNavigate();
+    const { user, refreshUser } = useAuth();
 
     const [newUser, setNewUser] = useState({
         uloga: '',
@@ -15,21 +17,19 @@ function RegOdabirUloga() {
     });
 
     useEffect(() => {
-        const checkUserStatus = async () => {
-            try {
-                const user = await getCurrentUser();
-                if (user?.role && user.role !== "ANONYMOUS") {
-                    navigate("/homepage");
-                }
-            } catch (error) {
-                console.error("Greška pri provjeri korisnika:", error);
-            }
-        };
-        checkUserStatus();
-    }, [navigate]);
+        if (user?.role && user.role !== "ANONYMOUS") {
+            navigate("/homepage");
+        }
+    }, [user, navigate]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        // Dozvoli samo numeričke unose i + za polje 'telefon'
+        if (name === 'telefon' && !/^[+]?\d*$/.test(value)) {
+            return;
+        }
+
         setNewUser((prevState) => ({
             ...prevState,
             [name]: value
@@ -74,6 +74,7 @@ function RegOdabirUloga() {
 
             if (response) {
                 console.log("Registracija uspješna:", response);
+                await refreshUser();
                 navigate('/homepage');
             }
 
@@ -159,7 +160,7 @@ function RegOdabirUloga() {
                             </div>
                         </>
                     )}
-                    {(newUser.uloga === 'voditelj' || newUser.uloga === 'organizator') && (
+                    {(newUser.uloga === 'organizator') && (
                         <div className='telefon'>
                             <label htmlFor='telefon'>Broj telefona: </label>
                             <input
