@@ -153,8 +153,8 @@ def competition_edit(request, id):
         attr = field.name  
         if attr in ['id', 'status']:
             continue
-        if request.POST.get(attr):
-            setattr(competition, attr, request.POST.get(attr))
+        if request.data(attr):
+            setattr(competition, attr, request.data(attr))
      
         competition.save()
 
