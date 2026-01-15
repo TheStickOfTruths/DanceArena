@@ -174,6 +174,7 @@ class Appearance(models.Model):
         GroupSizeCategory, 
         on_delete=models.PROTECT
     )
+    accepted = models.BooleanField(default=False)
     paid_registration = models.BooleanField(default=False)
 
     def __str__(self):
