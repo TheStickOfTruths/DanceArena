@@ -173,7 +173,7 @@ def competition_edit(request, id):
                 competition.style_categories.set(ids)
             elif attr == 'group_size_categories':
                 ids = GroupSizeCategory.objects.filter(name__in=categories_names).values_list('id', flat=True)
-                competition.style_categories.set(ids)
+                competition.group_size_categories.set(ids)
 
     return JsonResponse({"success":"Spremljene promjene"}, status=201)
 
