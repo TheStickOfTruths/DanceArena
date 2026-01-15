@@ -156,7 +156,24 @@ def competition_edit(request, id):
         if attr in request.data:
             setattr(competition, attr, request.data.get(attr))
      
-        competition.save()
+    competition.save() 
+
+
+    m2m_fields = ['age_categories', 'style_categories', 'group_size_categories']
+
+    for attr in m2m_fields:
+        if attr in request.data:
+            categories_names = request.data.get(attr) 
+            
+            if attr == 'age_categories':
+                ids = AgeCategory.objects.filter(name__in=categories_names).values_list('id', flat=True)
+                competition.age_categories.set(ids)
+            elif attr == 'style_categories':
+                ids = StyleCategory.objects.filter(name__in=categories_names).values_list('id', flat=True)
+                competition.style_categories.set(ids)
+            elif attr == 'group_size_categories':
+                ids = GroupSizeCategory.objects.filter(name__in=categories_names).values_list('id', flat=True)
+                competition.style_categories.set(ids)
 
     return JsonResponse({"success":"Spremljene promjene"}, status=201)
 
