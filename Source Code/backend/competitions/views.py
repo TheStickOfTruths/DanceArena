@@ -18,8 +18,10 @@ import json
 import boto3
 
 
-@api_view(['GET'])
 def competition_published(request):
+    if request.method != 'GET':
+        return JsonResponse({"error": "Nije get metoda."}, status=405)
+    
     data = []
     publishedStatuses = [StatusChoices.PUBLISHED, StatusChoices.CLOSED_APPLICATIONS]
     if Competition.objects.filter(status__in=publishedStatuses).exists():
