@@ -326,13 +326,13 @@ def competition_signup(request, id):
         if competition.status != StatusChoices.PUBLISHED:
             return HttpResponseForbidden("Prijava nije moguća.")
 
-        # Here you will assume PayPal is already paid OR you are in the new flow
+        
         try:
             appearance = _create_appearance_from_request(request, competition)
         except ValueError as e:
             return HttpResponseForbidden(str(e))
 
-        # In the PayPal flow, you will override paid_registration in confirm_entry
+        
         appearance.save()
         return HttpResponse(appearance)
 
@@ -449,16 +449,16 @@ def capture_paypal_order(order_id):
 def confirm_entry(request, competition_id):
     user = request.user
 
-    # 1. Read data from request
+    
     order_id = request.data.get("orderID")
     choreography = request.data.get("choreography")
-    length_str = request.data.get("length")  # e.g. "00:03:00"
+    length_str = request.data.get("length")  
     choreograph = request.data.get("choreograph")
     age_category_id = request.data.get("age_category")
     style_category_id = request.data.get("style_category")
     group_size_category_id = request.data.get("group_size_category")
 
-    # Basic validation
+    
     if not all(
         [
             order_id,
@@ -475,10 +475,10 @@ def confirm_entry(request, competition_id):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    # 2. Convert length string -> timedelta for DurationField.[web:194]
+    
     length = parse_duration(length_str)
     if length is None:
-        # Fallback if format is strictly "HH:MM:SS"
+        
         try:
             h, m, s = map(int, length_str.split(":"))
             length = timedelta(hours=h, minutes=m, seconds=s)
@@ -488,19 +488,17 @@ def confirm_entry(request, competition_id):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-    # 3. Load competition and categories
+    
     competition = get_object_or_404(Competition, pk=competition_id)
     age_category = get_object_or_404(AgeCategory, pk=age_category_id)
     style_category = get_object_or_404(StyleCategory, pk=style_category_id)
     group_size_category = get_object_or_404(GroupSizeCategory, pk=group_size_category_id)
 
-    # Optional: validate categories belong to this competition if you have M2M relations
-
-    # 4. Capture PayPal order (only once, after buyer approval).[web:198][web:195]
+    
     try:
         capture_result = capture_paypal_order(order_id)
     except requests.HTTPError as e:
-        # Bubble up PayPal error details
+        
         try:
             error_json = e.response.json()
         except Exception:
@@ -510,7 +508,7 @@ def confirm_entry(request, competition_id):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    # Check PayPal status
+    
     status_str = capture_result.get("status")
     if status_str not in ["COMPLETED", "APPROVED"]:
         return Response(
@@ -521,10 +519,10 @@ def confirm_entry(request, competition_id):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    # 5. Create Appearance
+    
     appearance = Appearance(
         competition=competition,
-        club_manager=user,  # assumes FK to custom user model
+        club_manager=user,  
         choreography=choreography,
         length=length,
         choreograph=choreograph,
@@ -552,7 +550,7 @@ def _create_appearance_from_request(request, competition):
 
     appearance = Appearance()
 
-    # Simple fields
+    
     appearance.choreography = data.get("choreography")
     appearance.length = data.get("length")
     appearance.choreograph = data.get("choreograph")
@@ -560,7 +558,7 @@ def _create_appearance_from_request(request, competition):
     if not all([appearance.choreography, appearance.length, appearance.choreograph]):
         raise ValueError("Nepotpuna prijava.")
 
-    # Foreign keys: look up objects by ID
+    
     try:
         age_id = data.get("age_category")
         style_id = data.get("style_category")
@@ -572,12 +570,12 @@ def _create_appearance_from_request(request, competition):
     except (AgeCategory.DoesNotExist, StyleCategory.DoesNotExist, GroupSizeCategory.DoesNotExist):
         raise ValueError("Nepotpuna prijava.")
 
-    # Optional music
+    
     music_id = data.get("music")
     if music_id:
-        appearance.music_id = music_id  # or MediaFile.objects.get(id=music_id)
+        appearance.music_id = music_id  
 
-    # Validate categories belong to this competition
+    
     if (appearance.age_category not in competition.age_categories.all() or
         appearance.style_category not in competition.style_categories.all() or
         appearance.group_size_category not in competition.group_size_categories.all()):
