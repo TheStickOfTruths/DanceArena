@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import send_judge_invite 
+from .views import send_judge_invite, create_entry_order, confirm_entry
 
 urlpatterns = [
     path('', views.competition_live, name='competition_live'),
@@ -22,4 +22,7 @@ urlpatterns = [
         views.competition_appearance_results, name='competition_appearance_results'),
     path('<int:id>/signup/', views.competition_signup, name='competition_signup'),
     path('invite-judge/', send_judge_invite, name='send_judge_invite'),
+    path('<int:competition_id>/confirm-entry/', confirm_entry, name='confirm_entry'),
+    path('<int:id>/create-entry-order/', create_entry_order, name='create_entry_order'),
+    
 ]

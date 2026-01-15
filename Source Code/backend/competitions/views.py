@@ -17,6 +17,13 @@ import uuid
 from rest_framework.permissions import AllowAny
 import json
 import boto3
+from users.paypal_orders import create_paypal_order
+import requests
+from users.paypal import get_paypal_access_token
+from django.utils.dateparse import parse_duration
+from datetime import timedelta
+
+
 
 
 def competition_live(request):
@@ -311,34 +318,26 @@ def competition_appearance_results(request, competition_id, appearance_id):
 
 
 @role_required(Role.CLUB_MANAGER)
+@role_required(Role.CLUB_MANAGER)
 def competition_signup(request, id):
     competition = get_object_or_404(Competition, id=id)
 
     if request.method == 'POST':
         if competition.status != StatusChoices.PUBLISHED:
             return HttpResponseForbidden("Prijava nije moguća.")
-        
-        appearance = Appearance()
-        for field in Appearance._meta.fields:
-            attr = field.name  
-            if attr in ['id', 'club_manager', 'competition']:
-                continue
-            if request.POST.get(attr):
-                setattr(appearance, attr, request.POST.get(attr))
-            else:
-                return HttpResponseForbidden("Nepotpuna prijava.")
 
-        if appearance.age_category not in competition.age_categories\
-            or appearance.style_category not in competition.style_categories\
-            or appearance.group_size_category not in competition.group_size_categories:
-            return HttpResponseForbidden("Nepodrzana kategorija.")
-        appearance.club_manager = request.user
-        appearance.competition = competition
+        # Here you will assume PayPal is already paid OR you are in the new flow
+        try:
+            appearance = _create_appearance_from_request(request, competition)
+        except ValueError as e:
+            return HttpResponseForbidden(str(e))
+
+        # In the PayPal flow, you will override paid_registration in confirm_entry
         appearance.save()
-
         return HttpResponse(appearance)
-    
+
     return HttpResponse("Prijavi nastup.html")
+
 
 
 @api_view(['POST'])
@@ -414,3 +413,180 @@ def download_media(request, file_id):
     s3_url = generate_s3_url(media_item.file.name, link_type=action_type)
 
     return redirect(s3_url)
+
+
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def create_entry_order(request, id):
+    competition = get_object_or_404(Competition, id=id)
+
+    if request.user.role != Role.CLUB_MANAGER:
+        return Response({"error": "Only club managers can register."}, status=403)
+
+    amount = competition.registration_fee
+    order = create_paypal_order(
+        amount=float(amount),
+        currency="EUR",
+        description=f"Entry fee for competition {competition.name}"
+    )
+    return Response(order)
+
+def capture_paypal_order(order_id):
+    access_token = get_paypal_access_token()
+    url = f"https://api-m.sandbox.paypal.com/v2/checkout/orders/{order_id}/capture"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {access_token}",
+    }
+    resp = requests.post(url, headers=headers)
+    resp.raise_for_status()
+    return resp.json()
+
+@api_view(['POST'])
+@permission_classes([AllowAny])   
+def confirm_entry(request, competition_id):
+    user = request.user
+
+    # 1. Read data from request
+    order_id = request.data.get("orderID")
+    choreography = request.data.get("choreography")
+    length_str = request.data.get("length")  # e.g. "00:03:00"
+    choreograph = request.data.get("choreograph")
+    age_category_id = request.data.get("age_category")
+    style_category_id = request.data.get("style_category")
+    group_size_category_id = request.data.get("group_size_category")
+
+    # Basic validation
+    if not all(
+        [
+            order_id,
+            choreography,
+            length_str,
+            choreograph,
+            age_category_id,
+            style_category_id,
+            group_size_category_id,
+        ]
+    ):
+        return Response(
+            {"detail": "Nepotpuna prijava."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    # 2. Convert length string -> timedelta for DurationField.[web:194]
+    length = parse_duration(length_str)
+    if length is None:
+        # Fallback if format is strictly "HH:MM:SS"
+        try:
+            h, m, s = map(int, length_str.split(":"))
+            length = timedelta(hours=h, minutes=m, seconds=s)
+        except Exception:
+            return Response(
+                {"detail": "Neispravan format trajanja. Koristi HH:MM:SS."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+    # 3. Load competition and categories
+    competition = get_object_or_404(Competition, pk=competition_id)
+    age_category = get_object_or_404(AgeCategory, pk=age_category_id)
+    style_category = get_object_or_404(StyleCategory, pk=style_category_id)
+    group_size_category = get_object_or_404(GroupSizeCategory, pk=group_size_category_id)
+
+    # Optional: validate categories belong to this competition if you have M2M relations
+
+    # 4. Capture PayPal order (only once, after buyer approval).[web:198][web:195]
+    try:
+        capture_result = capture_paypal_order(order_id)
+    except requests.HTTPError as e:
+        # Bubble up PayPal error details
+        try:
+            error_json = e.response.json()
+        except Exception:
+            error_json = {"message": str(e)}
+        return Response(
+            {"detail": "Greška kod PayPal naplate.", "paypal_error": error_json},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    # Check PayPal status
+    status_str = capture_result.get("status")
+    if status_str not in ["COMPLETED", "APPROVED"]:
+        return Response(
+            {
+                "detail": "Plaćanje nije potvrđeno.",
+                "paypal_status": status_str,
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    # 5. Create Appearance
+    appearance = Appearance(
+        competition=competition,
+        club_manager=user,  # assumes FK to custom user model
+        choreography=choreography,
+        length=length,
+        choreograph=choreograph,
+        age_category=age_category,
+        style_category=style_category,
+        group_size_category=group_size_category,
+        paid_registration=True,
+        
+    )
+    appearance.save()
+
+    return Response(
+        {
+            "success": True,
+            "appearance_id": appearance.id,
+            "paypal_status": status_str,
+        },
+        status=status.HTTP_201_CREATED,
+    )
+
+
+
+def _create_appearance_from_request(request, competition):
+    data = request.data
+
+    appearance = Appearance()
+
+    # Simple fields
+    appearance.choreography = data.get("choreography")
+    appearance.length = data.get("length")
+    appearance.choreograph = data.get("choreograph")
+
+    if not all([appearance.choreography, appearance.length, appearance.choreograph]):
+        raise ValueError("Nepotpuna prijava.")
+
+    # Foreign keys: look up objects by ID
+    try:
+        age_id = data.get("age_category")
+        style_id = data.get("style_category")
+        group_id = data.get("group_size_category")
+
+        appearance.age_category = AgeCategory.objects.get(id=age_id)
+        appearance.style_category = StyleCategory.objects.get(id=style_id)
+        appearance.group_size_category = GroupSizeCategory.objects.get(id=group_id)
+    except (AgeCategory.DoesNotExist, StyleCategory.DoesNotExist, GroupSizeCategory.DoesNotExist):
+        raise ValueError("Nepotpuna prijava.")
+
+    # Optional music
+    music_id = data.get("music")
+    if music_id:
+        appearance.music_id = music_id  # or MediaFile.objects.get(id=music_id)
+
+    # Validate categories belong to this competition
+    if (appearance.age_category not in competition.age_categories.all() or
+        appearance.style_category not in competition.style_categories.all() or
+        appearance.group_size_category not in competition.group_size_categories.all()):
+        raise ValueError("Nepodrzana kategorija.")
+
+    appearance.club_manager = request.user if request.user.is_authenticated else None
+    appearance.competition = competition
+    return appearance
+
+
+
+
