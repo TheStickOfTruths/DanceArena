@@ -21,8 +21,9 @@ import boto3
 
 def competition_published(request):
     data = []
-    if Competition.objects.exists():
-        for competition in Competition.objects.all():
+    publishedStatuses = [StatusChoices.PUBLISHED, StatusChoices.CLOSED_APPLICATIONS]
+    if Competition.objects.filter(status__in=publishedStatuses).exists():
+        for competition in Competition.objects.filter(status__in=publishedStatuses):
             data.append({
             'name': competition.name,
             'organizer': competition.organizer.first_name or competition.organizer.username,
