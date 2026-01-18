@@ -87,7 +87,7 @@ def current_user(request):
 
 @api_view(['PUT'])
 @permission_classes([AllowAny]) 
-def put_user_info(request):
+def user_info(request):
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
