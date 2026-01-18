@@ -44,6 +44,7 @@
     cursor: pointer;
 
 }
+
 .role-card-v {
     background-color: var(--primary-darker);
     display: flex;
@@ -56,6 +57,7 @@
     cursor: pointer;
 
 }
+
 .role-card-s {
     background-color: var(--primary);
     display: flex;
@@ -79,7 +81,7 @@
 
 .registration-form {
     position: absolute;
-    display:flex;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -119,7 +121,6 @@
     margin-bottom: 2%;
     height: 4vh;
     width: 100%;
-    display: none;
 }
 
 
@@ -140,7 +141,6 @@
     background-color: var(--primary-darker);
     font-size: 0.8rem;
     color: white;
-    display: none;
 }
 
 .registration-form input[type='submit']:hover {

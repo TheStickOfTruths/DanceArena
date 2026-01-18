@@ -149,8 +149,7 @@ class Appearance(models.Model):
         settings.AUTH_USER_MODEL,
         limit_choices_to={'role': 'CLUB_MANAGER'},
         on_delete=models.CASCADE,
-        related_name='appearances',
-        null=True
+        related_name='appearances'
     )
     choreography = models.CharField(max_length=50)
     length = models.DurationField()
@@ -174,6 +173,7 @@ class Appearance(models.Model):
         GroupSizeCategory, 
         on_delete=models.PROTECT
     )
+    accepted = models.BooleanField(default=False)
     paid_registration = models.BooleanField(default=False)
 
     def __str__(self):

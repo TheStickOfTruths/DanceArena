@@ -52,7 +52,7 @@ class CompetitionAdmin(admin.ModelAdmin):
 class AppearanceAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'competition_info', 'club_manager__username', 'paid_registration', 
-        'choreography', 'choreograph',
+        'accepted', 'choreography', 'choreograph',
         'age_category', 'style_category', 'group_size_category'
     )
     search_fields = (
