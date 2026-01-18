@@ -45,6 +45,9 @@ function NovoNatjecanje() {
     });
 
     useEffect(() => {
+        if (currentUser.role !== 'ORGANIZER') {
+            navigate('/');
+        }
         if (isEditMode) {
             const fetchData = async () => {
                 try {

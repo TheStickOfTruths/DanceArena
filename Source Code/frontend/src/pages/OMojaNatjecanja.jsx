@@ -13,6 +13,9 @@ function OMojaNatjecanja() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (currentUser.role !== 'ORGANIZER') {
+            navigate('/');
+        }
         const fetchData = async () => {
             try {
                 const response = await getMyCompetitions();

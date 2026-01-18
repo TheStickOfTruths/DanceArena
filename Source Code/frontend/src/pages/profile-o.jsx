@@ -51,7 +51,6 @@ function ProfileO() {
                         <div className='profile-buttons'>
                             <button className='novo-natjecanje' onClick={handleNovoNatjecanje}>Novo Natjecanje</button>
                             <button className='upr-prijavama' onClick={handleOMojaNatjecanja}>Moja Natjecanja</button>
-                            <button className='upr-prijavama' onClick={handleOupravljanjePrijavamaOdabir}>Objavljena natjecanja</button>
                         </div>
                         <div className='profile-about'>
                             <div>
