@@ -69,6 +69,14 @@ const router = createBrowserRouter([
       </ProtectedRoute>,
   },
   {
+    path: "/organizator/natjecanje/uredi/:id",
+    element: (
+      <ProtectedRoute>
+        <NovoNatjecanje />
+      </ProtectedRoute>
+    ),
+  },
+  {
     path: "/organizator/placanje",
     element:
       <ProtectedRoute>

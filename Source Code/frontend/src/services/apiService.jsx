@@ -109,12 +109,35 @@ export const getMyCompetitions = async () => {
 
 export const publishCompetition = async (competitionId) => {
     try {
-        const response = await api.post(
+        const response = await api.put(
             `/competitions/${competitionId}/publish/`
         );
         return response.data;
     } catch (error) {
         console.error("Greška pri objavi natjecanja:", error);
+        throw error;
+    }
+};
+
+export const getCompetitionByID = async (competitionId) => {
+    try {
+        const response = await api.get(`/competitions/${competitionId}/`);
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri dohvaćanju natjecanja:", error);
+        throw error;
+    }
+};
+
+export const updateCompetition = async (competitionId, competitionData) => {
+    try {
+        const response = await api.put(
+            `/competitions/${competitionId}/edit/`,
+            competitionData
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri ažuriranju natjecanja:", error);
         throw error;
     }
 };
