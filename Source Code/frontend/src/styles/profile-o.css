@@ -117,8 +117,9 @@
 }
 
 .profile-about div {
-    display: grid;
-    grid-template-columns: 20% 70%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     border-bottom: 1px solid var(--secondary-darker);
     height: 7vh;
     align-content: center;

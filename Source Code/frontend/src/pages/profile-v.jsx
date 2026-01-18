@@ -7,8 +7,6 @@ function ProfileV() {
     const { user: currentUser, loading } = useAuth();
     const navigate = useNavigate();
 
-    console.log('Current User in ProfileV:', currentUser);
-
     if (loading) {
         return (
             <div className="homepage-container">

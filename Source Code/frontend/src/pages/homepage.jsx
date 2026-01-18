@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Navbar from "../components/navbar.jsx";
 import CompetitionMini from "../components/competitionmini.jsx";
-import { getLiveCompetitions } from "../services/apiService.jsx";
+import { getCompetitions } from "../services/apiService.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 
 function Homepage() {
@@ -14,7 +14,7 @@ function Homepage() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const competitionsData = await getLiveCompetitions();
+				const competitionsData = await getCompetitions(["PUBLISHED", "CLOSED_APPLICATIONS"]);
 				setCompetitions(competitionsData);
 			} catch (error) {
 				console.error("Greška u homepage.jsx:", error);
@@ -45,7 +45,7 @@ function Homepage() {
 					<>
 						<p>Uspješno ulogirani!</p>
 						<p>
-							Dobrodošao {currentUser.first_name} ({currentUser.email})!
+							Dobrodošao {currentUser.first_name}!
 						</p>
 
 						<div className="competitions-container">

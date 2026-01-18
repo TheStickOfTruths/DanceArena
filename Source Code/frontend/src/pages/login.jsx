@@ -11,7 +11,7 @@ function Login() {
 	const login = useGoogleLogin({
 		onSuccess: async (tokenResponse) => {
 			try {
-				console.log("Google response:", tokenResponse);
+				// console.log("Google response:", tokenResponse);
 
 				await loginWithGoogle(tokenResponse.access_token);
 

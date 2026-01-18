@@ -2,6 +2,7 @@ import "../styles/navbar.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 function DropdownItem({ icon, text, path, border = "yes", onClick }) {
 	const itemContent = (
@@ -23,10 +24,11 @@ function DropdownItem({ icon, text, path, border = "yes", onClick }) {
 function Navbar({ currentUser }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const { user, logout } = useAuth();
+	const navigate = useNavigate();
 
 	const handleLogout = () => {
 		logout();
-		// navigate('/login');
+		navigate('/homepage', { replace: true });
 	};
 
 	return (
