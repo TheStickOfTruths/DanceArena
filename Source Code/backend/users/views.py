@@ -17,6 +17,12 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from .paypal import get_paypal_access_token
+from .models import OrganizerSubscriptionPrice, OrganizerSubscription
+import requests
+from django.shortcuts import redirect
+from datetime import date
+from dateutil.relativedelta import relativedelta
 import json
 
 
@@ -193,6 +199,7 @@ def paypal_success(request):
     subscription.end_date = date.today() + relativedelta(years=1)
     subscription.save()
 
-    # Redirect back to frontend success page
-    return redirect("http://localhost:3000/subscription-success")
+    
+    return JsonResponse({"success": True, "paypal_status": data.get("status")})
+    
 
