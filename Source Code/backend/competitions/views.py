@@ -18,12 +18,16 @@ import json
 import boto3
 
 
-def competition_published(request):
+def competition_filtered(request):
     if request.method != 'GET':
         return JsonResponse({"error": "Nije get metoda."}, status=405)
     
     data = []
-    publishedStatuses = [StatusChoices.PUBLISHED, StatusChoices.CLOSED_APPLICATIONS]
+    publishedStatuses = request.GET.getlist('filter')
+
+    if not publishedStatuses:
+        return JsonResponse({"error": "Nisu poslani statusi za filtriranje."}, status=400)
+    
     if Competition.objects.filter(status__in=publishedStatuses).exists():
         for competition in Competition.objects.filter(status__in=publishedStatuses):
             data.append({
