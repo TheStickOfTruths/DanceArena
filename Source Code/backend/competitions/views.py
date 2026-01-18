@@ -45,6 +45,7 @@ def competition_filtered(request):
             'age_categories': [cat.name for cat in competition.age_categories.all()],
             'style_categories': [cat.name for cat in competition.style_categories.all()],
             'group_size_categories': [cat.name for cat in competition.group_size_categories.all()],
+            'status': competition.status,
             'id': competition.id
         })
     

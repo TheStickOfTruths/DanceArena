@@ -30,8 +30,8 @@ urlpatterns = [
     path('<int:competition_id>/appearances/<int:appearance_id>/accept/',
         views.competition_accept_appearance, name='competition_accept_appearance'),
 
-    path('invite-judge/', send_judge_invite, name='send_judge_invite'),
-    path('<int:competition_id>/confirm-entry/', confirm_entry, name='confirm_entry'),
-    path('<int:id>/create-entry-order/', create_entry_order, name='create_entry_order'),
+    path('invite-judge/', views.send_judge_invite, name='send_judge_invite'),
+    path('<int:competition_id>/singup/', views.competition_signup, name='signup'),
+    path('<int:id>/create-order/', views.create_entry_order, name='create_entry_order'),
     
 ]
