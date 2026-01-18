@@ -1,6 +1,5 @@
 from django.urls import path
 from . import views
-from .views import send_judge_invite, create_entry_order, confirm_entry
 
 urlpatterns = [
     path('filtered/', views.competition_filtered, name='competition_published'),
@@ -33,5 +32,4 @@ urlpatterns = [
     path('invite-judge/', views.send_judge_invite, name='send_judge_invite'),
     path('<int:competition_id>/singup/', views.competition_signup, name='signup'),
     path('<int:id>/create-order/', views.create_entry_order, name='create_entry_order'),
-    
 ]
