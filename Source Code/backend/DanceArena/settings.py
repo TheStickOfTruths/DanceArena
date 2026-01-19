@@ -22,6 +22,7 @@ IS_RENDER = 'RENDER' in os.environ
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+FRONTEND_URL = config('FRONTEND_URL')
 
 if not IS_RENDER:
 
@@ -42,7 +43,6 @@ if not IS_RENDER:
 
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-    FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:3000')
     LOGIN_REDIRECT_URL = FRONTEND_URL + '/homepage'
 
 else:

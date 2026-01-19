@@ -1,4 +1,3 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import {
   createBrowserRouter,
@@ -25,6 +24,8 @@ import Oplacanje from "./pages/Oplacanje.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import ProfileWrapper from "./components/ProfileWrapper.jsx";
 import OMojaNatjecanja from "./pages/OMojaNatjecanja.jsx";
+import PaypalReturn from "./components/paypalreturn.jsx";
+import PaymentSuccess from "./pages/PaymentSuccess.jsx";
 
 
 // Dohvati Client ID iz .env datoteke
@@ -132,14 +133,26 @@ const router = createBrowserRouter([
         <VpregledNatjecanja />
       </ProtectedRoute>,
   },
+  {
+    path: "/paypal-return",
+    element:
+      <ProtectedRoute>
+        <PaypalReturn />
+      </ProtectedRoute>
+  },
+  {
+    path: "/payment-success",
+    element:
+      <ProtectedRoute>
+        <PaymentSuccess />
+      </ProtectedRoute>
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
-    </GoogleOAuthProvider>
-  </StrictMode>
+  <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  </GoogleOAuthProvider>
 );

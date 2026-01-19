@@ -150,4 +150,28 @@ export const updateCompetition = async (competitionId, competitionData) => {
     }
 };
 
+export const createOrder = async (comp_id) => {
+    try {
+        const response = await api.post(`/competitions/${comp_id}/create-order/`);
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri kreiranju narudžbe:", error);
+        throw error;
+    }
+};
+
+export const signUpForCompetition = async (comp_id, formData) => {
+    try {
+        const response = await api.post(`/competitions/${comp_id}/signup/`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri prijavi na natjecanje:", error);
+        throw error;
+    }
+};
+
 export default api;
