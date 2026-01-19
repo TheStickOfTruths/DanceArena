@@ -24,7 +24,7 @@ const ProfileWrapper = () => {
             return <ProfileSudac />;
 
         default:
-            return <div>Nepoznata uloga korisnika: {user.role}</div>;
+            return <Navigate to="/registracija" replace />;
     }
 };
 
