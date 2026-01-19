@@ -1,32 +1,31 @@
 import '../styles/v-prijava-nastupa-odabir.css';
 import Navbar from '../components/navbar';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getCurrentUser } from '../services/apiService.jsx';
+import { getCompetitions } from '../services/apiService.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
+import CompetitionMicro from '../components/competitionmicro.jsx';
 
-function VprijavaNastupaOdabir(){
+function VprijavaNastupaOdabir() {
 
-    const [currentUser, setCurrentUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { user: currentUser, loading } = useAuth();
+    const [competitions, setCompetitions] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (currentUser.role !== 'CLUB_MANAGER') {
+            navigate('/');
+        }
         const fetchData = async () => {
             try {
-                const response = await getCurrentUser();
-
-                if (response) {
-                    setCurrentUser(response);
-                }
+                const response = await getCompetitions(["PUBLISHED"]);
+                setCompetitions(response);
             } catch (error) {
-                console.error("Greška u homepage.jsx:", error);
-            } finally {
-                setLoading(false);
+                console.error("Greška pri dohvaćanju mojih natjecanja:", error);
             }
         };
-
         fetchData();
-    }, []);
+    }, [currentUser, navigate]);
 
     if (loading) {
         return (
@@ -39,14 +38,9 @@ function VprijavaNastupaOdabir(){
         );
     }
 
-
-    function handleVprijavaNastupa() {
-        navigate('/voditelj/prijava-nastupa');
-    }
-
-    return(
+    return (
         <div className='page-container'>
-           <Navbar currentUser={currentUser} />
+            <Navbar currentUser={currentUser} />
 
             <div className='page-content-container'>
                 <div className='headboard-v'>
@@ -54,18 +48,21 @@ function VprijavaNastupaOdabir(){
                 </div>
 
                 <div className='competition-list-container'>
-                    <div className='competition'>
-                        <p>Natjecanje 1</p>
-                        <button className='prijava-button' label="1" onClick={handleVprijavaNastupa}>Prijavi se</button>
-                    </div>
-                    <div className='competition'>
-                        <p>Natjecanje 2</p>
-                        <button className='prijava-button' label="2" onClick={handleVprijavaNastupa}>Prijavi se</button>
-                    </div>
+                    {competitions.length > 0 ? (
+                        competitions.map((competition) => (
+                            <CompetitionMicro
+                                key={competition.id}
+                                competition={competition}
+                                onUpdate={null}
+                            />
+                        ))
+                    ) : (
+                        <p>Nema natjecanja za prikaz.</p>
+                    )}
                 </div>
             </div>
         </div>
-        
+
     );
 }
 

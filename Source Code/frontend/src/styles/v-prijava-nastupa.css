@@ -1,25 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
 .new-act-container {
-    display: grid;
-    grid-template-rows: 10vh 90vh;
-    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1920px;
 }
 
 .new-act-form-container {
-    display: grid;
-    grid-template-rows: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     margin: 0;
     padding: 0;
     width: 100%;
-    position: relative;
     height: 90vh;
 }
 
 .headboard-v {
     background-color: var(--primary);
     height: 10vh;
-    top:0;
+    top: 0;
     width: 100%;
     padding: 0;
     margin: 0;
@@ -32,32 +34,25 @@
     font-weight: bold;
     padding-left: 1%;
     color: var(--primary);
-    color: rgba(255,255,255,0.5)
+    color: rgba(255, 255, 255, 0.5)
 }
 
 .new-act-form {
-    position: absolute;
-    display:grid;
-    gap: 1%;
-    grid-template-rows: auto auto auto auto auto;
     margin: 0;
     padding: 0;
-    width: 30%;
-    left: 50%;
-    transform: translate(-50%);
-    top: 10vh;
+    width: 70%;
     height: auto;
-    padding-bottom: 20vh;
 }
 
 
-.new-act-form input::placeholder {
+/* --- Input Groups --- */
+.form-input-group input::placeholder {
     color: var(--primary);
     opacity: 50%;
     padding: 1%;
 }
 
-.new-act-form input[type='text'] {
+.form-input-group input[type='text'] {
     height: 80%;
     width: 100%;
     color: var(--primary);
@@ -65,7 +60,7 @@
     border-radius: 8px;
 }
 
-.new-act-form input[type='text']:hover {
+.form-input-group input[type='text']:hover {
     background-color: color-mix(in oklab, var(--primary) 10%, white 100%);
 }
 
@@ -89,9 +84,7 @@
     padding-left: 1%;
 }
 
-.new-act-form div:nth-child(2),
-.new-act-form div:nth-child(3),
-.new-act-form div:nth-child(4) {
+.form-input-group {
     display: grid;
     grid-template-rows: 30% 70%;
     height: 10vh;
@@ -99,11 +92,13 @@
     justify-items: start;
     color: var(--primary-darker);
     font-size: 0.9rem;
+    margin-bottom: 1vh;
 }
 
-.new-act-form div:nth-child(5) {
+/* --- Options Row --- */
+.form-options-row {
     display: grid;
-    margin:0;
+    margin: 0;
     padding: 0;
     grid-template-columns: 50% 50%;
     grid-template-rows: auto auto auto;
@@ -115,34 +110,20 @@
     height: auto;
 }
 
-.new-act-form div:nth-child(5) div{
+.select-group {
     display: grid;
     grid-template-rows: 20% 80%;
     height: 10vh;
     align-items: center;
     justify-items: start;
-    width: auto;
+    width: 20vw;
     padding: 0;
     margin: 0;
 }
 
-.new-act-form div:nth-child(5) label {
+.select-group label {
     padding: 0;
     margin: 0;
-}
-
-.new-act-form div:nth-child(5) select {
-    width: 12vw;
-    height: 60%;
-    border: 1px solid color-mix(in oklab, var(--primary) 50%, white 0%);
-    border-radius: 8px;
-    color: var(--primary-darker);
-    padding:0;
-    margin: 0;
-}
-
-.new-act-form div:nth-child(5) select:hover {
-    background-color: color-mix(in oklab, var(--primary) 10%, white 100%);
 }
 
 .new-act-form .file-container {
@@ -183,4 +164,23 @@
 .new-act-form input[type='submit']:hover {
     cursor: pointer;
     background-color: color-mix(in oklab, var(--primary-darker) 100%, black 30%)
+}
+
+.react-select-container {
+    width: 20vw;
+    margin: 0;
+    padding: 0;
+}
+
+.react-select__control {
+    min-height: 40px;
+    border-radius: 8px !important;
+    border: 1px solid color-mix(in oklab, var(--primary) 50%, white 0%) !important;
+    box-shadow: none !important;
+}
+
+.react-select__control:hover {
+    background-color: color-mix(in oklab, var(--primary) 10%, white 100%);
+    border-color: color-mix(in oklab, var(--primary) 50%, white 0%) !important;
+    cursor: pointer;
 }

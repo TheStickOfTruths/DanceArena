@@ -24,11 +24,12 @@ urlpatterns = [
     path('<int:competition_id>/results/<int:appearance_id>/',
         views.competition_appearance_results, name='competition_appearance_results'),
 
-    path('<int:id>/signup/', views.competition_signup, name='competition_signup'),
+    # path('<int:id>/signup/', views.competition_signup, name='competition_signup'),
+    path('<int:competition_id>/signup/', views.competition_signup, name='competition_signup'),
     path('<int:competition_id>/appearances/<int:appearance_id>/accept/',
         views.competition_accept_appearance, name='competition_accept_appearance'),
 
     path('invite-judge/', views.send_judge_invite, name='send_judge_invite'),
-    path('<int:competition_id>/singup/', views.competition_signup, name='signup'),
+    # path('<int:competition_id>/singup/', views.competition_signup, name='signup'),
     path('<int:id>/create-order/', views.create_entry_order, name='create_entry_order'),
 ]

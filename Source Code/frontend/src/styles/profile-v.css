@@ -2,6 +2,7 @@
     display: grid;
     grid-template-rows: 10vh 90vh;
     width: 100vw;
+    max-width: 1920px;
 }
 
 .profile-content-container {
@@ -117,7 +118,6 @@
 .profile-info-v .profile-about div {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     border-bottom: 1px solid var(--primary-darker);
     height: 7vh;
     align-content: center;

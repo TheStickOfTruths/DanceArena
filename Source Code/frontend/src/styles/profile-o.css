@@ -1,7 +1,7 @@
 .profile-container {
     display: grid;
     grid-template-rows: 10vh 90vh;
-    width: 100vw;
+    max-width: 1920px;
 }
 
 
