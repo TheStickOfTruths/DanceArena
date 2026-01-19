@@ -94,6 +94,7 @@ class MyCompetitionsTests(APITestCase):
         self.url_publish = reverse('competition_publish', kwargs={'id': self.comp1.id})
         self.url_publish_active = reverse('competition_publish', kwargs={'id': self.comp2.id})
 
+
     def test_my_competitions_success(self):
         print(f"\nTesting test MyCompetitions Success for User: {self.organizer.username}")
         
@@ -153,7 +154,7 @@ class MyCompetitionsTests(APITestCase):
         from .models import Competition
         self.assertTrue(Competition.objects.filter(name="Novi Plesni Kup").exists())
 
-    def test_new_competition_forbidden_role(self):
+    def test_new_competition_incomplete(self):
         print(f"\nTesting test New Competition incomplete for User: {self.organizer.username}")
         
         self.client.force_authenticate(user=self.judge)
@@ -167,7 +168,10 @@ class MyCompetitionsTests(APITestCase):
         )
         
         if response.status_code == 403:
-            print(f"Test passed: Correctly denied creation to user with id: {self.organizer.id}")
+            print(f"""Test passed: Correctly denied creation to user with id: {self.organizer.id}
+                    sent competition information: 
+                    {payload}
+                    """)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
