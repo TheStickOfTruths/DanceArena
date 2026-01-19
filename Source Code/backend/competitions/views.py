@@ -288,13 +288,13 @@ def invite_judge(request, id):
         return JsonResponse({"error":"Korisnik nije prijavljen"}, status=401)
     #   poslati mail sucu koji nije prijavljen
     user = User.objects.get(email=email)
-    if user.role != 'JUDGE':
+    if user.role != Role.JUDGE:
         return JsonResponse({"error": "Korisnik nije sudac."}, status=401)
-    CompetitionJudge = CompetitionJudge(
+    compJudge = CompetitionJudge(
         competition=competition,
         judge=user
     )
-    CompetitionJudge.save()
+    compJudge.save()
 
     return JsonResponse({"success": "Dodan sudac."}, status=201)
 
