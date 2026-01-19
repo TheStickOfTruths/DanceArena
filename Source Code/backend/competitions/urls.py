@@ -17,6 +17,7 @@ urlpatterns = [
     path('<int:id>/starting_list/', views.competition_starting_list, name='competition_starting_list'),
 
     path('<int:id>/invite_judge/', views.invite_judge, name='invite_judge'),
+    path('get_judges/', views.get_judges, name='get_judges'),
     path('<int:competition_id>/grade/<int:appearance_id>/', 
         views.competition_grade, name='competition_grade'),
 
@@ -24,12 +25,10 @@ urlpatterns = [
     path('<int:competition_id>/results/<int:appearance_id>/',
         views.competition_appearance_results, name='competition_appearance_results'),
 
-    # path('<int:id>/signup/', views.competition_signup, name='competition_signup'),
-    path('<int:competition_id>/signup/', views.competition_signup, name='competition_signup'),
     path('<int:competition_id>/appearances/<int:appearance_id>/accept/',
         views.competition_accept_appearance, name='competition_accept_appearance'),
 
     path('invite-judge/', views.send_judge_invite, name='send_judge_invite'),
-    # path('<int:competition_id>/singup/', views.competition_signup, name='signup'),
+    path('<int:competition_id>/signup/', views.competition_signup, name='competition_signup'),
     path('<int:id>/create-order/', views.create_entry_order, name='create_entry_order'),
 ]

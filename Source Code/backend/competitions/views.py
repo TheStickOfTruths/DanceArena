@@ -299,6 +299,26 @@ def invite_judge(request, id):
     return JsonResponse({"success": "Dodan sudac."}, status=201)
 
 
+def get_judges(request):
+    if request.method != 'GET':
+        return JsonResponse({"error": "Nije get metoda."}, status=405)
+    
+    data = []
+    
+    if User.objects.filter(role=Role.JUDGE).exists():
+        for user in User.objects.filter(role=Role.JUDGE):
+            data.append({
+            'name': user.name,
+            'surname': user.last_name,
+            'email': user.email,
+            'id': user.id
+        })
+    
+        return JsonResponse(data, safe=False, status=200)
+    else:
+        return JsonResponse({"success":"Nema sudaca."}, status=200)
+
+
 @api_view(['POST']) 
 @permission_classes([IsAuthenticated])
 def competition_grade(request, competition_id, appearance_id):
