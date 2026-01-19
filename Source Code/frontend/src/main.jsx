@@ -1,4 +1,3 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import {
   createBrowserRouter,
@@ -142,7 +141,7 @@ const router = createBrowserRouter([
       </ProtectedRoute>
   },
   {
-    path: "/paypal-success",
+    path: "/payment-success",
     element:
       <ProtectedRoute>
         <PaymentSuccess />
@@ -151,11 +150,9 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")).render(
-  // <StrictMode>
   <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
   </GoogleOAuthProvider>
-  // </StrictMode>
 );
