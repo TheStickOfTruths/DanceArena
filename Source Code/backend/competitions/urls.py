@@ -1,9 +1,8 @@
 from django.urls import path
 from . import views
-from .views import send_judge_invite, create_entry_order, confirm_entry
 
 urlpatterns = [
-    path('filtered/', views.competition_filtered, name='competition_published'),
+    path('filtered/', views.competition_filtered, name='competition_filtered'),
     path('my_competitions/', views.my_competitions, name='my_competitions'),
 
     path('new/', views.competition_create, name='competition_create'),
@@ -22,7 +21,6 @@ urlpatterns = [
         views.competition_grade, name='competition_grade'),
 
     path('results/', views.competition_results, name='competition_results'),
-    path('<int:id>/results/', views.competition_results, name='competition_results'),
     path('<int:competition_id>/results/<int:appearance_id>/',
         views.competition_appearance_results, name='competition_appearance_results'),
 
@@ -30,8 +28,7 @@ urlpatterns = [
     path('<int:competition_id>/appearances/<int:appearance_id>/accept/',
         views.competition_accept_appearance, name='competition_accept_appearance'),
 
-    path('invite-judge/', send_judge_invite, name='send_judge_invite'),
-    path('<int:competition_id>/confirm-entry/', confirm_entry, name='confirm_entry'),
-    path('<int:id>/create-entry-order/', create_entry_order, name='create_entry_order'),
-    
+    path('invite-judge/', views.send_judge_invite, name='send_judge_invite'),
+    path('<int:competition_id>/singup/', views.competition_signup, name='signup'),
+    path('<int:id>/create-order/', views.create_entry_order, name='create_entry_order'),
 ]

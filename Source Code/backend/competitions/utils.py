@@ -8,7 +8,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib.units import cm
 import itertools
 from collections import defaultdict
-from .models import Appearance, Grade, MediaFile
+from .models import Appearance, Grade, MediaFile, Result
 from datetime import datetime, date, time, timedelta
 
 
@@ -128,12 +128,13 @@ def generate_starting_list_pdf(competition):
 def generate_results(competition):
 
     triplets = list(itertools.product(
-        competition.age_categories,
-        competition.style_categories,
-        competition.group_size_categories
+        competition.age_categories.all(),
+        competition.style_categories.all(),
+        competition.group_size_categories.all()
     ))
 
     results = defaultdict(dict)
+    results_to_db = []
 
     for age, style, size in triplets:
 
@@ -159,22 +160,21 @@ def generate_results(competition):
             for position, app in enumerate(sorted_app_map, start=1)
         }
 
+        for position, app in ranked_map.items():
+            results_to_db.append(Result(
+                competition=competition,
+                appearance=app,
+                rank=position
+            ))
+
         category = f"{age}-{style}-{size}"
         results[category] = ranked_map 
 
-    results_json = {
-        category: [
-            {
-                position: {
-                    'id': app.id,
-                    'choreography': app.choreography
-                    }
-            } for position, app in ranked_map.items()
-        ]
-        for category, ranked_map in results.items()
-    }
+    if results_to_db:
+        Result.objects.filter(competition=competition).delete()
+        Result.objects.bulk_create(results_to_db)
 
-    return results_json
+    return
 
 
 def generate_grades(appearance):
@@ -182,7 +182,8 @@ def generate_grades(appearance):
     grades_json = {
         "grades": [
             {
-                f"{judge_name} {judge_surname}": grade
+                'judge': f"{judge_name} {judge_surname}",
+                'grade': grade
             } for judge_name, judge_surname, grade in Grade.objects.filter(appearance=appearance)
             .values_list('judge__first_name', 'judge__last_name', 'grade')
         ],

@@ -2,7 +2,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.conf import settings
 from django.http import JsonResponse
 from django.db import transaction
-from .models import Competition, Appearance, Grade, CompetitionJudge, \
+from .models import Competition, Appearance, Grade, CompetitionJudge, Result,\
                     StatusChoices, AgeCategory, StyleCategory, GroupSizeCategory, MediaFile
 from .utils import generate_starting_list_pdf, generate_results, generate_grades
 from users.models import User, Role
@@ -21,8 +21,7 @@ import requests
 from users.paypal import get_paypal_access_token
 from django.utils.dateparse import parse_duration
 from datetime import timedelta
-
-
+import itertools
 
 
 def competition_filtered(request):
@@ -47,6 +46,7 @@ def competition_filtered(request):
             'age_categories': [cat.name for cat in competition.age_categories.all()],
             'style_categories': [cat.name for cat in competition.style_categories.all()],
             'group_size_categories': [cat.name for cat in competition.group_size_categories.all()],
+            'status': competition.status,
             'id': competition.id
         })
     
@@ -219,7 +219,8 @@ def competition_close_applications(request, id):
 
     competition.status = StatusChoices.CLOSED_APPLICATIONS
     competition.save()
-    link = generate_starting_list_pdf(competition)
+    media = generate_starting_list_pdf(competition)
+    link = media.file.url
 
     return JsonResponse({"success":"Zatvorene prijave.", "starting_list":link}, status=200)
 
@@ -268,7 +269,7 @@ def competition_starting_list(request, id):
     if request.user.id not in allowed_users:
         return JsonResponse({"error":"Pristup zabranjen."}, status=403)
 
-    return redirect(competition.starting_list.file.url)
+    return JsonResponse({"link":competition.starting_list.file.url}, status=200)
 
 
 @api_view(['POST']) 
@@ -335,17 +336,68 @@ def competition_complete(request, id):
     competition.status = StatusChoices.COMPLETED
     competition.save()
 
-    return JsonResponse({"success": "Natjecanje završeno"}, status=201)
+    generate_results(competition)
+
+    return JsonResponse({"success": "Natjecanje završeno i rezultati generirani."}, status=201)
 
 
-def competition_results(request, id):
-    competition = get_object_or_404(Competition, id=id)
-    if competition.status != StatusChoices.COMPLETED:
-        return JsonResponse({"error": "Natjecanje nije gotovo."}, status=401)
+def competition_results(request):
+    if request.method != 'GET':
+        return JsonResponse({"error": "Nije get metoda."}, status=405)
+    
+    data = []
+    completed_competitions = Competition.objects.filter(status=StatusChoices.COMPLETED).prefetch_related(
+        'age_categories', 'style_categories', 'group_size_categories'
+    )
 
-    results = generate_results(competition)
+    if not completed_competitions.exists():
+        return JsonResponse({"message": "Nema završenih natjecanja."}, status=200)
 
-    return JsonResponse(results)
+    for competition in completed_competitions:
+        comp_info = {
+            'competition_id': competition.id,
+            'competition_name': competition.name,
+            'competition_description': competition.description,
+            'competition_location': competition.location,
+            'competition_date': competition.date,
+            'categories': []
+        }
+
+        triplets = list(itertools.product(
+            competition.age_categories.all(),
+            competition.style_categories.all(),
+            competition.group_size_categories.all()
+        ))
+
+        for age, style, size in triplets:
+            category_results = Result.objects.filter(
+                competition=competition,
+                appearance__age_category=age,
+                appearance__style_category=style,
+                appearance__group_size_category=size
+            ).select_related('appearance').order_by('rank')
+
+            if not category_results.exists():
+                continue
+
+            category_data = {
+                'category': f"{age.get_name_display()} - {style.get_name_display()} - {size.get_name_display()}",
+                'results': []
+            }
+
+            for res in category_results:
+                category_data['results'].append({
+                    'appearance_id': res.appearance.id,
+                    'club_manager': str(res.appearance.club_manager),
+                    'choreography': res.appearance.choreography,
+                    'choreograph': res.appearance.choreograph,
+                    'rank': res.rank
+                })
+            
+            comp_info["categories"].append(category_data)
+            data.append(comp_info)
+
+    return JsonResponse(data, safe=False, status=200)
 
 
 @api_view(['GET']) 
@@ -364,38 +416,6 @@ def competition_appearance_results(request, competition_id, appearance_id):
     grades = generate_grades(appearance)
 
     return JsonResponse(grades)
-
-
-@api_view(['POST']) 
-@permission_classes([IsAuthenticated])
-@role_required(Role.CLUB_MANAGER)
-@role_required(Role.CLUB_MANAGER)
-def competition_signup(request, id):
-    competition = get_object_or_404(Competition, id=id)
-
-    if competition.status != StatusChoices.PUBLISHED:
-        return JsonResponse({"error": "Natjecanje nije objavljeno"}, status=401)
-        
-    appearance = Appearance()
-    for field in Appearance._meta.fields:
-        attr = field.name  
-        if attr in ['id', 'club_manager', 'competition']:
-            continue
-        elif request.POST.get(attr):
-            setattr(appearance, attr, request.POST.get(attr))
-        else:
-            return JsonResponse({"error": "Nepotpuna prijava."}, status=401)
-
-    if appearance.age_category not in competition.age_categories\
-        or appearance.style_category not in competition.style_categories\
-        or appearance.group_size_category not in competition.group_size_categories:
-        return JsonResponse({"error": "Nepodrzana kategorija."}, status=401)
-    
-    appearance.club_manager = request.user
-    appearance.competition = competition
-    appearance.save()
-
-    return JsonResponse({"success": "Prijavljen nastup"}, status=201)
 
 
 @api_view(['PUT']) 
@@ -419,7 +439,6 @@ def competition_accept_appearance(request, competition_id, appearance_id):
     return JsonResponse({"success":"Nastup prihvaćen."}, status=201)
 
 
-
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def send_judge_invite(request):
@@ -432,7 +451,7 @@ def send_judge_invite(request):
         )
 
     token = uuid.uuid4()
-    invite_link = "https://dancearena.netlify.app/login"
+    invite_link = settings.FRONTEND_URL
 
     send_mail(
         subject="Judge Registration Invitation",
@@ -497,23 +516,20 @@ def download_media(request, file_id):
     return redirect(s3_url)
 
 
-
-
 @api_view(['POST'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
+@role_required(Role.CLUB_MANAGER)
 def create_entry_order(request, id):
     competition = get_object_or_404(Competition, id=id)
-
-    if request.user.role != Role.CLUB_MANAGER:
-        return Response({"error": "Only club managers can register."}, status=403)
-
+    print(settings.FRONTEND_URL)
     amount = competition.registration_fee
     order = create_paypal_order(
         amount=float(amount),
         currency="EUR",
         description=f"Entry fee for competition {competition.name}"
     )
-    return Response(order)
+    return JsonResponse(order)
+
 
 def capture_paypal_order(order_id):
     access_token = get_paypal_access_token()
@@ -526,147 +542,78 @@ def capture_paypal_order(order_id):
     resp.raise_for_status()
     return resp.json()
 
-@api_view(['POST'])
-@permission_classes([AllowAny])   
-def confirm_entry(request, competition_id):
-    user = request.user
 
-    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@role_required(Role.CLUB_MANAGER)
+def competition_signup(request, competition_id):
+    user = request.user
+    competition = get_object_or_404(Competition, pk=competition_id)
+
     order_id = request.data.get("orderID")
     choreography = request.data.get("choreography")
     length_str = request.data.get("length")  
     choreograph = request.data.get("choreograph")
-    age_category_id = request.data.get("age_category")
-    style_category_id = request.data.get("style_category")
-    group_size_category_id = request.data.get("group_size_category")
+    age_category_name = request.data.get("age_category")
+    style_category_name = request.data.get("style_category")
+    group_size_category_name = request.data.get("group_size_category")
 
-    
-    if not all(
-        [
-            order_id,
-            choreography,
-            length_str,
-            choreograph,
-            age_category_id,
-            style_category_id,
-            group_size_category_id,
-        ]
-    ):
-        return Response(
-            {"detail": "Nepotpuna prijava."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+    required_fields = [order_id, choreography, length_str, choreograph, 
+                       age_category_name, style_category_name, group_size_category_name]
+    if not all(required_fields):
+        return JsonResponse({"detail": "Nepotpuna prijava."}, status=400)
 
-    
+    uploaded_file = request.FILES.get('muzika')
+    if not uploaded_file:
+        return JsonResponse({"error": "Nije poslana muzička datoteka."}, status=400)
+    if not uploaded_file.name.lower().endswith('.mp3'):
+        return JsonResponse({"error": "Dopušteni su samo MP3 formati."}, status=400)
+
     length = parse_duration(length_str)
     if length is None:
-        
         try:
             h, m, s = map(int, length_str.split(":"))
             length = timedelta(hours=h, minutes=m, seconds=s)
         except Exception:
-            return Response(
-                {"detail": "Neispravan format trajanja. Koristi HH:MM:SS."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            return JsonResponse({"detail": "Format mora biti HH:MM:SS."}, status=400)
 
-    
-    competition = get_object_or_404(Competition, pk=competition_id)
-    age_category = get_object_or_404(AgeCategory, pk=age_category_id)
-    style_category = get_object_or_404(StyleCategory, pk=style_category_id)
-    group_size_category = get_object_or_404(GroupSizeCategory, pk=group_size_category_id)
+    age_category = get_object_or_404(AgeCategory, name=age_category_name)
+    style_category = get_object_or_404(StyleCategory, name=style_category_name)
+    group_size_category = get_object_or_404(GroupSizeCategory, name=group_size_category_name)
 
-    
     try:
         capture_result = capture_paypal_order(order_id)
-    except requests.HTTPError as e:
-        
-        try:
-            error_json = e.response.json()
-        except Exception:
-            error_json = {"message": str(e)}
-        return Response(
-            {"detail": "Greška kod PayPal naplate.", "paypal_error": error_json},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+        status_str = capture_result.get("status")
+        if status_str not in ["COMPLETED", "APPROVED"]:
+             return JsonResponse({"detail": "Plaćanje nije potvrđeno."}, status=400)
+    except Exception as e:
+        return JsonResponse({"detail": "PayPal greška.", "error": str(e)}, status=400)
 
-    
-    status_str = capture_result.get("status")
-    if status_str not in ["COMPLETED", "APPROVED"]:
-        return Response(
-            {
-                "detail": "Plaćanje nije potvrđeno.",
-                "paypal_status": status_str,
-            },
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-
-    
-    appearance = Appearance(
-        competition=competition,
-        club_manager=user,  
-        choreography=choreography,
-        length=length,
-        choreograph=choreograph,
-        age_category=age_category,
-        style_category=style_category,
-        group_size_category=group_size_category,
-        paid_registration=True,
-        
-    )
-    appearance.save()
-
-    return Response(
-        {
-            "success": True,
-            "appearance_id": appearance.id,
-            "paypal_status": status_str,
-        },
-        status=status.HTTP_201_CREATED,
-    )
-
-
-
-def _create_appearance_from_request(request, competition):
-    data = request.data
-
-    appearance = Appearance()
-
-    
-    appearance.choreography = data.get("choreography")
-    appearance.length = data.get("length")
-    appearance.choreograph = data.get("choreograph")
-
-    if not all([appearance.choreography, appearance.length, appearance.choreograph]):
-        raise ValueError("Nepotpuna prijava.")
-
-    
     try:
-        age_id = data.get("age_category")
-        style_id = data.get("style_category")
-        group_id = data.get("group_size_category")
+        with transaction.atomic():
+            music_file = MediaFile(
+                title=f"Music for Comp {competition.id} - {choreography}",
+                file_type='mp3'
+            )
+            music_file.file.save(f"comp_{competition.id}_{order_id}.mp3", uploaded_file, save=True)
 
-        appearance.age_category = AgeCategory.objects.get(id=age_id)
-        appearance.style_category = StyleCategory.objects.get(id=style_id)
-        appearance.group_size_category = GroupSizeCategory.objects.get(id=group_id)
-    except (AgeCategory.DoesNotExist, StyleCategory.DoesNotExist, GroupSizeCategory.DoesNotExist):
-        raise ValueError("Nepotpuna prijava.")
+            appearance = Appearance.objects.create(
+                competition=competition,
+                club_manager=user,  
+                choreography=choreography,
+                length=length,
+                choreograph=choreograph,
+                age_category=age_category,
+                style_category=style_category,
+                group_size_category=group_size_category,
+                music=music_file,
+                paid_registration=True,       
+            )
 
-    
-    music_id = data.get("music")
-    if music_id:
-        appearance.music_id = music_id  
+        return JsonResponse({
+            "success": True,
+            "appearance_id": appearance.id
+        }, status=201)
 
-    
-    if (appearance.age_category not in competition.age_categories.all() or
-        appearance.style_category not in competition.style_categories.all() or
-        appearance.group_size_category not in competition.group_size_categories.all()):
-        raise ValueError("Nepodrzana kategorija.")
-
-    appearance.club_manager = request.user if request.user.is_authenticated else None
-    appearance.competition = competition
-    return appearance
-
-
-
-
+    except Exception as e:
+        return JsonResponse({"detail": "Greška pri spremanju prijave.", "error": str(e)}, status=500)

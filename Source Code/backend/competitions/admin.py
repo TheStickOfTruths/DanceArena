@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AgeCategory, StyleCategory, GroupSizeCategory, \
+from .models import AgeCategory, StyleCategory, GroupSizeCategory, Result,\
                     Competition, Appearance, Grade, CompetitionJudge, MediaFile
 
 
@@ -106,3 +106,10 @@ class CompetitionJudgeAdmin(admin.ModelAdmin):
     def competition_info(self, obj):
         return f"ID:{obj.competition.id} - ORGANIZER:{obj.competition.organizer}"
     competition_info.short_description = 'Competition'
+
+
+@admin.register(Result)
+class ResultAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 'competition_id', 'appearance_id', 'rank'
+    )

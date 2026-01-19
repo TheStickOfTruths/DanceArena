@@ -209,3 +209,21 @@ class Grade(models.Model):
 
     def __str__(self):
         return f"{self.judge.username}->{self.appearance.id}:{self.grade}"
+    
+
+class Result(models.Model):
+    competition = models.ForeignKey(
+        Competition,
+        on_delete=models.CASCADE,
+        related_name='results'
+    )
+    appearance = models.ForeignKey(
+        Appearance,
+        on_delete=models.CASCADE,
+        related_name='results'
+    )
+    rank = models.IntegerField(validators=[MinValueValidator(1)])
+
+    class Meta:
+        ordering = ['rank'] 
+        unique_together = ('competition', 'appearance')
