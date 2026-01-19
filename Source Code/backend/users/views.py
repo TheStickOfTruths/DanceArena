@@ -93,7 +93,6 @@ def user_info(request):
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Nevazeci JSON'}, status=400)
 
-    print("Primljeni podaci za ažuriranje korisnika:", data)
     user = request.user
     role = data.get('role')
     try:

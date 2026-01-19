@@ -89,7 +89,15 @@ else:
     LOGIN_REDIRECT_URL = config('FRONTEND_URL') + '/homepage'
 
 
+import sys
 
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:'
+        }
+    }
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
