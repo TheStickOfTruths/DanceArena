@@ -2,7 +2,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.conf import settings
 from django.http import JsonResponse
 from django.db import transaction
-from .models import Competition, Appearance, Grade, CompetitionJudge, \
+from .models import Competition, Appearance, Grade, CompetitionJudge, Result,\
                     StatusChoices, AgeCategory, StyleCategory, GroupSizeCategory, MediaFile
 from .utils import generate_starting_list_pdf, generate_results, generate_grades
 from users.models import User, Role
@@ -21,6 +21,7 @@ import requests
 from users.paypal import get_paypal_access_token
 from django.utils.dateparse import parse_duration
 from datetime import timedelta
+import itertools
 
 
 def competition_filtered(request):
@@ -218,7 +219,8 @@ def competition_close_applications(request, id):
 
     competition.status = StatusChoices.CLOSED_APPLICATIONS
     competition.save()
-    link = generate_starting_list_pdf(competition)
+    media = generate_starting_list_pdf(competition)
+    link = media.file.url
 
     return JsonResponse({"success":"Zatvorene prijave.", "starting_list":link}, status=200)
 
@@ -267,7 +269,7 @@ def competition_starting_list(request, id):
     if request.user.id not in allowed_users:
         return JsonResponse({"error":"Pristup zabranjen."}, status=403)
 
-    return redirect(competition.starting_list.file.url)
+    return JsonResponse({"link":competition.starting_list.file.url}, status=200)
 
 
 @api_view(['POST']) 
@@ -334,17 +336,68 @@ def competition_complete(request, id):
     competition.status = StatusChoices.COMPLETED
     competition.save()
 
-    return JsonResponse({"success": "Natjecanje završeno"}, status=201)
+    generate_results(competition)
+
+    return JsonResponse({"success": "Natjecanje završeno i rezultati generirani."}, status=201)
 
 
-def competition_results(request, id):
-    competition = get_object_or_404(Competition, id=id)
-    if competition.status != StatusChoices.COMPLETED:
-        return JsonResponse({"error": "Natjecanje nije gotovo."}, status=401)
+def competition_results(request):
+    if request.method != 'GET':
+        return JsonResponse({"error": "Nije get metoda."}, status=405)
+    
+    data = []
+    completed_competitions = Competition.objects.filter(status=StatusChoices.COMPLETED).prefetch_related(
+        'age_categories', 'style_categories', 'group_size_categories'
+    )
 
-    results = generate_results(competition)
+    if not completed_competitions.exists():
+        return JsonResponse({"message": "Nema završenih natjecanja."}, status=200)
 
-    return JsonResponse(results)
+    for competition in completed_competitions:
+        comp_info = {
+            'competition_id': competition.id,
+            'competition_name': competition.name,
+            'competition_description': competition.description,
+            'competition_location': competition.location,
+            'competition_date': competition.date,
+            'categories': []
+        }
+
+        triplets = list(itertools.product(
+            competition.age_categories.all(),
+            competition.style_categories.all(),
+            competition.group_size_categories.all()
+        ))
+
+        for age, style, size in triplets:
+            category_results = Result.objects.filter(
+                competition=competition,
+                appearance__age_category=age,
+                appearance__style_category=style,
+                appearance__group_size_category=size
+            ).select_related('appearance').order_by('rank')
+
+            if not category_results.exists():
+                continue
+
+            category_data = {
+                'category': f"{age.get_name_display()} - {style.get_name_display()} - {size.get_name_display()}",
+                'results': []
+            }
+
+            for res in category_results:
+                category_data['results'].append({
+                    'appearance_id': res.appearance.id,
+                    'club_manager': str(res.appearance.club_manager),
+                    'choreography': res.appearance.choreography,
+                    'choreograph': res.appearance.choreograph,
+                    'rank': res.rank
+                })
+            
+            comp_info["categories"].append(category_data)
+            data.append(comp_info)
+
+    return JsonResponse(data, safe=False, status=200)
 
 
 @api_view(['GET']) 
@@ -468,7 +521,7 @@ def download_media(request, file_id):
 @role_required(Role.CLUB_MANAGER)
 def create_entry_order(request, id):
     competition = get_object_or_404(Competition, id=id)
-
+    print(settings.FRONTEND_URL)
     amount = competition.registration_fee
     order = create_paypal_order(
         amount=float(amount),

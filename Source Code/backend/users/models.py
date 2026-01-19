@@ -30,6 +30,9 @@ class User(AbstractUser):
             self.role = self.Role.ADMIN
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
 
 class OrganizerSubscription(models.Model):
     organizer = models.ForeignKey(

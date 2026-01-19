@@ -21,7 +21,6 @@ urlpatterns = [
         views.competition_grade, name='competition_grade'),
 
     path('results/', views.competition_results, name='competition_results'),
-    path('<int:id>/results/', views.competition_results, name='competition_results'),
     path('<int:competition_id>/results/<int:appearance_id>/',
         views.competition_appearance_results, name='competition_appearance_results'),
 
