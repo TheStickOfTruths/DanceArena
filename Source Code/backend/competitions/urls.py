@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('filtered/', views.competition_filtered, name='competition_published'),
+    path('filtered/', views.competition_filtered, name='competition_filtered'),
     path('my_competitions/', views.my_competitions, name='my_competitions'),
 
     path('new/', views.competition_create, name='competition_create'),
