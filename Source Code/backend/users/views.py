@@ -66,14 +66,9 @@ def current_user(request):
     
     user = request.user
 
-    flag = False
-    if user.role == Role.ANONYMOUS:
-        flag = True
-
     refresh = RefreshToken.for_user(user)
     
     data = {
-        'flag': flag,
         'authenticated': True,
         'id': user.id,
         'username': user.username,
@@ -81,13 +76,16 @@ def current_user(request):
         'first_name': user.first_name,
         'last_name': user.last_name,
         'role': user.role,
+        'contact': user.contact,
+        'club_name': user.club_name,
+        'club_location': user.club_location,
         'access': str(refresh.access_token),
         'refresh': str(refresh),
     }
     return JsonResponse(data)
 
 
-@api_view(['POST'])
+@api_view(['PUT'])
 @permission_classes([AllowAny]) 
 def user_info(request):
     try:
@@ -95,31 +93,29 @@ def user_info(request):
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Nevazeci JSON'}, status=400)
 
+    print("Primljeni podaci za ažuriranje korisnika:", data)
+    user = request.user
     role = data.get('role')
     try:
         with transaction.atomic():
+            user.role = role
+            user.first_name = data.get('name', user.first_name)
+            user.last_name = data.get('surname', user.last_name)
+
             if role == Role.JUDGE:
-                user = User.objects.create(
-                    name=data.get('name'),
-                    last_name=data.get('surname')
-                )
+                pass 
+            
             elif role == Role.ORGANIZER:
-                user = User.objects.create(
-                    name=data.get('name'),
-                    last_name=data.get('surname'),
-                    contact=data.get('contact')
-                )
+                user.contact = data.get('contact', user.contact)
+                
             elif role == Role.CLUB_MANAGER:
-                user = User.objects.create(
-                    name=data.get('name'),
-                    last_name=data.get('surname'),
-                    club_name=data.get('club_name'),
-                    club_location=data.get('club_location')
-                )
+                user.club_name = data.get('club_name', user.club_name)
+                user.club_location = data.get('club_location', user.club_location)
             else:
                 return JsonResponse({'error': "Nevazeca uloga"}, status=400)
-    except:
-        return JsonResponse({'error': "Neuspjeh"}, status=400)
+            user.save()
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
     return JsonResponse({'success': "Uspjeh"}, status=200)
 
 
@@ -128,7 +124,7 @@ def custom_logout(request):
     logout(request)
     return JsonResponse({'success': "Logged out successfully."}, status=200)
 
-@csrf_exempt
+
 @csrf_exempt
 def create_subscription(request):
     price_obj = OrganizerSubscriptionPrice.objects.first()
