@@ -197,4 +197,14 @@ export const inviteSudac = async (competitionId, email) => {
     }
 };
 
+export const getResults = async () => {
+    try {
+        const response = await api.get("/competitions/results/");
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri dohvaćanju rezultata:", error);
+        return [];
+    }
+};
+
 export default api;

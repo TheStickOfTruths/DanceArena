@@ -1,0 +1,21 @@
+.result-card-header {
+    background-color: var(--primary-darker);
+    color: white;
+}
+
+.result-location {
+    color: var(--crna);
+}
+
+.result-category-title {
+    color: var(--secondary);
+}
+
+.result-table-head {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.result-choreographer {
+    color: var(--primary) !important;
+}

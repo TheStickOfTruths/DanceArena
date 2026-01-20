@@ -39,6 +39,7 @@ a {
 .login-form p {
     font-weight: bold;
     text-align: center;
+    margin: 12px 0;
 }
 
 .form-container {

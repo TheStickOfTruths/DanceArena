@@ -13,9 +13,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 30px;
     box-sizing: border-box;
-    overflow-y: auto;
+    overflow: hidden;
+    min-height: 0;
 }
 
 .competitions-container {
@@ -25,6 +25,9 @@
     align-items: center;
     gap: 20px;
     padding: 20px 0;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .homepage-content-container {
@@ -40,4 +43,50 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.switch-view {
+    width: 40%;
+    max-width: 600px;
+    margin-top: 10px;
+}
+
+.switch-view label {
+    color: var(--primary);
+    border-color: var(--primary);
+    font-size: 1.2rem;
+    width: 100px;
+}
+
+.switch-view .btn-check:checked+.btn-outline-primary {
+    background-color: var(--primary-darker);
+    border-color: var(--primary-darker);
+    color: var(--bijela);
+}
+
+.switch-view .btn:hover {
+    background-color: var(--primary-darker);
+    border-color: var(--primary-darker);
+    color: var(--bijela);
+}
+
+.results-container {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    overflow-y: auto;
+    height: 81vh;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.card {
+    width: 100%;
+    max-width: 1000px;
 }

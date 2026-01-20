@@ -1,4 +1,4 @@
-.navbar {
+.da-navbar {
     padding: 5px 20px;
     background-color: var(--bijela);
     width: 100%;
@@ -19,7 +19,7 @@
     flex-direction: row;
 }
 
-.logo-text-container :hover {
+.logo-text-container:hover {
     cursor: pointer;
 }
 
@@ -28,7 +28,7 @@
     width: auto;
 }
 
-.navbar-text {
+.da-navbar-text {
     margin-left: 4px;
     height: 15px;
     width: auto;
@@ -45,24 +45,30 @@
     transform: translate(-50%, -50%);
 }
 
+.da-nav-link {
+    margin: 0;
+    cursor: pointer;
+}
+
 .account-section {
     display: flex;
     align-items: center;
     flex-direction: row;
     background-color: var(--primary-darker);
-    padding: 3px;
     border-radius: 50%;
-    height: 35px;
-    width: 35px;
+    padding: 4px;
+    height: 43px;
+    width: 43px;
 }
 
 .user-icon {
     border-radius: 50%;
     height: 35px;
     width: auto;
+    cursor: pointer;
 }
 
-.dropdown-menu {
+.da-dropdown-menu {
     border: 3px solid var(--primary-darker);
     border-radius: 10px;
     background-color: var(--bijela);
@@ -77,7 +83,7 @@
     z-index: 1000;
 }
 
-.dropdown-item {
+.da-dropdown-item {
     display: flex;
     align-items: center;
     font-size: 1rem;
@@ -87,16 +93,16 @@
     box-sizing: border-box;
 }
 
-.dropdown-item:hover {
+.da-dropdown-item:hover {
     background-color: var(--secondary);
     cursor: pointer;
 }
 
-.dropdown-item.no {
+.da-dropdown-item.no {
     border-bottom: none;
 }
 
-.dropdown-item div {
+.da-dropdown-item div {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -107,15 +113,16 @@
     height: 3vh;
 }
 
-.dropdown-item p {
+.da-dropdown-item p {
     margin-left: 15px;
+    margin-bottom: 0;
     color: var(--primary-darker);
 }
 
-.dropdown-item i {
+.da-dropdown-item i {
     font-size: 1.2rem;
 }
 
-.dropdown-menu a {
+.da-dropdown-menu a {
     text-decoration: none;
 }
