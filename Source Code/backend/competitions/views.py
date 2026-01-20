@@ -283,7 +283,7 @@ def invite_judge(request, id):
     if competition.status != StatusChoices.PUBLISHED:
         return JsonResponse({"error": "Natjecanje nije objavljeno."}, status=403)
 
-    email = request.POST.get('email')
+    email = request.data.get('email')
     if not User.objects.filter(email=email).exists():
         return JsonResponse({"error":"Korisnik nije prijavljen"}, status=403)
 
