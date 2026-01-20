@@ -4,7 +4,8 @@ from django.http import JsonResponse
 from django.db import transaction
 from .models import Competition, Appearance, Grade, CompetitionJudge, Result,\
                     StatusChoices, AgeCategory, StyleCategory, GroupSizeCategory, MediaFile
-from .utils import generate_starting_list_pdf, generate_results, generate_grades, send_judge_invite
+from .utils import generate_starting_list_pdf, generate_results, generate_grades, \
+                    send_judge_invite, judging_in_progress
 from users.models import User, Role
 from users.decorators import role_required
 from rest_framework.decorators import api_view, permission_classes
@@ -41,9 +42,9 @@ def competition_filtered(request):
             'date': competition.date,
             'location': competition.location,
             'registration_fee': competition.registration_fee,
-            'age_categories': [cat.name for cat in competition.age_categories.all()],
-            'style_categories': [cat.name for cat in competition.style_categories.all()],
-            'group_size_categories': [cat.name for cat in competition.group_size_categories.all()],
+            'age_categories': [cat.get_name_display() for cat in competition.age_categories.all()],
+            'style_categories': [cat.get_name_display() for cat in competition.style_categories.all()],
+            'group_size_categories': [cat.get_name_display() for cat in competition.group_size_categories.all()],
             'status': competition.status,
             'id': competition.id
         })
@@ -235,6 +236,9 @@ def competition_close_applications(request, id):
 def competition_activate(request, id):
     competition = get_object_or_404(Competition, id=id)
     
+    if competition.organizer != request.user:
+        return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
+    
     if competition.status != StatusChoices.CLOSED_APPLICATIONS:
         return JsonResponse({"error": "Nisu završile prijave."}, status=403)
 
@@ -344,8 +348,11 @@ def competition_grade(request, competition_id, appearance_id):
         
     if competition.status != StatusChoices.ACTIVE:
         return JsonResponse({"error": "Natjecanje nije aktivno."}, status=403)
+    
+    if Grade.objects.filter(appearance=appearance, judge=request.user).exists():
+        return JsonResponse({"error": "Nastup već ocijenjen."}, status=403)
         
-    appearance_grade = request.POST.get('grade')
+    appearance_grade = request.data.get('grade')
     grade = Grade(
         judge=request.user,
         appearance=appearance,
@@ -366,6 +373,9 @@ def competition_complete(request, id):
 
     if competition.status != StatusChoices.ACTIVE:
         return JsonResponse({"error": "Natjecanje nije aktivno."}, status=403)
+    
+    if judging_in_progress(competition):
+        return JsonResponse({"error": "Suci i dalje ocijenjuju."}, status=403)
     
     competition.status = StatusChoices.COMPLETED
     competition.save()
@@ -429,7 +439,8 @@ def competition_results(request):
                 })
             
             comp_info["categories"].append(category_data)
-            data.append(comp_info)
+
+        data.append(comp_info)
 
     return JsonResponse(data, safe=False, status=200)
 
@@ -452,6 +463,70 @@ def competition_appearance_results(request, competition_id, appearance_id):
     return JsonResponse(grades)
 
 
+@api_view(['GET']) 
+@permission_classes([IsAuthenticated])
+def competition_get_appearances(request, competition_id):
+    competition = get_object_or_404(Competition, id=competition_id)
+
+    judge_ids = CompetitionJudge.objects.filter(competition=competition).values_list('judge__id', flat=True)
+    if request.user != competition.organizer and request.user.id not in judge_ids:
+        return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
+    
+    if Appearance.objects.filter(competition=competition).exists():
+        data = []
+        for appearance in Appearance.objects.filter(competition=competition):
+            url = 'music_not_uploaded'
+            if appearance.music:
+                url = appearance.music.file.url
+            data.append({
+            'club_manager': str(appearance.club_manager),
+            'choreography': appearance.choreography,
+            'choreograph': appearance.choreograph,
+            'length': appearance.get_length_display(),
+            'age_category': appearance.age_category.get_name_display(),
+            'style_category': appearance.style_category.get_name_display(),
+            'group_size_category': appearance.group_size_category.get_name_display(),
+            'music_link': url,
+            'accepted': appearance.accepted,
+            'paid_registration': appearance.paid_registration,
+            'id': appearance.id
+        })
+    
+        return JsonResponse(data, safe=False, status=200)
+    else:
+        return JsonResponse({"success":"Nema nastupa."}, status=200)
+
+
+@api_view(['GET']) 
+@permission_classes([IsAuthenticated])
+@role_required(Role.CLUB_MANAGER)
+def my_appearances(request):
+
+    if Appearance.objects.filter(club_manager=request.user).exists():
+        data = []
+        for appearance in Appearance.objects.filter(club_manager=request.user):
+            url = 'music_not_uploaded'
+            if appearance.music:
+                url = appearance.music.file.url
+            data.append({
+            'club_manager': str(appearance.club_manager),
+            'choreography': appearance.choreography,
+            'choreograph': appearance.choreograph,
+            'length': appearance.get_length_display(),
+            'age_category': appearance.age_category.get_name_display(),
+            'style_category': appearance.style_category.get_name_display(),
+            'group_size_category': appearance.group_size_category.get_name_display(),
+            'music_link': url,
+            'accepted': appearance.accepted,
+            'paid_registration': appearance.paid_registration,
+            'id': appearance.id
+        })
+    
+        return JsonResponse(data, safe=False, status=200)
+    else:
+        return JsonResponse({"success":"Nemaš nastupa."}, status=200)
+
+
 @api_view(['PUT']) 
 @permission_classes([IsAuthenticated])
 def competition_accept_appearance(request, competition_id, appearance_id):
@@ -471,6 +546,50 @@ def competition_accept_appearance(request, competition_id, appearance_id):
     appearance.save()
      
     return JsonResponse({"success":"Nastup prihvaćen."}, status=201)
+
+
+@api_view(['PUT']) 
+@permission_classes([IsAuthenticated])
+def competition_unaccept_appearance(request, competition_id, appearance_id):
+    competition = get_object_or_404(Competition, id=competition_id)
+    appearance = get_object_or_404(Appearance, id=appearance_id)
+
+    if competition.organizer != request.user:
+        return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
+
+    if competition.status != StatusChoices.PUBLISHED:
+        return JsonResponse({"error":"Natjecanje nije objavljeno."}, status=403)
+    
+    if appearance.competition != competition:
+        return JsonResponse({"error":"Nastup ne pripada tom natjecanju"}, status=403)
+    
+    appearance.accepted = False
+    appearance.save()
+     
+    return JsonResponse({"success":"Nastup nije prihvaćen."}, status=201)
+
+
+@api_view(['PUT']) 
+@permission_classes([IsAuthenticated])
+def competition_deny_appearance(request, competition_id, appearance_id):
+    competition = get_object_or_404(Competition, id=competition_id)
+    appearance = get_object_or_404(Appearance, id=appearance_id)
+
+    if competition.organizer != request.user:
+        return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
+
+    if competition.status != StatusChoices.PUBLISHED:
+        return JsonResponse({"error":"Natjecanje nije objavljeno."}, status=403)
+    
+    if appearance.competition != competition:
+        return JsonResponse({"error":"Nastup ne pripada tom natjecanju."}, status=403)
+    
+    if appearance.accepted:
+        return JsonResponse({"error":"Nastup je trenutno prihvaćen, trebaš ga odznačiti."}, status=403)
+    
+    appearance.delete()
+     
+    return JsonResponse({"success":"Nastup odbijen."}, status=200)
 
 
 def generate_s3_url(file_path, link_type='view'):

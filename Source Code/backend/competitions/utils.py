@@ -8,15 +8,11 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib.units import cm
 import itertools
 from collections import defaultdict
-from .models import Appearance, Grade, MediaFile, Result
+from .models import Appearance, Grade, MediaFile, Result, CompetitionJudge, Competition
 from datetime import datetime, date, time, timedelta
 import uuid
 from django.conf import settings
-from django.http import JsonResponse
-from django.core.mail import send_mail
-from rest_framework import status
 import requests
-import os
 
 
 def calculate_start_time(base_time: time, length: timedelta) -> time:
@@ -75,7 +71,7 @@ def generate_starting_list_pdf(competition):
         if not appearances.exists():
             continue
 
-        elements.append(Paragraph(f"{age}  {style}  {size}", styles['SectionHeader']))
+        elements.append(Paragraph(f"{age.get_name_display()} - {style.get_name_display()} - {size.get_name_display()}", styles['SectionHeader']))
 
         table_data = [["#", "Pocetak nastupa", "Koreograf", "Koreografija", "Voditelj kluba", "Duljina nastupa"]]
         for i, app in enumerate(appearances, start=1):
@@ -236,3 +232,17 @@ def send_judge_invite(email, invite_link):
             
     except Exception as e:
         print(f"--- Greška pri API pozivu: {e} ---")
+
+
+def judging_in_progress(competition):
+    for comp_judge in CompetitionJudge.objects.filter(competition=competition):
+        judge = comp_judge.judge
+        if Appearance.objects.filter(competition=competition):
+            for appearance in Appearance.objects.filter(competition=competition):
+                if not Grade.objects.filter(judge=judge, appearance=appearance):
+                    return True
+        else:
+            return False
+        
+    return False
+            

@@ -113,7 +113,7 @@ class Competition(models.Model):
     )
 
     def __str__(self):
-        return f"ID:{self.id} - ORGANIZER:{self.organizer}"
+        return f"ID:{self.id} ORGANIZER:{self.organizer}"
 
 
 class CompetitionJudge(models.Model):
@@ -135,8 +135,7 @@ class CompetitionJudge(models.Model):
         ]
 
     def __str__(self):
-        return f"""{self.judge.username}->{self.competition}
-                ===================="""
+        return f"{self.judge}->{self.competition}"
 
 
 class Appearance(models.Model):
@@ -177,13 +176,15 @@ class Appearance(models.Model):
     paid_registration = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"""ID:{self.id}-COMPETITION ID:{self.competition.id}-
-                CLUB MANAGER:{self.club_manager}-
-                AGE CATEGORY:{self.age_category}-
-                STYLE CATEGORY:{self.style_category}-
-                GROUP SIZE CATEGORY:{self.group_size_category}
-                ====================
-                """
+        return f"ID:{self.id} COMPETITION_ID:{self.competition.id} CLUB_MANAGER:{self.club_manager}"
+    
+    def get_length_display(self):
+        if self.length:
+            total_seconds = int(self.length.total_seconds())
+            minutes = total_seconds // 60
+            seconds = total_seconds % 60
+            return f"{minutes:02d}:{seconds:02d}"
+        return "00:00"
 
 
 class Grade(models.Model):
