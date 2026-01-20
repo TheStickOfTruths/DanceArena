@@ -4,16 +4,13 @@ from django.http import JsonResponse
 from django.db import transaction
 from .models import Competition, Appearance, Grade, CompetitionJudge, Result,\
                     StatusChoices, AgeCategory, StyleCategory, GroupSizeCategory, MediaFile
-from .utils import generate_starting_list_pdf, generate_results, generate_grades
+from .utils import generate_starting_list_pdf, generate_results, generate_grades, send_judge_invite
 from users.models import User, Role
 from users.decorators import role_required
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework import status
-import uuid
-from rest_framework.permissions import AllowAny
 import json
 import boto3
 from users.paypal_orders import create_paypal_order
@@ -466,41 +463,6 @@ def competition_accept_appearance(request, competition_id, appearance_id):
     appearance.save()
      
     return JsonResponse({"success":"Nastup prihvaćen."}, status=201)
-
-
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def send_judge_invite(request):
-    email = request.data.get('email')
-
-    if not email:
-        return JsonResponse(
-            {"detail": "Email is required"},
-            status=status.HTTP_400_BAD_REQUEST
-        )
-
-    token = uuid.uuid4()
-    base_url = settings.FRONTEND_URL.rstrip('/')
-    invite_link = f"{base_url}/?invitedJudge=True"
-
-    send_mail(
-        subject="Judge Registration Invitation",
-        message=(
-            "Hello,\n\n"
-            "You have been invited to register as a judge on Dance Arena.\n"
-            "Please use the link below to register:\n\n"
-            f"{invite_link}\n\n"
-            "Best regards,\n"
-            "Dance Arena Team"
-        ),
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[email],
-    )
-
-    return JsonResponse(
-        {"detail": "Invitation email sent"},
-        status=status.HTTP_200_OK
-    )
 
 
 def generate_s3_url(file_path, link_type='view'):
