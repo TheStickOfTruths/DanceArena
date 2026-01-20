@@ -289,6 +289,7 @@ def invite_judge(request, id):
         print(f"Korisnik {email} ne postoji. Šaljem pozivnicu.")
         base_url = settings.FRONTEND_URL.rstrip('/')
         invite_link = f"{base_url}/?invitedJudge=True"
+        print(invite_link)
         thread = threading.Thread(
             target=send_judge_invite, 
             args=(email, invite_link)
