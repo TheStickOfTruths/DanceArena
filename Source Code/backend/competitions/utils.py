@@ -15,6 +15,8 @@ from django.conf import settings
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from rest_framework import status
+import requests
+import os
 
 
 def calculate_start_time(base_time: time, length: timedelta) -> time:
@@ -198,34 +200,39 @@ def generate_grades(appearance):
     return grades_json
 
 
-def send_judge_invite(request):
-    email = request.data.get('email')
+def send_judge_invite(email, invite_link):
+    url = "https://mailserver.automationlounge.com/api/v1/messages/send"
+    
+    api_key = settings.API_MAIL_KEY
+    
+    payload = {
+        "to": email,
+        "subject": "Judge Registration Invitation - Dance Arena",
+        "html": f"""
+            <h1>Welcome!</h1>
+            <p>You have been invited to register as a judge on Dance Arena.</p>
+            <p>Please use the link below to register:</p>
+            <a href="{invite_link}">Register as Judge</a>
+            <br><br>
+            <p>Best regards,<br>Dance Arena Team</p>
+        """
+    }
 
-    if not email:
-        return JsonResponse(
-            {"detail": "Email is required"},
-            status=status.HTTP_400_BAD_REQUEST
-        )
+    print(api_key)
+    
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
 
-    token = uuid.uuid4()
-    base_url = settings.FRONTEND_URL.rstrip('/')
-    invite_link = f"{base_url}/?invitedJudge=True"
-
-    send_mail(
-        subject="Judge Registration Invitation",
-        message=(
-            "Hello,\n\n"
-            "You have been invited to register as a judge on Dance Arena.\n"
-            "Please use the link below to register:\n\n"
-            f"{invite_link}\n\n"
-            "Best regards,\n"
-            "Dance Arena Team"
-        ),
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[email],
-    )
-
-    return JsonResponse(
-        {"detail": "Invitation email sent"},
-        status=status.HTTP_200_OK
-    )
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        
+        if response.status_code == 200:
+            print(f"--- API Email uspješno poslan na: {email} ---")
+            print(f"Response: {response.json()}")
+        else:
+            print(f"--- API Greška ({response.status_code}): {response.text} ---")
+            
+    except Exception as e:
+        print(f"--- Greška pri API pozivu: {e} ---")
