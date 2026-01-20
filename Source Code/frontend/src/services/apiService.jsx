@@ -174,9 +174,9 @@ export const signUpForCompetition = async (comp_id, formData) => {
     }
 };
 
-export const getSudci = async () => {
+export const getSudci = async (competitionId) => {
     try {
-        const response = await api.get("/competitions/get_judges/");
+        const response = await api.get(`/competitions/${competitionId}/get_judges/`);
         return response.data;
     } catch (error) {
         console.error("Greška pri dohvaćanju sudaca:", error);
