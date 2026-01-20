@@ -216,6 +216,13 @@ def competition_close_applications(request, id):
     
     if competition.status != StatusChoices.PUBLISHED:
         return JsonResponse({"error": "Natjecanje nije objavljeno."}, status=403)
+    
+    if not CompetitionJudge.objects.filter(competition=competition).exists():
+        return JsonResponse({"error":"Nema sudaca."}, status=403)
+    if CompetitionJudge.objects.filter(competition=competition).count() == 1:
+        return JsonResponse({"error":"Samo jedan sudac."}, status=403)
+    if CompetitionJudge.objects.filter(competition=competition).count() / 2 == 1:
+        return JsonResponse({"error":"Paran broj sudaca."}, status=403)
 
     competition.status = StatusChoices.CLOSED_APPLICATIONS
     competition.save()
@@ -233,10 +240,6 @@ def competition_activate(request, id):
     if competition.status != StatusChoices.CLOSED_APPLICATIONS:
         return JsonResponse({"error": "Nisu završile prijave."}, status=403)
 
-    if not CompetitionJudge.objects.filter(competition=competition).exists():
-        return JsonResponse({"error":"Nema sudaca."}, status=403)
-    if CompetitionJudge.objects.filter(competition=competition).count() / 2 == 1:
-        return JsonResponse({"error":"Paran broj sudaca."}, status=403)
     competition.status = StatusChoices.ACTIVE
     competition.save()
     
@@ -285,7 +288,9 @@ def invite_judge(request, id):
 
     email = request.data.get('email')
     if not User.objects.filter(email=email).exists():
-        return JsonResponse({"error":"Korisnik nije prijavljen"}, status=403)
+        print(f"Korisnik {email} ne postoji. Šaljem pozivnicu.")
+        send_judge_invite(request) 
+        return JsonResponse({"success": "Korisnik ne postoji. Pozivnica za registraciju poslana na email."}, status=202)
 
     user = User.objects.get(email=email)
     if user.role != Role.JUDGE:
@@ -475,7 +480,8 @@ def send_judge_invite(request):
         )
 
     token = uuid.uuid4()
-    invite_link = settings.FRONTEND_URL
+    base_url = settings.FRONTEND_URL.rstrip('/')
+    invite_link = f"{base_url}/?invitedJudge=True"
 
     send_mail(
         subject="Judge Registration Invitation",
@@ -483,7 +489,7 @@ def send_judge_invite(request):
             "Hello,\n\n"
             "You have been invited to register as a judge on Dance Arena.\n"
             "Please use the link below to register:\n\n"
-           # #f"{invite_link}?judgeCalled=True\n\n"
+            f"{invite_link}\n\n"
             "Best regards,\n"
             "Dance Arena Team"
         ),
