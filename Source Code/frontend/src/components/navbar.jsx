@@ -30,7 +30,7 @@ function DropdownItem({
 		: text;
 
 	const itemContent = (
-		<div className={`dropdown-item ${border}`} onClick={handleClick}>
+		<div className={`da-dropdown-item ${border}`} onClick={handleClick}>
 			<div>
 				<i className={displayedIcon}></i>
 			</div>
@@ -63,7 +63,7 @@ function Navbar({ currentUser }) {
 
 
 	return (
-		<div className="navbar">
+		<div className="da-navbar">
 			<Link to="/homepage" className="logo-text-container">
 				<img
 					src="/pictures/logo.png"
@@ -73,13 +73,27 @@ function Navbar({ currentUser }) {
 				<img
 					src="/pictures/tekst.png"
 					alt="Dance Arena Title"
-					className="navbar-text"
+					className="da-navbar-text"
 				/>
 			</Link>
 			<div className="nav-links">
-				<p className="nav-link">Home</p>
-				<p className="nav-link">About</p>
-				<p className="nav-link">Contact</p>
+				<p className="da-nav-link">Home</p>
+				<p className="da-nav-link">About</p>
+				<p className="da-nav-link">Contact</p>
+			</div>
+			<div className="account-name">
+				{currentUser ? (
+					<>
+						<p>Uspješno ulogirani!</p>
+						<p>
+							Dobrodošao {currentUser.first_name}!
+						</p>
+					</>
+				) : (
+					<>
+						<p>Niste prijavljeni.</p>
+						<Link to="/login">Idi na prijavu</Link>
+					</>)}
 			</div>
 			<div className="account-section">
 				<img
@@ -90,7 +104,7 @@ function Navbar({ currentUser }) {
 				/>
 
 				{isOpen && currentUser && (
-					<div className="dropdown-menu">
+					<div className="da-dropdown-menu">
 						<DropdownItem
 							icon="bi bi-x-circle"
 							text="Close menu"
