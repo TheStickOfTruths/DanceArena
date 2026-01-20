@@ -299,14 +299,18 @@ def invite_judge(request, id):
     return JsonResponse({"success": "Dodan sudac."}, status=201)
 
 
-def get_judges(request):
+def get_judges(request, id):
     if request.method != 'GET':
         return JsonResponse({"error": "Nije get metoda."}, status=405)
     
+    competition = get_object_or_404(Competition, id=id)
+    user = request.user
     data = []
     
     if User.objects.filter(role=Role.JUDGE).exists():
         for user in User.objects.filter(role=Role.JUDGE):
+            if CompetitionJudge.objects.filter(competition=competition,judge=user):
+                continue
             data.append({
             'name': user.first_name,
             'surname': user.last_name,
@@ -479,7 +483,7 @@ def send_judge_invite(request):
             "Hello,\n\n"
             "You have been invited to register as a judge on Dance Arena.\n"
             "Please use the link below to register:\n\n"
-            f"{invite_link}\n\n"
+           # #f"{invite_link}?judgeCalled=True\n\n"
             "Best regards,\n"
             "Dance Arena Team"
         ),
