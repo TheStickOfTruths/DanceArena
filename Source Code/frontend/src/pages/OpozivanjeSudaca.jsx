@@ -23,7 +23,7 @@ function OpozivanjeSudaca() {
     const location = useLocation();
     const navigate = useNavigate();
     const [sudci, setSudci] = useState([]);
-    const competition = location.state?.competition;
+    const competition = location.state?.competition || null;
     const { user: currentUser, loading } = useAuth();
 
     if (loading) {
@@ -37,23 +37,25 @@ function OpozivanjeSudaca() {
         );
     }
 
-    useEffect(() => {
-        if (currentUser.role !== 'ORGANIZER') {
-            navigate('/');
+    const fetchSudci = async () => {
+        try {
+            const response = await getSudci(competition.id);
+
+            console.log(response);
+
+            setSudci(response);
+        } catch (error) {
+            console.error("Greška pri dohvaćanju sudaca:", error);
         }
-        const fetchSudci = async () => {
-            try {
-                const response = await getSudci();
+    };
 
-                console.log(response);
-
-                setSudci(response);
-            } catch (error) {
-                console.error("Greška pri dohvaćanju sudaca:", error);
-            }
-        };
+    useEffect(() => {
+        if (currentUser.role !== 'ORGANIZER' || !competition) {
+            navigate('/');
+            return;
+        }
         fetchSudci();
-    }, []);
+    }, [currentUser, competition, navigate]);
 
     const handleSudciInvite = async (e) => {
         e.preventDefault();
@@ -64,12 +66,14 @@ function OpozivanjeSudaca() {
     const sendInvite = async (email) => {
         try {
             await inviteSudac(competition.id, email);
-            alert(`Pozivnica poslana na ${email}!`);
+            fetchSudci();
         } catch (error) {
             console.error("Greška pri slanju pozivnice:", error);
             alert('Došlo je do greške pri slanju pozivnice.');
         }
     };
+
+    if (!competition || !currentUser) return null;
 
     return (
         <div className='page-container'>
@@ -87,7 +91,7 @@ function OpozivanjeSudaca() {
                         </form>
                     </div>
                     <div className="sudci-lista">
-                        <p>Popis postojećih sudaca:</p>
+                        {sudci.length > 0 ? <p>Popis postojećih sudaca:</p> : <p>Pozvao si sve sudce što postoje, molim te nemoj više!</p>}
                         <div className="sudci-scroll">
                             {sudci.map((sudac) => (
                                 <SudacMini key={sudac.id} sudac={sudac} onInvite={sendInvite} />
