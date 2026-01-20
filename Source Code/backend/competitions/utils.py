@@ -198,8 +198,7 @@ def generate_grades(appearance):
     return grades_json
 
 
-def send_judge_invite(request):
-    email = request.data.get('email')
+def send_judge_invite(email, invite_link):
 
     if not email:
         return JsonResponse(
@@ -208,22 +207,23 @@ def send_judge_invite(request):
         )
 
     token = uuid.uuid4()
-    base_url = settings.FRONTEND_URL.rstrip('/')
-    invite_link = f"{base_url}/?invitedJudge=True"
 
-    send_mail(
-        subject="Judge Registration Invitation",
-        message=(
-            "Hello,\n\n"
-            "You have been invited to register as a judge on Dance Arena.\n"
-            "Please use the link below to register:\n\n"
-            f"{invite_link}\n\n"
-            "Best regards,\n"
-            "Dance Arena Team"
-        ),
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[email],
-    )
+    try:
+        send_mail(
+            subject="Judge Registration Invitation",
+            message=(
+                "Hello,\n\n"
+                "You have been invited to register as a judge on Dance Arena.\n"
+                "Please use the link below to register:\n\n"
+                f"{invite_link}\n\n"
+                "Best regards,\n"
+                "Dance Arena Team"
+            ),
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+        )
+    except Exception as e:
+        print(f"--- GREŠKA PRI SLANJU EMAILA ({email}): {e} ---")
 
     return JsonResponse(
         {"detail": "Invitation email sent"},

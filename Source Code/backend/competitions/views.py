@@ -19,6 +19,7 @@ from users.paypal import get_paypal_access_token
 from django.utils.dateparse import parse_duration
 from datetime import timedelta
 import itertools
+import threading
 
 
 def competition_filtered(request):
@@ -286,8 +287,14 @@ def invite_judge(request, id):
     email = request.data.get('email')
     if not User.objects.filter(email=email).exists():
         print(f"Korisnik {email} ne postoji. Šaljem pozivnicu.")
-        send_judge_invite(request) 
-        return JsonResponse({"success": "Korisnik ne postoji. Pozivnica za registraciju poslana na email."}, status=202)
+        base_url = settings.FRONTEND_URL.rstrip('/')
+        invite_link = f"{base_url}/?invitedJudge=True"
+        thread = threading.Thread(
+            target=send_judge_invite, 
+            args=(email, invite_link)
+        )
+        thread.start()
+        return JsonResponse({"success": "Korisnik ne postoji. Pozivnica se šalje u pozadini."}, status=202)
 
     user = User.objects.get(email=email)
     if user.role != Role.JUDGE:
