@@ -30,7 +30,7 @@ const CompetitionMicro = ({ competition, onUpdate }) => {
 
     const handleInviteJudges = (e) => {
         e.stopPropagation();
-        console.log("Pozovi sudce za:", competition.name);
+        navigate('/organizator/pozivanje-sudaca', { state: { competition } });
     };
 
     const handleManageRegistrations = (e) => {

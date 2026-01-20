@@ -174,4 +174,27 @@ export const signUpForCompetition = async (comp_id, formData) => {
     }
 };
 
+export const getSudci = async () => {
+    try {
+        const response = await api.get("/competitions/get_judges/");
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri dohvaćanju sudaca:", error);
+        return [];
+    }
+};
+
+export const inviteSudac = async (competitionId, email) => {
+    try {
+        const formData = new FormData();
+        formData.append('email', email);
+
+        const response = await api.post(`/competitions/${competitionId}/invite_judge/`, formData);
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri pozivanju suca:", error);
+        throw error;
+    }
+};
+
 export default api;

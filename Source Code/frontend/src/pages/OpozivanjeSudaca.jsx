@@ -1,0 +1,104 @@
+import '../styles/opozivanjesudaca.css';
+import Navbar from '../components/navbar.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { getSudci, inviteSudac } from '../services/apiService.jsx';
+
+const SudacMini = ({ sudac, onInvite }) => {
+    return (
+        <div className="sudac-mini">
+            <p>{sudac.name} {sudac.surname} ({sudac.email})</p>
+            <button
+                className="pozovi-button"
+                onClick={() => onInvite(sudac.email)}
+            >
+                Pozovi
+            </button>
+        </div>
+    );
+}
+
+function OpozivanjeSudaca() {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [sudci, setSudci] = useState([]);
+    const competition = location.state?.competition;
+    const { user: currentUser, loading } = useAuth();
+
+    if (loading) {
+        return (
+            <div className="homepage-container">
+                <Navbar currentUser={currentUser} />
+                <div className="homepage-content-container">
+                    <p>Učitavanje podataka...</p>
+                </div>
+            </div>
+        );
+    }
+
+    useEffect(() => {
+        if (currentUser.role !== 'ORGANIZER') {
+            navigate('/');
+        }
+        const fetchSudci = async () => {
+            try {
+                const response = await getSudci();
+
+                console.log(response);
+
+                setSudci(response);
+            } catch (error) {
+                console.error("Greška pri dohvaćanju sudaca:", error);
+            }
+        };
+        fetchSudci();
+    }, []);
+
+    const handleSudciInvite = async (e) => {
+        e.preventDefault();
+        const email = e.target.elements[0].value;
+        await sendInvite(email);
+    };
+
+    const sendInvite = async (email) => {
+        try {
+            await inviteSudac(competition.id, email);
+            alert(`Pozivnica poslana na ${email}!`);
+        } catch (error) {
+            console.error("Greška pri slanju pozivnice:", error);
+            alert('Došlo je do greške pri slanju pozivnice.');
+        }
+    };
+
+    return (
+        <div className='page-container'>
+            <Navbar currentUser={currentUser} />
+
+            <div className='page-content-container-sudci'>
+                <div className='headboard'>
+                    <p>Pozovi sudce za {competition.name}</p>
+                </div>
+                <div className="pozivanje-sudaca-content">
+                    <div className="email-form">
+                        <form onSubmit={handleSudciInvite}>
+                            <input type="email" placeholder="Unesite email sudca" required />
+                            <button type="submit">Pošalji pozivnicu</button>
+                        </form>
+                    </div>
+                    <div className="sudci-lista">
+                        <p>Popis postojećih sudaca:</p>
+                        <div className="sudci-scroll">
+                            {sudci.map((sudac) => (
+                                <SudacMini key={sudac.id} sudac={sudac} onInvite={sendInvite} />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    );
+}
+
+export default OpozivanjeSudaca;

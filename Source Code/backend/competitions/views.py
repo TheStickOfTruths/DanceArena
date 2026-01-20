@@ -308,7 +308,7 @@ def get_judges(request):
     if User.objects.filter(role=Role.JUDGE).exists():
         for user in User.objects.filter(role=Role.JUDGE):
             data.append({
-            'name': user.name,
+            'name': user.first_name,
             'surname': user.last_name,
             'email': user.email,
             'id': user.id
