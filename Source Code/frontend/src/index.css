@@ -8,8 +8,7 @@
   font-family: 'Poppins', sans-serif;
 }
 
-:root,
-.theme-original {
+:root {
   --primary: #E04594ff;
   --secondary: #37D2E7ff;
   --primary-darker: #8A206Aff;
@@ -20,8 +19,7 @@
   
 }
 
-/* :root,
-.theme-dark {
+:root.theme-dark {
   --primary: #8A206Aff;
   --secondary: #21519Aff;
   --primary-darker: #E04594ff;
@@ -29,7 +27,7 @@
   --bijela: #2C3E50ff;
   --crna: #ECF0F1ff;
   --ljubičasta: #5D3375ff;
-} */
+}
 
 body {
   margin: 0;
