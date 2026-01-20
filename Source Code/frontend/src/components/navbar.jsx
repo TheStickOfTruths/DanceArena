@@ -1,44 +1,44 @@
 import "../styles/navbar.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 
 function DropdownItem({
-  icon,
-  text,
-  path,
-  border = "yes",
-  onClick,
-  themeToggle = false,
-  isDark,
-  setIsDark
+	icon,
+	text,
+	path,
+	border = "yes",
+	onClick,
+	themeToggle = false,
+	isDark,
+	setIsDark
 }) {
-  const handleClick = () => {
-    if (themeToggle) {
-      setIsDark(prev => !prev);
-    }
-    if (onClick) onClick();
-  };
+	const handleClick = () => {
+		if (themeToggle) {
+			setIsDark(prev => !prev);
+		}
+		if (onClick) onClick();
+	};
 
-  const displayedIcon = themeToggle
-    ? isDark ? "bi bi-sun" : "bi bi-moon"
-    : icon;
+	const displayedIcon = themeToggle
+		? isDark ? "bi bi-sun" : "bi bi-moon"
+		: icon;
 
-  const displayedText = themeToggle
-    ? isDark ? "Light Theme" : "Dark Theme"
-    : text;
+	const displayedText = themeToggle
+		? isDark ? "Light Theme" : "Dark Theme"
+		: text;
 
-  const itemContent = (
-    <div className={`dropdown-item ${border}`} onClick={handleClick}>
-      <div>
-        <i className={displayedIcon}></i>
-      </div>
-      <p>{displayedText}</p>
-    </div>
-  );
+	const itemContent = (
+		<div className={`dropdown-item ${border}`} onClick={handleClick}>
+			<div>
+				<i className={displayedIcon}></i>
+			</div>
+			<p>{displayedText}</p>
+		</div>
+	);
 
-  return path ? <Link to={path}>{itemContent}</Link> : itemContent;
+	return path ? <Link to={path}>{itemContent}</Link> : itemContent;
 }
 
 function Navbar({ currentUser }) {
@@ -102,17 +102,18 @@ function Navbar({ currentUser }) {
 							path="/profile"
 						/>
 						<DropdownItem
-							border="no"
-							icon="bi bi-escape"
-							text="LogOut"
-							onClick={handleLogout}
-						/>
-						<DropdownItem 
 							themeToggle
 							border="yes"
 							isDark={isDark}
 							setIsDark={setIsDark}
 						/>
+						<DropdownItem
+							border="no"
+							icon="bi bi-escape"
+							text="LogOut"
+							onClick={handleLogout}
+						/>
+
 					</div>
 				)}
 			</div>
