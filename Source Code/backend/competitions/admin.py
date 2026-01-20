@@ -65,7 +65,7 @@ class AppearanceAdmin(admin.ModelAdmin):
     ordering = ('club_manager', 'id')
 
     def competition_info(self, obj):
-        return f"ID:{obj.competition.id} - ORGANIZER:{obj.competition.organizer}"
+        return f"ID:{obj.competition.id} ORGANIZER:{obj.competition.organizer}"
     competition_info.short_description = 'Competition'
 
 @admin.register(Grade)
@@ -82,7 +82,7 @@ class GradeAdmin(admin.ModelAdmin):
     competition_info.short_description = 'Competition'
 
     def judge_info(self, obj):
-        return f"{obj.judge.id} - {obj.judge.username}"
+        return f"{obj.judge.id} - {obj.judge}"
     judge_info.short_description = 'Judge'
 
     def appearance_id(self, obj):
@@ -100,11 +100,11 @@ class CompetitionJudgeAdmin(admin.ModelAdmin):
     ordering = ('competition', 'id')
 
     def judge_info(self, obj):
-        return f"{obj.judge.id} - {obj.judge.username}"
+        return f"{str(obj.judge)}"
     judge_info.short_description = 'Judge'
 
     def competition_info(self, obj):
-        return f"ID:{obj.competition.id} - ORGANIZER:{obj.competition.organizer}"
+        return f"ID:{obj.competition.id} ORGANIZER:{obj.competition.organizer}"
     competition_info.short_description = 'Competition'
 
 
