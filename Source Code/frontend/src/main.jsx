@@ -25,8 +25,8 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import ProfileWrapper from "./components/ProfileWrapper.jsx";
 import OMojaNatjecanja from "./pages/OMojaNatjecanja.jsx";
 import PaypalReturn from "./components/paypalreturn.jsx";
-import PaymentSuccess from "./pages/PaymentSuccess.jsx";
-import OpozivanjeSudaca from "./pages/Opozivanjesudaca.jsx";
+import PaymentSuccess from "./pages/paymentsuccess.jsx";
+import OpozivanjeSudaca from "./pages/OpozivanjeSudaca.jsx";
 
 
 // Dohvati Client ID iz .env datoteke
