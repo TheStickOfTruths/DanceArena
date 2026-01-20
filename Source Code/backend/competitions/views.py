@@ -158,7 +158,7 @@ def competition_edit(request, id):
         return JsonResponse({"error":"Nisi vlasnik natjecanja."}, status=403)
     
     if competition.status != StatusChoices.DRAFT:
-        return JsonResponse({"error":"Natjecanje nije draft."}, status=401)
+        return JsonResponse({"error":"Natjecanje nije draft."}, status=403)
 
     for field in Competition._meta.fields:
         attr = field.name  
@@ -198,7 +198,7 @@ def competition_publish(request, id):
         return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
 
     if competition.status != StatusChoices.DRAFT:
-        return JsonResponse({"error": "Natjecanje nije draft."}, status=401)
+        return JsonResponse({"error": "Natjecanje nije draft."}, status=403)
 
     competition.status = StatusChoices.PUBLISHED
     competition.save()
@@ -234,9 +234,9 @@ def competition_activate(request, id):
         return JsonResponse({"error": "Nisu završile prijave."}, status=403)
 
     if not CompetitionJudge.objects.filter(competition=competition).exists():
-        return JsonResponse({"error":"Nema sudaca."}, status=401)
+        return JsonResponse({"error":"Nema sudaca."}, status=403)
     if CompetitionJudge.objects.filter(competition=competition).count() / 2 == 1:
-        return JsonResponse({"error":"Paran broj sudaca."}, status=401)
+        return JsonResponse({"error":"Paran broj sudaca."}, status=403)
     competition.status = StatusChoices.ACTIVE
     competition.save()
     
@@ -281,15 +281,15 @@ def invite_judge(request, id):
         return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
     
     if competition.status != StatusChoices.PUBLISHED:
-        return JsonResponse({"error": "Natjecanje nije objavljeno."}, status=401)
+        return JsonResponse({"error": "Natjecanje nije objavljeno."}, status=403)
 
     email = request.POST.get('email')
     if not User.objects.filter(email=email).exists():
-        return JsonResponse({"error":"Korisnik nije prijavljen"}, status=401)
-    #   poslati mail sucu koji nije prijavljen
+        return JsonResponse({"error":"Korisnik nije prijavljen"}, status=403)
+
     user = User.objects.get(email=email)
     if user.role != Role.JUDGE:
-        return JsonResponse({"error": "Korisnik nije sudac."}, status=401)
+        return JsonResponse({"error": "Korisnik nije sudac."}, status=403)
     compJudge = CompetitionJudge(
         competition=competition,
         judge=user
@@ -329,7 +329,7 @@ def competition_grade(request, competition_id, appearance_id):
         return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
         
     if competition.status != StatusChoices.ACTIVE:
-        return JsonResponse({"error": "Natjecanje nije aktivno."}, status=401)
+        return JsonResponse({"error": "Natjecanje nije aktivno."}, status=403)
         
     appearance_grade = request.POST.get('grade')
     grade = Grade(
@@ -351,7 +351,7 @@ def competition_complete(request, id):
         return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
 
     if competition.status != StatusChoices.ACTIVE:
-        return JsonResponse({"error": "Natjecanje nije aktivno."}, status=401)
+        return JsonResponse({"error": "Natjecanje nije aktivno."}, status=403)
     
     competition.status = StatusChoices.COMPLETED
     competition.save()
@@ -426,7 +426,7 @@ def competition_appearance_results(request, competition_id, appearance_id):
     competition = get_object_or_404(Competition, id=competition_id)
 
     if competition.status != StatusChoices.COMPLETED:
-        return JsonResponse({"error": "Natjecanje nije gotovo"}, status=401)
+        return JsonResponse({"error": "Natjecanje nije gotovo"}, status=403)
     
     appearance = get_object_or_404(Appearance, id=appearance_id)
     
@@ -451,7 +451,7 @@ def competition_accept_appearance(request, competition_id, appearance_id):
         return JsonResponse({"error":"Natjecanje nije objavljeno."}, status=403)
     
     if appearance.competition != competition:
-        return JsonResponse({"error":"Nastup ne pripada tom natjecanju"}, status=401)
+        return JsonResponse({"error":"Nastup ne pripada tom natjecanju"}, status=403)
     
     appearance.accepted = True
     appearance.save()
