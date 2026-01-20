@@ -4,21 +4,41 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 
-function DropdownItem({ icon, text, path, border = "yes", onClick }) {
-	const itemContent = (
-		<div className={`dropdown-item ${border}`}>
-			<div>
-				<i className={icon}></i>
-			</div>
-			<p>{text}</p>
-		</div>
-	);
+function DropdownItem({
+  icon,
+  text,
+  path,
+  border = "yes",
+  onClick,
+  themeToggle = false,
+  isDark,
+  setIsDark
+}) {
+  const handleClick = () => {
+    if (themeToggle) {
+      setIsDark(prev => !prev);
+    }
+    if (onClick) onClick();
+  };
 
-	if (path) {
-		return <Link to={path}>{itemContent}</Link>;
-	}
+  const displayedIcon = themeToggle
+    ? isDark ? "bi bi-sun" : "bi bi-moon"
+    : icon;
 
-	return <div onClick={onClick}>{itemContent}</div>;
+  const displayedText = themeToggle
+    ? isDark ? "Light Theme" : "Dark Theme"
+    : text;
+
+  const itemContent = (
+    <div className={`dropdown-item ${border}`} onClick={handleClick}>
+      <div>
+        <i className={displayedIcon}></i>
+      </div>
+      <p>{displayedText}</p>
+    </div>
+  );
+
+  return path ? <Link to={path}>{itemContent}</Link> : itemContent;
 }
 
 function Navbar({ currentUser }) {
@@ -26,10 +46,21 @@ function Navbar({ currentUser }) {
 	const { user, logout } = useAuth();
 	const navigate = useNavigate();
 
+	const [isDark, setIsDark] = useState(() =>
+		localStorage.getItem("theme") === "dark"
+	);
+
+	useEffect(() => {
+		const root = document.getElementById("root");
+		root.classList.toggle("theme-dark", isDark);
+		localStorage.setItem("theme", isDark ? "dark" : "light");
+	}, [isDark]);
+
 	const handleLogout = () => {
 		logout();
 		navigate('/homepage', { replace: true });
 	};
+
 
 	return (
 		<div className="navbar">
@@ -75,6 +106,12 @@ function Navbar({ currentUser }) {
 							icon="bi bi-escape"
 							text="LogOut"
 							onClick={handleLogout}
+						/>
+						<DropdownItem 
+							themeToggle
+							border="yes"
+							isDark={isDark}
+							setIsDark={setIsDark}
 						/>
 					</div>
 				)}
