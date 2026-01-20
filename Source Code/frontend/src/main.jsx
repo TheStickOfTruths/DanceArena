@@ -26,6 +26,7 @@ import ProfileWrapper from "./components/ProfileWrapper.jsx";
 import OMojaNatjecanja from "./pages/OMojaNatjecanja.jsx";
 import PaypalReturn from "./components/paypalreturn.jsx";
 import PaymentSuccess from "./pages/PaymentSuccess.jsx";
+import OpozivanjeSudaca from "./pages/Opozivanjesudaca.jsx";
 
 
 // Dohvati Client ID iz .env datoteke
@@ -96,6 +97,13 @@ const router = createBrowserRouter([
     element:
       <ProtectedRoute>
         <OupravljanjePrijavama />
+      </ProtectedRoute>,
+  },
+  {
+    path: "organizator/pozivanje-sudaca",
+    element:
+      <ProtectedRoute>
+        <OpozivanjeSudaca />
       </ProtectedRoute>,
   },
   {

@@ -4,16 +4,13 @@ from django.http import JsonResponse
 from django.db import transaction
 from .models import Competition, Appearance, Grade, CompetitionJudge, Result,\
                     StatusChoices, AgeCategory, StyleCategory, GroupSizeCategory, MediaFile
-from .utils import generate_starting_list_pdf, generate_results, generate_grades
+from .utils import generate_starting_list_pdf, generate_results, generate_grades, send_judge_invite
 from users.models import User, Role
 from users.decorators import role_required
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework import status
-import uuid
-from rest_framework.permissions import AllowAny
 import json
 import boto3
 from users.paypal_orders import create_paypal_order
@@ -158,7 +155,7 @@ def competition_edit(request, id):
         return JsonResponse({"error":"Nisi vlasnik natjecanja."}, status=403)
     
     if competition.status != StatusChoices.DRAFT:
-        return JsonResponse({"error":"Natjecanje nije draft."}, status=401)
+        return JsonResponse({"error":"Natjecanje nije draft."}, status=403)
 
     for field in Competition._meta.fields:
         attr = field.name  
@@ -198,7 +195,7 @@ def competition_publish(request, id):
         return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
 
     if competition.status != StatusChoices.DRAFT:
-        return JsonResponse({"error": "Natjecanje nije draft."}, status=401)
+        return JsonResponse({"error": "Natjecanje nije draft."}, status=403)
 
     competition.status = StatusChoices.PUBLISHED
     competition.save()
@@ -216,6 +213,13 @@ def competition_close_applications(request, id):
     
     if competition.status != StatusChoices.PUBLISHED:
         return JsonResponse({"error": "Natjecanje nije objavljeno."}, status=403)
+    
+    if not CompetitionJudge.objects.filter(competition=competition).exists():
+        return JsonResponse({"error":"Nema sudaca."}, status=403)
+    if CompetitionJudge.objects.filter(competition=competition).count() == 1:
+        return JsonResponse({"error":"Samo jedan sudac."}, status=403)
+    if CompetitionJudge.objects.filter(competition=competition).count() / 2 == 1:
+        return JsonResponse({"error":"Paran broj sudaca."}, status=403)
 
     competition.status = StatusChoices.CLOSED_APPLICATIONS
     competition.save()
@@ -233,10 +237,6 @@ def competition_activate(request, id):
     if competition.status != StatusChoices.CLOSED_APPLICATIONS:
         return JsonResponse({"error": "Nisu završile prijave."}, status=403)
 
-    if not CompetitionJudge.objects.filter(competition=competition).exists():
-        return JsonResponse({"error":"Nema sudaca."}, status=401)
-    if CompetitionJudge.objects.filter(competition=competition).count() / 2 == 1:
-        return JsonResponse({"error":"Paran broj sudaca."}, status=401)
     competition.status = StatusChoices.ACTIVE
     competition.save()
     
@@ -281,22 +281,48 @@ def invite_judge(request, id):
         return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
     
     if competition.status != StatusChoices.PUBLISHED:
-        return JsonResponse({"error": "Natjecanje nije objavljeno."}, status=401)
+        return JsonResponse({"error": "Natjecanje nije objavljeno."}, status=403)
 
-    email = request.POST.get('email')
+    email = request.data.get('email')
     if not User.objects.filter(email=email).exists():
-        return JsonResponse({"error":"Korisnik nije prijavljen"}, status=401)
-    #   poslati mail sucu koji nije prijavljen
+        print(f"Korisnik {email} ne postoji. Šaljem pozivnicu.")
+        send_judge_invite(request) 
+        return JsonResponse({"success": "Korisnik ne postoji. Pozivnica za registraciju poslana na email."}, status=202)
+
     user = User.objects.get(email=email)
-    if user.role != 'JUDGE':
-        return JsonResponse({"error": "Korisnik nije sudac."}, status=401)
-    CompetitionJudge = CompetitionJudge(
+    if user.role != Role.JUDGE:
+        return JsonResponse({"error": "Korisnik nije sudac."}, status=403)
+    compJudge = CompetitionJudge(
         competition=competition,
         judge=user
     )
-    CompetitionJudge.save()
+    compJudge.save()
 
     return JsonResponse({"success": "Dodan sudac."}, status=201)
+
+
+def get_judges(request, id):
+    if request.method != 'GET':
+        return JsonResponse({"error": "Nije get metoda."}, status=405)
+    
+    competition = get_object_or_404(Competition, id=id)
+    user = request.user
+    data = []
+    
+    if User.objects.filter(role=Role.JUDGE).exists():
+        for user in User.objects.filter(role=Role.JUDGE):
+            if CompetitionJudge.objects.filter(competition=competition,judge=user):
+                continue
+            data.append({
+            'name': user.first_name,
+            'surname': user.last_name,
+            'email': user.email,
+            'id': user.id
+        })
+    
+        return JsonResponse(data, safe=False, status=200)
+    else:
+        return JsonResponse({"success":"Nema sudaca."}, status=200)
 
 
 @api_view(['POST']) 
@@ -309,7 +335,7 @@ def competition_grade(request, competition_id, appearance_id):
         return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
         
     if competition.status != StatusChoices.ACTIVE:
-        return JsonResponse({"error": "Natjecanje nije aktivno."}, status=401)
+        return JsonResponse({"error": "Natjecanje nije aktivno."}, status=403)
         
     appearance_grade = request.POST.get('grade')
     grade = Grade(
@@ -331,7 +357,7 @@ def competition_complete(request, id):
         return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
 
     if competition.status != StatusChoices.ACTIVE:
-        return JsonResponse({"error": "Natjecanje nije aktivno."}, status=401)
+        return JsonResponse({"error": "Natjecanje nije aktivno."}, status=403)
     
     competition.status = StatusChoices.COMPLETED
     competition.save()
@@ -406,7 +432,7 @@ def competition_appearance_results(request, competition_id, appearance_id):
     competition = get_object_or_404(Competition, id=competition_id)
 
     if competition.status != StatusChoices.COMPLETED:
-        return JsonResponse({"error": "Natjecanje nije gotovo"}, status=401)
+        return JsonResponse({"error": "Natjecanje nije gotovo"}, status=403)
     
     appearance = get_object_or_404(Appearance, id=appearance_id)
     
@@ -431,46 +457,12 @@ def competition_accept_appearance(request, competition_id, appearance_id):
         return JsonResponse({"error":"Natjecanje nije objavljeno."}, status=403)
     
     if appearance.competition != competition:
-        return JsonResponse({"error":"Nastup ne pripada tom natjecanju"}, status=401)
+        return JsonResponse({"error":"Nastup ne pripada tom natjecanju"}, status=403)
     
     appearance.accepted = True
     appearance.save()
      
     return JsonResponse({"success":"Nastup prihvaćen."}, status=201)
-
-
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def send_judge_invite(request):
-    email = request.data.get('email')
-
-    if not email:
-        return JsonResponse(
-            {"detail": "Email is required"},
-            status=status.HTTP_400_BAD_REQUEST
-        )
-
-    token = uuid.uuid4()
-    invite_link = settings.FRONTEND_URL
-
-    send_mail(
-        subject="Judge Registration Invitation",
-        message=(
-            "Hello,\n\n"
-            "You have been invited to register as a judge on Dance Arena.\n"
-            "Please use the link below to register:\n\n"
-            f"{invite_link}\n\n"
-            "Best regards,\n"
-            "Dance Arena Team"
-        ),
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[email],
-    )
-
-    return JsonResponse(
-        {"detail": "Invitation email sent"},
-        status=status.HTTP_200_OK
-    )
 
 
 def generate_s3_url(file_path, link_type='view'):

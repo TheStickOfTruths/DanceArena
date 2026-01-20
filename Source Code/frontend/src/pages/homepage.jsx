@@ -1,5 +1,5 @@
 import "../styles/homepage.css";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Navbar from "../components/navbar.jsx";
 import CompetitionMini from "../components/competitionmini.jsx";
@@ -10,6 +10,10 @@ function Homepage() {
 	const { user: currentUser } = useAuth();
 	const [loading, setLoading] = useState(true);
 	const [competitions, setCompetitions] = useState([]);
+
+	if (currentUser && currentUser.role === "ANONYMOUS") {
+		return <Navigate to="/registracija" replace />;
+	}
 
 	useEffect(() => {
 		const fetchData = async () => {
