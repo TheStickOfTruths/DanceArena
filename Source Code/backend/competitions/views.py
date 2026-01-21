@@ -324,13 +324,21 @@ def get_judges(request, id):
     if User.objects.filter(role=Role.JUDGE).exists():
         for user in User.objects.filter(role=Role.JUDGE):
             if CompetitionJudge.objects.filter(competition=competition,judge=user):
-                continue
-            data.append({
-            'name': user.first_name,
-            'surname': user.last_name,
-            'email': user.email,
-            'id': user.id
-        })
+                data.append({
+                    'name': user.first_name,
+                    'surname': user.last_name,
+                    'email': user.email,
+                    'member': True,
+                    'id': user.id
+                })
+            else:
+                data.append({
+                    'name': user.first_name,
+                    'surname': user.last_name,
+                    'email': user.email,
+                    'member': False,
+                    'id': user.id
+                })
     
         return JsonResponse(data, safe=False, status=200)
     else:
