@@ -17,10 +17,34 @@
     align-items: center;
     justify-content: flex-start;
     flex-direction: row;
+    background-color: #FDFEFEff;
 }
 
 .logo-text-container:hover {
     cursor: pointer;
+}
+
+.navbar-buttons {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.navbar-btn {
+    text-decoration: underline;
+    color: var(--crna);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.navbar-btn:hover {
+    cursor: pointer;
+    color: color-mix(in oklab, var(--crna) 50%, var(--bijela) 50%);;
 }
 
 .account-info-container {
@@ -29,7 +53,6 @@
     justify-content: center;
     flex-direction: row;
     gap: 10px;
-
 }
 
 .account-name {
@@ -59,27 +82,11 @@
     width: auto;
 }
 
-.nav-links {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    gap: 20px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.da-nav-link {
-    margin: 0;
-    cursor: pointer;
-}
-
 .account-section {
     display: flex;
     align-items: center;
     flex-direction: row;
-    background-color: var(--primary-darker);
+    background-color: color-mix(in oklab, var(--crna) 50%, var(--bijela) 50%);
     border-radius: 50%;
     padding: 4px;
     height: 43px;

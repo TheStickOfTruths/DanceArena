@@ -46,6 +46,8 @@ function Navbar({ currentUser }) {
 	const { user, logout } = useAuth();
 	const navigate = useNavigate();
 
+	// Mijenjanje teme
+
 	const [isDark, setIsDark] = useState(() =>
 		localStorage.getItem("theme") === "dark"
 	);
@@ -56,10 +58,30 @@ function Navbar({ currentUser }) {
 		localStorage.setItem("theme", isDark ? "dark" : "light");
 	}, [isDark]);
 
+	// Logout funkcija
 	const handleLogout = () => {
 		logout();
 		navigate('/homepage', { replace: true });
 	};
+
+	// dinamičko prikazivanje gumbova na osnovi uloge
+	const roleButtons = {
+		ORGANIZER: [
+			{ text: "Novo natjecanje", path: "/organizator/novo-natjecanje" },
+			{ text: "Moja natjecanja", path: "/organizator/moja-natjecanja" },
+		],
+		JUDGE: [
+			{ text: "Ocijeni nastupe", path: "/sudac/odabir-natjecanja" },
+		],
+		CLUB_MANAGER: [
+			{ text: "Prijavi Nastup", path: "/voditelj/prijava-nastupa-odabir" },
+			{ text: "Otvorene prijave", path: "/voditelj/pregled-natjecanja" },
+		],
+		NULL: []
+	};
+
+	const userRoleButtons = currentUser?.role ? roleButtons[currentUser.role] || [] : [];
+	
 
 
 	return (
@@ -76,6 +98,16 @@ function Navbar({ currentUser }) {
 					className="da-navbar-text"
 				/>
 			</Link>
+			<div className="navbar-buttons">
+				{currentUser ? (
+					userRoleButtons.map((btn, idx) => (
+					<Link key={idx} to={btn.path} className="navbar-btn">
+						{btn.text}
+					</Link>
+				))
+				) : (<></>)}
+				
+			</div>
 			<div className="account-info-container">
 				<div className="account-name">
 				{currentUser ? (
