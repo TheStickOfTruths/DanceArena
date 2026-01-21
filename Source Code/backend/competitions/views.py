@@ -15,6 +15,7 @@ from rest_framework import status
 import json
 import boto3
 from users.paypal_orders import create_paypal_order
+from users.decorators import organizer_subscription_required
 import requests
 from users.paypal import get_paypal_access_token
 from django.utils.dateparse import parse_duration
@@ -56,6 +57,7 @@ def competition_filtered(request):
 
 @api_view(['GET']) 
 @permission_classes([IsAuthenticated]) 
+@organizer_subscription_required
 def my_competitions(request):
     data = []
     if Competition.objects.filter(organizer=request.user).exists():
@@ -81,6 +83,7 @@ def my_competitions(request):
 @api_view(['POST']) 
 @permission_classes([IsAuthenticated]) 
 @role_required(Role.ORGANIZER)
+@organizer_subscription_required
 def competition_create(request):
     try:
         data = json.loads(request.body)
@@ -150,6 +153,7 @@ def competition_id(request, id):
 
 @api_view(['PUT']) 
 @permission_classes([IsAuthenticated]) 
+@organizer_subscription_required
 def competition_edit(request, id):
     competition = get_object_or_404(Competition, id=id)
 
@@ -188,8 +192,10 @@ def competition_edit(request, id):
     return JsonResponse({"success":"Spremljene promjene"}, status=201)
 
 
+
 @api_view(['PUT']) 
 @permission_classes([IsAuthenticated]) 
+@organizer_subscription_required
 def competition_publish(request, id):
     competition = get_object_or_404(Competition, id=id)
 
@@ -207,6 +213,7 @@ def competition_publish(request, id):
 
 @api_view(['POST']) 
 @permission_classes([IsAuthenticated]) 
+@organizer_subscription_required
 def competition_close_applications(request, id):
     competition = get_object_or_404(Competition, id=id)
 
@@ -236,6 +243,7 @@ def competition_close_applications(request, id):
 
 @api_view(['PUT']) 
 @permission_classes([IsAuthenticated])
+@organizer_subscription_required
 def competition_activate(request, id):
     competition = get_object_or_404(Competition, id=id)
     
@@ -285,6 +293,7 @@ def competition_starting_list(request, id):
 
 @api_view(['POST']) 
 @permission_classes([IsAuthenticated])
+@organizer_subscription_required
 def invite_judge(request, id):
     competition = get_object_or_404(Competition, id=id)
 
@@ -377,6 +386,7 @@ def competition_grade(request, competition_id, appearance_id):
 
 @api_view(['POST']) 
 @permission_classes([IsAuthenticated])
+@organizer_subscription_required
 def competition_complete(request, id):
     competition = get_object_or_404(Competition, id=id)
 
@@ -477,9 +487,9 @@ def competition_appearance_results(request, competition_id, appearance_id):
 
 @api_view(['GET']) 
 @permission_classes([IsAuthenticated])
+@organizer_subscription_required
 def competition_get_appearances(request, competition_id):
     competition = get_object_or_404(Competition, id=competition_id)
-
     judge_ids = CompetitionJudge.objects.filter(competition=competition).values_list('judge__id', flat=True)
     if request.user != competition.organizer and request.user.id not in judge_ids:
         return JsonResponse({"error": "Nije tvoje natjecanja."}, status=403)
@@ -541,6 +551,7 @@ def my_appearances(request):
 
 @api_view(['PUT']) 
 @permission_classes([IsAuthenticated])
+@organizer_subscription_required
 def competition_accept_appearance(request, competition_id, appearance_id):
     competition = get_object_or_404(Competition, id=competition_id)
     appearance = get_object_or_404(Appearance, id=appearance_id)
@@ -565,6 +576,7 @@ def competition_accept_appearance(request, competition_id, appearance_id):
 
 @api_view(['PUT']) 
 @permission_classes([IsAuthenticated])
+@organizer_subscription_required
 def competition_unaccept_appearance(request, competition_id, appearance_id):
     competition = get_object_or_404(Competition, id=competition_id)
     appearance = get_object_or_404(Appearance, id=appearance_id)
@@ -586,6 +598,7 @@ def competition_unaccept_appearance(request, competition_id, appearance_id):
 
 @api_view(['PUT']) 
 @permission_classes([IsAuthenticated])
+@organizer_subscription_required
 def competition_deny_appearance(request, competition_id, appearance_id):
     competition = get_object_or_404(Competition, id=competition_id)
     appearance = get_object_or_404(Appearance, id=appearance_id)

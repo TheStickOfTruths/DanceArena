@@ -126,6 +126,16 @@ function NovoNatjecanje() {
                 <div className='new-comp-form-container'>
                     <div className='headboard'>
                         <p>{isEditMode ? 'Uredi natjecanje' : 'Novo natjecanje'}</p>
+                        <div
+                            className="back-button"
+                            role="button"
+                            tabIndex={0}
+                            aria-label="Return to previous page"
+                            onClick={() => navigate(-1)}
+                        >
+                            <i className="bi bi-arrow-left"></i>
+                        </div>
+                        <p>Novo natjecanje</p>
                     </div>
 
                     <form className='new-comp-form' onSubmit={handleSubmit}>

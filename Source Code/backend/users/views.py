@@ -20,7 +20,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .paypal import get_paypal_access_token
 from .models import OrganizerSubscriptionPrice, OrganizerSubscription
 import requests
-from django.shortcuts import redirect
 from datetime import date
 from dateutil.relativedelta import relativedelta
 import json
@@ -45,18 +44,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
-
-@role_required(Role.ORGANIZER)
-def organizers(req):
-    return HttpResponse('Organizer.html')
-
-@role_required(Role.CLUB_MANAGER)
-def club_managers(req):
-    return HttpResponse('Club manager.html')
-
-@role_required(Role.JUDGE)
-def judges(req):
-    return HttpResponse('Judge.html')
 
 @api_view(['GET'])
 @permission_classes([AllowAny]) 
@@ -124,7 +111,8 @@ def custom_logout(request):
     return JsonResponse({'success': "Logged out successfully."}, status=200)
 
 
-@csrf_exempt
+@api_view(['POST'])
+@role_required(Role.ORGANIZER)
 def create_subscription(request):
     price_obj = OrganizerSubscriptionPrice.objects.first()
     if not price_obj:
@@ -149,10 +137,6 @@ def create_subscription(request):
         json=payload,
     )
 
-    # NEW: debug instead of plain raise_for_status
-    print("PayPal subscription status:", response.status_code)
-    print("PayPal subscription body:", response.text)
-
     try:
         response.raise_for_status()
     except requests.HTTPError:
@@ -164,25 +148,25 @@ def create_subscription(request):
     return JsonResponse(response.json())
 
 
-@login_required
+@api_view(['POST'])
 def paypal_success(request):
-    subscription_id = request.GET.get("subscription_id")
+    subscription_id = request.data.get("subscription_id")
     if not subscription_id:
         return JsonResponse({"error": "Missing subscription ID"}, status=400)
 
     access_token = get_paypal_access_token()
     resp = requests.get(
         f"{settings.PAYPAL_API_BASE}/v1/billing/subscriptions/{subscription_id}",
-        headers={"Authorization": f"Bearer {access_token}"},
+        headers={
+            "Authorization": f"Bearer {access_token}"},
     )
+
     resp.raise_for_status()
     data = resp.json()
 
-    # Expect ACTIVE after successful approval
     if data.get("status") != "ACTIVE":
         return JsonResponse({"error": "Subscription not active", "paypal_status": data.get("status")}, status=400)
 
-    # Get or create subscription record for this organizer
     subscription, _ = OrganizerSubscription.objects.get_or_create(
         organizer=request.user
     )
@@ -194,11 +178,9 @@ def paypal_success(request):
     subscription.paypal_subscription_id = subscription_id
     subscription.paypal_status = data.get("status")
     subscription.price_paid = current_price
-    # Assuming your plan is yearly; change to months=1 if monthly
     subscription.end_date = date.today() + relativedelta(years=1)
     subscription.save()
 
-    
     return JsonResponse({"success": True, "paypal_status": data.get("status")})
     
 

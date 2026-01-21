@@ -2,10 +2,12 @@ import '../styles/s-ocijeni-natjecanje.css';
 import Navbar from '../components/navbar';
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from '../services/apiService.jsx';
+import { Link, useNavigate } from 'react-router-dom';
 
 function SocijeniNatjecanje(){
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,6 +44,15 @@ function SocijeniNatjecanje(){
 
             <div className='page-content-container'>
                 <div className='headboard-s'>
+                    <div
+                        className="back-button"
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Return to previous page"
+                        onClick={() => navigate(-1)}
+                        >
+                        <i className="bi bi-arrow-left"></i>
+                    </div>
                     <p>Ime Natjecanja</p>
                 </div>
 

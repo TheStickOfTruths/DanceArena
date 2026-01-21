@@ -16,6 +16,8 @@
     box-sizing: border-box;
     overflow: hidden;
     min-height: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .competitions-container {
@@ -28,11 +30,6 @@
     flex: 1;
     overflow-y: auto;
     min-height: 0;
-}
-
-.homepage-content-container {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
 }
 
 .homepage-content-container::-webkit-scrollbar {

@@ -6,6 +6,9 @@
   flex-direction: column;
   align-items: center;
   font-family: 'Poppins', sans-serif;
+  background-color: var(--bijela);
+  color: var(--crna);
+  /* height: 100vh; */
 }
 
 :root {
@@ -19,7 +22,7 @@
 
 }
 
-:root.theme-dark {
+#root.theme-dark {
   --primary: #8A206Aff;
   --secondary: #21519Aff;
   --primary-darker: #E04594ff;
@@ -30,6 +33,7 @@
 }
 
 body {
-  margin: 0;
   background-color: var(--bijela);
+  color: var(--crna);
+  margin: 0;
 }
