@@ -682,8 +682,11 @@ def competition_signup(request, competition_id):
     length_str = request.data.get("length")  
     choreograph = request.data.get("choreograph")
     age_category_name = request.data.get("age_category")
+    age_category_formatted = age_category_name.upper().replace(' ', '_')
     style_category_name = request.data.get("style_category")
+    style_category_formatted = style_category_name.upper().replace(' ', '_')
     group_size_category_name = request.data.get("group_size_category")
+    group_size_category_formatted = group_size_category_name.upper().replace(' ', '_')
 
     required_fields = [order_id, choreography, length_str, choreograph, 
                        age_category_name, style_category_name, group_size_category_name]
@@ -703,10 +706,12 @@ def competition_signup(request, competition_id):
             length = timedelta(hours=h, minutes=m, seconds=s)
         except Exception:
             return JsonResponse({"detail": "Format mora biti HH:MM:SS."}, status=400)
+        
+    
 
-    age_category = get_object_or_404(AgeCategory, name=age_category_name)
-    style_category = get_object_or_404(StyleCategory, name=style_category_name)
-    group_size_category = get_object_or_404(GroupSizeCategory, name=group_size_category_name)
+    age_category = get_object_or_404(AgeCategory, display__name=age_category_formatted)
+    style_category = get_object_or_404(StyleCategory, name=style_category_formatted)
+    group_size_category = get_object_or_404(GroupSizeCategory, name=group_size_category_formatted)
 
     try:
         capture_result = capture_paypal_order(order_id)
