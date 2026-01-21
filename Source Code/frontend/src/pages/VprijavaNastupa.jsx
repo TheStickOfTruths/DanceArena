@@ -47,6 +47,8 @@ function VprijavaNastupa() {
     };
 
     if (loading) {
+        console.log(competition);
+
         return (
             <div className="homepage-container">
                 <Navbar currentUser={currentUser} />
@@ -57,50 +59,20 @@ function VprijavaNastupa() {
         );
     }
 
-    let dobOptions = [];
+    const dobOptions = competition.age_categories.map(category => ({
+        value: category,
+        label: category
+    }));
 
-    const dobOptionsHelper = [
-        { value: 'DJECA', label: 'Djeca' },
-        { value: 'JUNIORI', label: 'Juniori' },
-        { value: 'SENIORI', label: 'Seniori' }
-    ];
+    const stilOptions = competition.style_categories.map(style => ({
+        value: style,
+        label: style
+    }));
 
-    competition.age_categories.forEach(category => {
-        dobOptions.push({
-            value: category, label: dobOptionsHelper.find(option => option.value === category).label
-        });
-    });
-
-    let stilOptions = [];
-
-    const stilOptionsHelper = [
-        { value: 'HIPHOP', label: 'Hip Hop' },
-        { value: 'BREAK', label: 'Breakdance' },
-        { value: 'JAZZ', label: 'Jazz' },
-        { value: 'BALET', label: 'Balet' },
-        { value: 'STEP', label: 'Step' }
-    ];
-
-    competition.style_categories.forEach(style => {
-        stilOptions.push({
-            value: style, label: stilOptionsHelper.find(option => option.value === style).label
-        });
-    });
-
-    let velicinaOptions = [];
-
-    const velicinaOptionsHelper = [
-        { value: 'SOLO', label: 'Solo' },
-        { value: 'DUO', label: 'Duo' },
-        { value: 'MALA_GRUPA', label: 'Mala grupa' },
-        { value: 'FORMACIJA', label: 'Formacija' }
-    ];
-
-    competition.group_size_categories.forEach(size => {
-        velicinaOptions.push({
-            value: size, label: velicinaOptionsHelper.find(option => option.value === size).label
-        });
-    });
+    const velicinaOptions = competition.group_size_categories.map(size => ({
+        value: size,
+        label: size
+    }));
 
     const handleSubmit = async (event) => {
         event.preventDefault();

@@ -125,7 +125,7 @@ function NovoNatjecanje() {
 
                 <div className='new-comp-form-container'>
                     <div className='headboard'>
-                        <p>Novo natjecanje</p>
+                        <p>{isEditMode ? 'Uredi natjecanje' : 'Novo natjecanje'}</p>
                     </div>
 
                     <form className='new-comp-form' onSubmit={handleSubmit}>

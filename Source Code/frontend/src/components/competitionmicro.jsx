@@ -28,14 +28,9 @@ const CompetitionMicro = ({ competition, onUpdate }) => {
         navigate('/voditelj/prijava-nastupa', { state: { competition } });
     };
 
-    const handleInviteJudges = (e) => {
-        e.stopPropagation();
-        navigate('/organizator/pozivanje-sudaca', { state: { competition } });
-    };
-
     const handleManageRegistrations = (e) => {
         e.stopPropagation();
-        console.log("Upravljaj prijavama za:", competition.name);
+        navigate('/organizator/upravljanje-prijavama', { state: { competition } })
     };
 
 
@@ -101,11 +96,8 @@ const CompetitionMicro = ({ competition, onUpdate }) => {
                     {/* 2. STATUS: PUBLISHED */}
                     {competition.status === 'PUBLISHED' && (
                         <>
-                            <button className="micro-btn btn-purple" onClick={handleInviteJudges}>
-                                Pozovi Sudce
-                            </button>
                             <button className="micro-btn btn-secondary" onClick={handleManageRegistrations}>
-                                Upravljaj Prijavama
+                                Upravljaj Natjecanjem
                             </button>
                         </>
                     )}
