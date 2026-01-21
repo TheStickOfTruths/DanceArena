@@ -18,8 +18,8 @@
   --secondary-darker: #21519Aff;
   --bijela: #FDFEFEff;
   --crna: black;
-  --ljubičasta: #8E45B3ff;
-  
+  --ljubicasta: #8E45B3ff;
+
 }
 
 #root.theme-dark {
@@ -29,7 +29,7 @@
   --secondary-darker: #37D2E7ff;
   --bijela: #2C3E50ff;
   --crna: #ECF0F1ff;
-  --ljubičasta: #5D3375ff;
+  --ljubicasta: #5D3375ff;
 }
 
 body {

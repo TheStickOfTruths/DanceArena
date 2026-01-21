@@ -1,5 +1,5 @@
 import '../styles/competitionmicro.css';
-import { publishCompetition } from '../services/apiService';
+import { publishCompetition, getStartnaLista, startCompetition, finishCompetition } from '../services/apiService';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -28,14 +28,39 @@ const CompetitionMicro = ({ competition, onUpdate }) => {
         navigate('/voditelj/prijava-nastupa', { state: { competition } });
     };
 
-    const handleInviteJudges = (e) => {
-        e.stopPropagation();
-        navigate('/organizator/pozivanje-sudaca', { state: { competition } });
-    };
-
     const handleManageRegistrations = (e) => {
         e.stopPropagation();
-        console.log("Upravljaj prijavama za:", competition.name);
+        navigate('/organizator/upravljanje-prijavama', { state: { competition } })
+    };
+
+    const handleViewStartList = async (e) => {
+        e.stopPropagation();
+        try {
+            const startList = await getStartnaLista(competition.id);
+            window.open(startList.link, '_blank');
+        } catch (error) {
+            console.error("Greška pri dohvaćanju startne liste:", error);
+        }
+    };
+
+    const handleStartCompetition = async (e) => {
+        e.stopPropagation();
+        try {
+            await startCompetition(competition.id);
+            onUpdate({ ...competition, status: 'ACTIVE' });
+        } catch (error) {
+            console.error("Greška pri pokretanju natjecanja:", error);
+        }
+    };
+
+    const handleFinishCompetition = async (e) => {
+        e.stopPropagation();
+        try {
+            await finishCompetition(competition.id);
+            onUpdate({ ...competition, status: 'COMPLETED' });
+        } catch (error) {
+            alert(error.response?.data?.error || 'Došlo je do greške pri završetku natjecanja.');
+        }
     };
 
 
@@ -86,7 +111,6 @@ const CompetitionMicro = ({ competition, onUpdate }) => {
                 </div>
 
                 <div className="comp-micro-actions">
-                    {/* 1. STATUS: DRAFT */}
                     {competition.status === 'DRAFT' && (
                         <>
                             <button className="micro-btn btn-secondary-darker" onClick={handleEdit}>
@@ -98,29 +122,28 @@ const CompetitionMicro = ({ competition, onUpdate }) => {
                         </>
                     )}
 
-                    {/* 2. STATUS: PUBLISHED */}
                     {competition.status === 'PUBLISHED' && (
                         <>
-                            <button className="micro-btn btn-purple" onClick={handleInviteJudges}>
-                                Pozovi Sudce
-                            </button>
                             <button className="micro-btn btn-secondary" onClick={handleManageRegistrations}>
-                                Upravljaj Prijavama
+                                Upravljaj Natjecanjem
                             </button>
                         </>
                     )}
 
-                    {/* --- PLACEHOLDERS ZA BUDUĆNOST --- */}
-
                     {competition.status === 'CLOSED_APPLICATIONS' && (
-                        <button className="micro-btn btn-primary-darker" onClick={(e) => e.stopPropagation()}>
-                            Pregledaj startne liste
-                        </button>
+                        <>
+                            <button className="micro-btn btn-secondary" onClick={handleViewStartList}>
+                                Pregledaj startnu listu
+                            </button>
+                            <button className="micro-btn btn-primary-darker" onClick={handleStartCompetition}>
+                                Započni Natjecanje
+                            </button>
+                        </>
                     )}
 
                     {competition.status === 'ACTIVE' && (
-                        <button className="micro-btn btn-primary" onClick={(e) => e.stopPropagation()}>
-                            Unesi rezultate
+                        <button className="micro-btn btn-primary" onClick={handleFinishCompetition}>
+                            Završi natjecanje
                         </button>
                     )}
 

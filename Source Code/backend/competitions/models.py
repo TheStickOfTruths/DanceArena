@@ -3,6 +3,7 @@ from users.models import User
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
+from django.core.exceptions import ValidationError
 
 
 class AgeChoices(models.TextChoices):
@@ -177,6 +178,21 @@ class Appearance(models.Model):
 
     def __str__(self):
         return f"ID:{self.id} COMPETITION_ID:{self.competition.id} CLUB_MANAGER:{self.club_manager}"
+    
+    def clean(self):
+        super().clean()
+        if not self.competition.group_size_categories.filter(id=self.group_size_category.id).exists():
+            raise ValidationError({
+                'group_size_category': f"Nedozvoljena kategorija za velicinu grupe."
+            })
+        if not self.competition.style_categories.filter(id=self.style_category.id).exists():
+            raise ValidationError({
+                'group_size_category': f"Nedozvoljena kategorija za stil."
+            })
+        if not self.competition.age_categories.filter(id=self.age_category.id).exists():
+            raise ValidationError({
+                'group_size_category': f"Nedozvoljena kategorija za dob."
+            })
     
     def get_length_display(self):
         if self.length:

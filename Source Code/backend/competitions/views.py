@@ -229,6 +229,9 @@ def competition_close_applications(request, id):
         return JsonResponse({"error":"Samo jedan sudac."}, status=403)
     if CompetitionJudge.objects.filter(competition=competition).count() / 2 == 1:
         return JsonResponse({"error":"Paran broj sudaca."}, status=403)
+    
+    if Appearance.objects.filter(competition=competition, accepted=False):
+        return JsonResponse({"error":"Postoje neriješene prijave."}, status=403)
 
     competition.status = StatusChoices.CLOSED_APPLICATIONS
     competition.save()
@@ -281,6 +284,9 @@ def competition_starting_list(request, id):
 
     if request.user.id not in allowed_users:
         return JsonResponse({"error":"Pristup zabranjen."}, status=403)
+    
+    if not competition.starting_list:
+        return JsonResponse({"message":"Nema startne liste."}, status=200)
 
     return JsonResponse({"link":competition.starting_list.file.url}, status=200)
 
@@ -299,10 +305,8 @@ def invite_judge(request, id):
 
     email = request.data.get('email')
     if not User.objects.filter(email=email).exists():
-        print(f"Korisnik {email} ne postoji. Šaljem pozivnicu.")
         base_url = settings.FRONTEND_URL.rstrip('/')
         invite_link = f"{base_url}/?invitedJudge=True"
-        print(invite_link)
         thread = threading.Thread(
             target=send_judge_invite, 
             args=(email, invite_link)
@@ -333,13 +337,21 @@ def get_judges(request, id):
     if User.objects.filter(role=Role.JUDGE).exists():
         for user in User.objects.filter(role=Role.JUDGE):
             if CompetitionJudge.objects.filter(competition=competition,judge=user):
-                continue
-            data.append({
-            'name': user.first_name,
-            'surname': user.last_name,
-            'email': user.email,
-            'id': user.id
-        })
+                data.append({
+                    'name': user.first_name,
+                    'surname': user.last_name,
+                    'email': user.email,
+                    'member': True,
+                    'id': user.id
+                })
+            else:
+                data.append({
+                    'name': user.first_name,
+                    'surname': user.last_name,
+                    'email': user.email,
+                    'member': False,
+                    'id': user.id
+                })
     
         return JsonResponse(data, safe=False, status=200)
     else:
@@ -484,7 +496,7 @@ def competition_get_appearances(request, competition_id):
     
     if Appearance.objects.filter(competition=competition).exists():
         data = []
-        for appearance in Appearance.objects.filter(competition=competition):
+        for appearance in Appearance.objects.filter(competition=competition).order_by('choreography'):
             url = 'music_not_uploaded'
             if appearance.music:
                 url = appearance.music.file.url
@@ -552,6 +564,9 @@ def competition_accept_appearance(request, competition_id, appearance_id):
     
     if appearance.competition != competition:
         return JsonResponse({"error":"Nastup ne pripada tom natjecanju"}, status=403)
+    
+    if not appearance.paid_registration:
+        return JsonResponse({"error":"Kotizacija nije plaćena"}, status=403)
     
     appearance.accepted = True
     appearance.save()
@@ -687,8 +702,11 @@ def competition_signup(request, competition_id):
     length_str = request.data.get("length")  
     choreograph = request.data.get("choreograph")
     age_category_name = request.data.get("age_category")
+    age_category_formatted = age_category_name.upper().replace(' ', '_')
     style_category_name = request.data.get("style_category")
+    style_category_formatted = style_category_name.upper().replace(' ', '_')
     group_size_category_name = request.data.get("group_size_category")
+    group_size_category_formatted = group_size_category_name.upper().replace(' ', '_')
 
     required_fields = [order_id, choreography, length_str, choreograph, 
                        age_category_name, style_category_name, group_size_category_name]
@@ -708,10 +726,12 @@ def competition_signup(request, competition_id):
             length = timedelta(hours=h, minutes=m, seconds=s)
         except Exception:
             return JsonResponse({"detail": "Format mora biti HH:MM:SS."}, status=400)
+        
+    
 
-    age_category = get_object_or_404(AgeCategory, name=age_category_name)
-    style_category = get_object_or_404(StyleCategory, name=style_category_name)
-    group_size_category = get_object_or_404(GroupSizeCategory, name=group_size_category_name)
+    age_category = get_object_or_404(AgeCategory, name=age_category_formatted)
+    style_category = get_object_or_404(StyleCategory, name=style_category_formatted)
+    group_size_category = get_object_or_404(GroupSizeCategory, name=group_size_category_formatted)
 
     try:
         capture_result = capture_paypal_order(order_id)

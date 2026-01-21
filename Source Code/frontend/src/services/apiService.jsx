@@ -207,4 +207,84 @@ export const getResults = async () => {
     }
 };
 
+export const getNastupi = async (competitionId) => {
+    try {
+        const response = await api.get(`/competitions/${competitionId}/appearances/`);
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri dohvaćanju nastupa:", error);
+        return [];
+    }
+};
+
+export const acceptNastup = async (competitionId, nastupId) => {
+    try {
+        const response = await api.put(`/competitions/${competitionId}/appearances/${nastupId}/accept/`);
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri prihvaćanju nastupa:", error);
+        throw error;
+    }
+};
+
+export const rejectNastup = async (competitionId, nastupId) => {
+    try {
+        const response = await api.put(`/competitions/${competitionId}/appearances/${nastupId}/unaccept/`);
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri odbijanju nastupa:", error);
+        throw error;
+    }
+};
+
+export const denyNastup = async (competitionId, nastupId) => {
+    try {
+        const response = await api.put(`/competitions/${competitionId}/appearances/${nastupId}/deny/`);
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri opozivu nastupa:", error);
+        throw error;
+    }
+};
+
+export const closeCompetitionApplications = async (competitionId) => {
+    try {
+        const response = await api.post(`/competitions/${competitionId}/close_applications/`);
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri zatvaranju prijava natjecanja:", error);
+        throw error;
+    }
+};
+
+export const getStartnaLista = async (competitionId) => {
+    try {
+        const response = await api.get(`/competitions/${competitionId}/starting_list/`);
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri dohvaćanju startne liste:", error);
+        throw error;
+    }
+};
+
+export const startCompetition = async (competitionId) => {
+    try {
+        const response = await api.put(`/competitions/${competitionId}/activate/`);
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri pokretanju natjecanja:", error);
+        throw error;
+    }
+};
+
+export const finishCompetition = async (competitionId) => {
+    try {
+        const response = await api.post(`/competitions/${competitionId}/complete/`);
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri završetku natjecanja:", error);
+        throw error;
+    }
+};
+
 export default api;

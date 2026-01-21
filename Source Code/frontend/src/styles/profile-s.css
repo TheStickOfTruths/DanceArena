@@ -94,7 +94,7 @@
 
 .profile-info-general {
     display: grid;
-    grid-template-columns: 22vh auto;
+    grid-template-columns: 17vw auto;
     gap: 0 5%;
     margin-top: 2%
 }
@@ -111,11 +111,12 @@
     padding: 0;
     height: 4.5vh;
     width: 90%;
+    min-height: 40px;
     border-style: none;
     border-radius: 13px;
     background-color: var(--primary-darker);
     margin-top: 11%;
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     color: white
 }
 
