@@ -76,18 +76,17 @@ function Navbar({ currentUser }) {
 					className="da-navbar-text"
 				/>
 			</Link>
-			<div className="account-name">
+			<div className="account-info-container">
+				<div className="account-name">
 				{currentUser ? (
 					<>
-						<p>Uspješno ulogirani!</p>
 						<p>
-							Dobrodošao {currentUser.first_name}!
+							{currentUser.first_name}
 						</p>
 					</>
 				) : (
 					<>
-						<p>Niste prijavljeni.</p>
-						<Link to="/login">Idi na prijavu</Link>
+						<Link to="/login">Prijavi se</Link>
 					</>)}
 			</div>
 			<div className="account-section">
@@ -126,6 +125,8 @@ function Navbar({ currentUser }) {
 					</div>
 				)}
 			</div>
+			</div>
+			
 		</div>
 	);
 }

@@ -23,6 +23,31 @@
     cursor: pointer;
 }
 
+.account-info-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 10px;
+
+}
+
+.account-name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: color-mix(in oklab, var(--crna) 50%, var(--bijela) 50%);
+}
+
+.account-name p {
+    margin: 0;
+    padding: 0;
+}
+
+
 .navbar-logo {
     height: 40px;
     width: auto;
