@@ -483,7 +483,7 @@ def competition_get_appearances(request, competition_id):
     
     if Appearance.objects.filter(competition=competition).exists():
         data = []
-        for appearance in Appearance.objects.filter(competition=competition):
+        for appearance in Appearance.objects.filter(competition=competition).order_by('choreography'):
             url = 'music_not_uploaded'
             if appearance.music:
                 url = appearance.music.file.url
