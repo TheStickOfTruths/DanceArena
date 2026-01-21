@@ -6,9 +6,6 @@ from users.views import MyTokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
-    path('organizer/', views.organizers, name="organizer.home"),
-    path('club_manager/', views.club_managers, name="club_manager.home"),
-    path('judge/', views.judges, name="judge.home"),
     path('auth/', include('dj_rest_auth.urls')),
     path('auth/login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

@@ -3,13 +3,12 @@ from .models import Role, OrganizerSubscription
 
 def is_paid_organizer(user):
     if not user.is_authenticated or user.role != Role.ORGANIZER:
-        return False
+        return True
 
     sub = OrganizerSubscription.objects.filter(organizer=user).first()
     if sub is None:
         return False
 
-    
     if not sub.paid_subscription:
         return False
     if not sub.end_date or sub.end_date < date.today():
