@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { getCurrentUser } from '../services/apiService.jsx';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-function VpregledNatjecanja(){
+function VpregledNatjecanja() {
 
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -39,7 +39,7 @@ function VpregledNatjecanja(){
         );
     }
 
-    return(
+    return (
         <div className='page-container'>
             <Navbar currentUser={currentUser} />
 
@@ -50,19 +50,19 @@ function VpregledNatjecanja(){
                         role="button"
                         tabIndex={0}
                         aria-label="Return to previous page"
-                        onClick={() => navigate(-1)}
-                        >
+                        onClick={() => navigate('/profile')}
+                    >
                         <i className="bi bi-arrow-left"></i>
                     </div>
                     <p>Moja natjecanja</p>
                 </div>
 
                 <div className='competition-list-container'>
-                    
+
                 </div>
             </div>
         </div>
-        
+
     );
 }
 

@@ -38,10 +38,6 @@ function OMojaNatjecanja() {
         );
     }
 
-    function handleOupravljanjePrijavama() {
-        navigate('/organizator/upravljanje-prijavama');
-    }
-
     function handleCompetitionsUpdate(competition) {
         const updatedCompetitions = competitions.map((comp) =>
             comp.id === competition.id ? competition : comp
@@ -60,8 +56,8 @@ function OMojaNatjecanja() {
                         role="button"
                         tabIndex={0}
                         aria-label="Return to previous page"
-                        onClick={() => navigate(-1)}
-                        >
+                        onClick={() => navigate('/profile')}
+                    >
                         <i className="bi bi-arrow-left"></i>
                     </div>
                     <p>Moja Natjecanja</p>

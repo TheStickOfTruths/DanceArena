@@ -208,17 +208,16 @@ function OupravljanjePrijavama() {
 
             <div className='stranica-content-container'>
                 <div className='headboard'>
-                    <p>Pripremanje za {competition.name}</p>
                     <div
                         className="back-button"
                         role="button"
                         tabIndex={0}
                         aria-label="Return to previous page"
-                        onClick={() => navigate(-1)}
+                        onClick={() => navigate('/profile')}
                     >
                         <i className="bi bi-arrow-left"></i>
                     </div>
-                    <p>Upravljanje prijavama</p>
+                    <p>Upravljanje prijavama za: {competition.name}</p>
                 </div>
                 <div className='sudci-nastupi-container'>
 

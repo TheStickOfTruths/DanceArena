@@ -42,7 +42,7 @@ function ProfileO() {
                         role="button"
                         tabIndex={0}
                         aria-label="Return to previous page"
-                        onClick={() => navigate(-1)}
+                        onClick={() => navigate('/homepage')}
                         >
                         <i className="bi bi-arrow-left"></i>
                     </div>

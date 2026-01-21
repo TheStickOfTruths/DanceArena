@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { getCurrentUser } from '../services/apiService.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 
-function SocijeniNatjecanje(){
+function SocijeniNatjecanje() {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -38,7 +38,7 @@ function SocijeniNatjecanje(){
         );
     }
 
-    return(
+    return (
         <div className='page-container'>
             <Navbar currentUser={currentUser} />
 
@@ -49,19 +49,19 @@ function SocijeniNatjecanje(){
                         role="button"
                         tabIndex={0}
                         aria-label="Return to previous page"
-                        onClick={() => navigate(-1)}
-                        >
+                        onClick={() => navigate('/profile')}
+                    >
                         <i className="bi bi-arrow-left"></i>
                     </div>
                     <p>Ime Natjecanja</p>
                 </div>
 
                 <div className='competition-list-container'>
-                    
+
                 </div>
             </div>
         </div>
-        
+
     );
 }
 
