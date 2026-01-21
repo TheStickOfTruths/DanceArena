@@ -257,4 +257,34 @@ export const closeCompetitionApplications = async (competitionId) => {
     }
 };
 
+export const getStartnaLista = async (competitionId) => {
+    try {
+        const response = await api.get(`/competitions/${competitionId}/starting_list/`);
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri dohvaćanju startne liste:", error);
+        throw error;
+    }
+};
+
+export const startCompetition = async (competitionId) => {
+    try {
+        const response = await api.post(`/competitions/${competitionId}/activate/`);
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri pokretanju natjecanja:", error);
+        throw error;
+    }
+};
+
+export const finishCompetition = async (competitionId) => {
+    try {
+        const response = await api.post(`/competitions/${competitionId}/complete/`);
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri završetku natjecanja:", error);
+        throw error;
+    }
+};
+
 export default api;

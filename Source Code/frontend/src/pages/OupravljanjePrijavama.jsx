@@ -46,6 +46,7 @@ const nastupSetter = async (competitionId, nastupId, action) => {
 const updateNastupi = async (setNastupi, competitionID) => {
     try {
         const updatedNastupi = await getNastupi(competitionID);
+        console.log("Osvježeni nastupi:", updatedNastupi);
         setNastupi(updatedNastupi);
     } catch (error) {
         console.error("Greška pri osvježavanju nastupa:", error);
@@ -87,9 +88,9 @@ const NastupMini = ({ nastup, competitionID, setNastupi }) => {
                     <p className="nastup-subtitle">{nastup.club_manager} | {nastup.choreograph}</p>
                 </div>
                 <div className="nastup-actions">
-                    <button className="odbij-btn" onClick={handleReject}>
+                    {!nastup.accepted && <button className="odbij-btn" onClick={handleReject}>
                         Odbij
-                    </button>
+                    </button>}
                     <button
                         className={`prihvati-btn ${nastup.accepted ? 'opozovi-btn' : ''}`}
                         onClick={handleAccept}
@@ -166,7 +167,11 @@ function OupravljanjePrijavama() {
     const handleSudciInvite = async (e) => {
         e.preventDefault();
         const email = e.target.elements[0].value;
-        await sendInvite(email);
+        const response = await sendInvite(email);
+        if (response) {
+            alert(`Pozivnica poslana na ${email}`);
+            e.target.reset();
+        }
     };
 
     const handleCloseApplications = async () => {
@@ -186,8 +191,9 @@ function OupravljanjePrijavama() {
 
     const sendInvite = async (email) => {
         try {
-            await inviteSudac(competition.id, email);
+            const response = await inviteSudac(competition.id, email);
             await updateSudci();
+            return response;
         } catch (error) {
             console.error("Greška pri slanju pozivnice:", error);
             alert('Došlo je do greške pri slanju pozivnice.');

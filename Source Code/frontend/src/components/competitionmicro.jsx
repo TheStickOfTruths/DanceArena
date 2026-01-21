@@ -1,5 +1,5 @@
 import '../styles/competitionmicro.css';
-import { publishCompetition } from '../services/apiService';
+import { publishCompetition, getStartnaLista, startCompetition, finishCompetition } from '../services/apiService';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -81,7 +81,6 @@ const CompetitionMicro = ({ competition, onUpdate }) => {
                 </div>
 
                 <div className="comp-micro-actions">
-                    {/* 1. STATUS: DRAFT */}
                     {competition.status === 'DRAFT' && (
                         <>
                             <button className="micro-btn btn-secondary-darker" onClick={handleEdit}>
@@ -93,7 +92,6 @@ const CompetitionMicro = ({ competition, onUpdate }) => {
                         </>
                     )}
 
-                    {/* 2. STATUS: PUBLISHED */}
                     {competition.status === 'PUBLISHED' && (
                         <>
                             <button className="micro-btn btn-secondary" onClick={handleManageRegistrations}>
@@ -102,12 +100,15 @@ const CompetitionMicro = ({ competition, onUpdate }) => {
                         </>
                     )}
 
-                    {/* --- PLACEHOLDERS ZA BUDUĆNOST --- */}
-
                     {competition.status === 'CLOSED_APPLICATIONS' && (
-                        <button className="micro-btn btn-primary-darker" onClick={(e) => e.stopPropagation()}>
-                            Pregledaj startne liste
-                        </button>
+                        <>
+                            <button className="micro-btn btn-secondary" onClick={(e) => e.stopPropagation()}>
+                                Pregledaj startnu listu
+                            </button>
+                            <button className="micro-btn btn-primary-darker" onClick={(e) => e.stopPropagation()}>
+                                Započni Natjecanje
+                            </button>
+                        </>
                     )}
 
                     {competition.status === 'ACTIVE' && (

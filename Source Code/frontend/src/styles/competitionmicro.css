@@ -74,11 +74,11 @@
 }
 
 .status-completed {
-    background-color: var(--ljubičasta);
+    background-color: var(--ljubicasta);
 }
 
 .status-completed-border {
-    border-left-color: var(--ljubičasta);
+    border-left-color: var(--ljubicasta);
 }
 
 
@@ -125,7 +125,7 @@
 }
 
 .btn-purple {
-    background-color: var(--ljubičasta);
+    background-color: var(--ljubicasta);
 }
 
 @media (max-width: 600px) {
@@ -154,7 +154,7 @@
     }
 
     .status-completed-border {
-        border-top-color: var(--ljubičasta);
+        border-top-color: var(--ljubicasta);
     }
 
     .comp-micro-actions {
