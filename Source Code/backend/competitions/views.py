@@ -276,6 +276,9 @@ def competition_starting_list(request, id):
 
     if request.user.id not in allowed_users:
         return JsonResponse({"error":"Pristup zabranjen."}, status=403)
+    
+    if not competition.starting_list:
+        return JsonResponse({"message":"Nema startne liste."}, status=200)
 
     return JsonResponse({"link":competition.starting_list.file.url}, status=200)
 
