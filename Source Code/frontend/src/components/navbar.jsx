@@ -76,11 +76,6 @@ function Navbar({ currentUser }) {
 					className="da-navbar-text"
 				/>
 			</Link>
-			<div className="nav-links">
-				<p className="da-nav-link">Home</p>
-				<p className="da-nav-link">About</p>
-				<p className="da-nav-link">Contact</p>
-			</div>
 			<div className="account-name">
 				{currentUser ? (
 					<>
