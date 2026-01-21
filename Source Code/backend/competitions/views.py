@@ -709,7 +709,7 @@ def competition_signup(request, competition_id):
         
     
 
-    age_category = get_object_or_404(AgeCategory, display__name=age_category_formatted)
+    age_category = get_object_or_404(AgeCategory, name=age_category_formatted)
     style_category = get_object_or_404(StyleCategory, name=style_category_formatted)
     group_size_category = get_object_or_404(GroupSizeCategory, name=group_size_category_formatted)
 
