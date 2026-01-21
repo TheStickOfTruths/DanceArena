@@ -269,7 +269,7 @@ export const getStartnaLista = async (competitionId) => {
 
 export const startCompetition = async (competitionId) => {
     try {
-        const response = await api.post(`/competitions/${competitionId}/activate/`);
+        const response = await api.put(`/competitions/${competitionId}/activate/`);
         return response.data;
     } catch (error) {
         console.error("Greška pri pokretanju natjecanja:", error);

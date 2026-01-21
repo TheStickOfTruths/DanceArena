@@ -33,6 +33,36 @@ const CompetitionMicro = ({ competition, onUpdate }) => {
         navigate('/organizator/upravljanje-prijavama', { state: { competition } })
     };
 
+    const handleViewStartList = async (e) => {
+        e.stopPropagation();
+        try {
+            const startList = await getStartnaLista(competition.id);
+            window.open(startList.link, '_blank');
+        } catch (error) {
+            console.error("Greška pri dohvaćanju startne liste:", error);
+        }
+    };
+
+    const handleStartCompetition = async (e) => {
+        e.stopPropagation();
+        try {
+            await startCompetition(competition.id);
+            onUpdate({ ...competition, status: 'ACTIVE' });
+        } catch (error) {
+            console.error("Greška pri pokretanju natjecanja:", error);
+        }
+    };
+
+    const handleFinishCompetition = async (e) => {
+        e.stopPropagation();
+        try {
+            await finishCompetition(competition.id);
+            onUpdate({ ...competition, status: 'COMPLETED' });
+        } catch (error) {
+            alert(error.response?.data?.error || 'Došlo je do greške pri završetku natjecanja.');
+        }
+    };
+
 
     const getStatusDetails = (status) => {
         switch (status) {
@@ -102,18 +132,18 @@ const CompetitionMicro = ({ competition, onUpdate }) => {
 
                     {competition.status === 'CLOSED_APPLICATIONS' && (
                         <>
-                            <button className="micro-btn btn-secondary" onClick={(e) => e.stopPropagation()}>
+                            <button className="micro-btn btn-secondary" onClick={handleViewStartList}>
                                 Pregledaj startnu listu
                             </button>
-                            <button className="micro-btn btn-primary-darker" onClick={(e) => e.stopPropagation()}>
+                            <button className="micro-btn btn-primary-darker" onClick={handleStartCompetition}>
                                 Započni Natjecanje
                             </button>
                         </>
                     )}
 
                     {competition.status === 'ACTIVE' && (
-                        <button className="micro-btn btn-primary" onClick={(e) => e.stopPropagation()}>
-                            Unesi rezultate
+                        <button className="micro-btn btn-primary" onClick={handleFinishCompetition}>
+                            Završi natjecanje
                         </button>
                     )}
 
