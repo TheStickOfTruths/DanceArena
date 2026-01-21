@@ -222,6 +222,9 @@ def competition_close_applications(request, id):
         return JsonResponse({"error":"Samo jedan sudac."}, status=403)
     if CompetitionJudge.objects.filter(competition=competition).count() / 2 == 1:
         return JsonResponse({"error":"Paran broj sudaca."}, status=403)
+    
+    if Appearance.objects.filter(competition=competition, accepted=False):
+        return JsonResponse({"error":"Postoje neriješene prijave."}, status=403)
 
     competition.status = StatusChoices.CLOSED_APPLICATIONS
     competition.save()
@@ -290,10 +293,8 @@ def invite_judge(request, id):
 
     email = request.data.get('email')
     if not User.objects.filter(email=email).exists():
-        print(f"Korisnik {email} ne postoji. Šaljem pozivnicu.")
         base_url = settings.FRONTEND_URL.rstrip('/')
         invite_link = f"{base_url}/?invitedJudge=True"
-        print(invite_link)
         thread = threading.Thread(
             target=send_judge_invite, 
             args=(email, invite_link)
@@ -549,6 +550,9 @@ def competition_accept_appearance(request, competition_id, appearance_id):
     
     if appearance.competition != competition:
         return JsonResponse({"error":"Nastup ne pripada tom natjecanju"}, status=403)
+    
+    if not appearance.paid_registration:
+        return JsonResponse({"error":"Kotizacija nije plaćena"}, status=403)
     
     appearance.accepted = True
     appearance.save()
