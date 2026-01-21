@@ -125,6 +125,15 @@ function NovoNatjecanje() {
 
                 <div className='new-comp-form-container'>
                     <div className='headboard'>
+                        <div
+                        className="back-button"
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Return to previous page"
+                        onClick={() => navigate(-1)}
+                        >
+                        <i className="bi bi-arrow-left"></i>
+                    </div>
                         <p>Novo natjecanje</p>
                     </div>
 

@@ -30,6 +30,15 @@ function ProfileS() {
 
             <div className='profile-content-container'>
                 <div className='headboard-s'>
+                    <div
+                        className="back-button"
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Return to previous page"
+                        onClick={() => navigate(-1)}
+                        >
+                        <i className="bi bi-arrow-left"></i>
+                    </div>
                     <p>Profil (Sudac)</p>
                 </div>
                 <div className='profile-info-s'>
