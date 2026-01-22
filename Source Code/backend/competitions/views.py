@@ -668,7 +668,6 @@ def download_media(request, file_id):
 @role_required(Role.CLUB_MANAGER)
 def create_entry_order(request, id):
     competition = get_object_or_404(Competition, id=id)
-    print(settings.FRONTEND_URL)
     amount = competition.registration_fee
     order = create_paypal_order(
         amount=float(amount),
@@ -704,7 +703,7 @@ def competition_signup(request, competition_id):
     age_category_name = request.data.get("age_category")
     age_category_formatted = age_category_name.upper().replace(' ', '_')
     style_category_name = request.data.get("style_category")
-    style_category_formatted = style_category_name.upper().replace(' ', '_')
+    style_category_formatted = style_category_name.upper().replace(' ', '')
     group_size_category_name = request.data.get("group_size_category")
     group_size_category_formatted = group_size_category_name.upper().replace(' ', '_')
 
@@ -727,8 +726,6 @@ def competition_signup(request, competition_id):
         except Exception:
             return JsonResponse({"detail": "Format mora biti HH:MM:SS."}, status=400)
         
-    
-
     age_category = get_object_or_404(AgeCategory, name=age_category_formatted)
     style_category = get_object_or_404(StyleCategory, name=style_category_formatted)
     group_size_category = get_object_or_404(GroupSizeCategory, name=group_size_category_formatted)
