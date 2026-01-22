@@ -1,31 +1,59 @@
 import '../styles/v-pregled-natjecanja.css';
+import '../styles/o-upravljanje-prijavama.css';
 import Navbar from '../components/navbar';
 import { useEffect, useState } from 'react';
-import { getCurrentUser } from '../services/apiService.jsx';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { getMojiNastupi } from '../services/apiService.jsx';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
+
+const NastupMini = ({ nastup }) => {
+    const [expanded, setExpanded] = useState(false);
+
+    return (
+        <div
+            className={`nastup-mini ${expanded ? 'expanded' : ''} ${nastup.accepted ? 'accepted-bg' : ''}`}
+            onClick={() => setExpanded(!expanded)}
+        >
+            <div className="nastup-header">
+                <div className="nastup-info">
+                    <p className="nastup-title">{nastup.choreography}</p>
+                    <p className="nastup-subtitle">{nastup.club_manager} | {nastup.choreograph}</p>
+                </div>
+            </div>
+
+            {expanded && (
+                <div className="nastup-details">
+                    <div className="detail-row">
+                        <span>Trajanje:</span> {nastup.length}
+                    </div>
+                    <div className="detail-row">
+                        <span>Kategorije:</span> {nastup.age_category} / {nastup.style_category} / {nastup.group_size_category}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
 
 function VpregledNatjecanja() {
 
-    const [currentUser, setCurrentUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { user: currentUser, loading } = useAuth();
     const navigate = useNavigate();
+    const [nastupi, setNastupi] = useState([]);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchNastupi = async () => {
             try {
-                const response = await getCurrentUser();
-
-                if (response) {
-                    setCurrentUser(response);
-                }
-            } catch (error) {
-                console.error("Greška u homepage.jsx:", error);
-            } finally {
-                setLoading(false);
+                const data = await getMojiNastupi();
+                setNastupi(data);
+                console.log("Dohvaćeni nastupi:", data);
+            }
+            catch (error) {
+                console.error("Greška pri dohvaćanju mojih nastupa:", error);
             }
         };
 
-        fetchData();
+        fetchNastupi();
     }, []);
 
     if (loading) {
@@ -43,7 +71,7 @@ function VpregledNatjecanja() {
         <div className='page-container'>
             <Navbar currentUser={currentUser} />
 
-            <div className='page-content-container'>
+            <div className='nastupi-content-container'>
                 <div className='headboard-v'>
                     <div
                         className="back-button"
@@ -54,11 +82,17 @@ function VpregledNatjecanja() {
                     >
                         <i className="bi bi-arrow-left"></i>
                     </div>
-                    <p>Moja natjecanja</p>
+                    <p>Moji nastupi</p>
                 </div>
 
-                <div className='competition-list-container'>
-
+                <div className='nastupi-list-container'>
+                    {nastupi.length > 0 ? (
+                        nastupi.map((nastup) => (
+                            <NastupMini key={nastup.id} nastup={nastup} />
+                        ))
+                    ) : (
+                        <p>Nema prijavljenih nastupa.</p>
+                    )}
                 </div>
             </div>
         </div>

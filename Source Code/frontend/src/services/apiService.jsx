@@ -287,4 +287,14 @@ export const finishCompetition = async (competitionId) => {
     }
 };
 
+export const getMojiNastupi = async () => {
+    try {
+        const response = await api.get("/competitions/my_appearances/");
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri dohvaćanju mojih nastupa:", error);
+        return [];
+    }
+};
+
 export default api;
