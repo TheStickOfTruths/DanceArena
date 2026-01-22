@@ -42,7 +42,19 @@
   --crna: #FFFFFFff;
   --ljubicasta: #9400D3ff;
 
-  /* font-size: large; */
+}
+
+/* Citljivost teksta */
+#root.larger-text {
+  p,
+  label,
+  button,
+  input,
+  textarea,
+  select,
+  .navbar-btn{
+    font-size: 1.5rem;
+  }
 }
 
 body {
