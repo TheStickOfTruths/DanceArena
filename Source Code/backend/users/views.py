@@ -19,7 +19,7 @@ import requests
 from datetime import date
 from dateutil.relativedelta import relativedelta
 import json
-from organizerUtils import is_paid_organizer
+from .organizerUtils import is_paid_organizer
 
 
 class GoogleLogin(SocialLoginView): 
@@ -184,4 +184,4 @@ def paypal_success(request):
 @api_view(['GET'])
 @role_required(Role.ORGANIZER)
 def subscribed(request):
-    return JsonResponse({'is_subbed':is_paid_organizer(request.user)}, code=200)
+    return JsonResponse({'is_subbed':is_paid_organizer(request.user)}, status=200)
