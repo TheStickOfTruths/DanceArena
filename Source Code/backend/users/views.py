@@ -184,4 +184,4 @@ def paypal_success(request):
 @api_view(['GET'])
 @role_required(Role.ORGANIZER)
 def subscribed(request):
-    return is_paid_organizer(request.user)
+    return JsonResponse({'is_subbed':is_paid_organizer(request.user)}, code=200)
