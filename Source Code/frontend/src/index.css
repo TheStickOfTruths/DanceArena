@@ -8,7 +8,6 @@
   font-family: 'Poppins', sans-serif;
   background-color: var(--bijela);
   color: var(--crna);
-  /* height: 100vh; */
 }
 
 :root {
@@ -22,7 +21,7 @@
 
 }
 
-#root.theme-dark {
+/* #root.theme-dark {
   --primary: #8A206Aff;
   --secondary: #21519Aff;
   --primary-darker: #E04594ff;
@@ -30,6 +29,20 @@
   --bijela: #2C3E50ff;
   --crna: #ECF0F1ff;
   --ljubicasta: #5D3375ff;
+} */
+
+
+/* High Contrast Theme */
+#root.theme-dark { 
+  --primary: #FF69B4ff;
+  --secondary: #00FFFFff;
+  --primary-darker: #FF1493ff;
+  --secondary-darker: #1E90FFFF;
+  --bijela: #000000ff;
+  --crna: #FFFFFFff;
+  --ljubicasta: #9400D3ff;
+
+  /* font-size: large; */
 }
 
 body {

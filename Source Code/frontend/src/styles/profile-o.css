@@ -25,19 +25,20 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    color: var(--bijela);
 }
 
 .headboard p {
     font-size: 1.5rem;
     font-weight: bold;
     padding-right: 2%;
-    color: var(--secondary);
-    color: rgba(255, 255, 255, 0.5)
+    color: color-mix(in oklab, var(--secondary) 70%, var(--bijela) 30%);
+    margin: 0;
 }
 
 .headboard .back-button {
     font-size: 1.5rem;
-    color: var(--crna);
+    color: var(--bijela);
     margin-left: 2%;
     cursor: pointer;
 }
@@ -135,7 +136,7 @@
     align-items: center;
 }
 
-.profile-about .atribut {
+/* .profile-about .atribut {
     font-size: 0.8rem;
     color: color-mix(in oklab, var(--crna) 40%, white 0%);
     margin: 0;
@@ -147,4 +148,4 @@
     color: var(--crna);
     margin: 0;
     padding: 0;
-}
+} */

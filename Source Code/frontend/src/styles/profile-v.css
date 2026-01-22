@@ -33,12 +33,12 @@
     font-weight: bold;
     padding-right: 1%;
     color: var(--primary);
-    color: rgba(255, 255, 255, 0.5)
+    color: color-mix(in oklab, var(--primary) 70%, var(--bijela) 30%)
 }
 
 .headboard-v .back-button {
     font-size: 1.5rem;
-    color: var(--crna);
+    color: var(--bijela);
     margin-left: 2%;
     cursor: pointer;
 }
@@ -136,14 +136,14 @@
 
 .profile-about .atribut {
     font-size: 0.8rem;
-    color: rgba(0, 0, 0, 0.4);
+    color: color-mix(in oklab, var(--bijela) 30%, var(--crna) 70%);
     margin: 0;
     padding: 0;
 }
 
 .profile-about .value {
     font-size: 0.8rem;
-    color: rgb(0, 0, 0);
+    color: var(--crna);
     margin: 0;
     padding: 0;
 }

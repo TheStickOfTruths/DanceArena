@@ -26,7 +26,7 @@ function DropdownItem({
 		: icon;
 
 	const displayedText = themeToggle
-		? isDark ? "Light Theme" : "Dark Theme"
+		? isDark ? "Normal" : "High Contrast"
 		: text;
 
 	const itemContent = (

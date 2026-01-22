@@ -32,7 +32,7 @@
     font-weight: bold;
     padding-right: 1%;
     color: var(--primary);
-    color: rgba(255, 255, 255, 0.5)
+    color: color-mix(in oklab, var(--primary) 70%, var(--bijela) 30%)
 }
 
 .headboard-s .back-button {
@@ -133,18 +133,4 @@
     height: 7vh;
     align-content: center;
     align-items: center;
-}
-
-.profile-about .atribut {
-    font-size: 0.8rem;
-    color: color-mix(in oklab, var(--crna) 40%, white 0%);
-    margin: 0;
-    padding: 0;
-}
-
-.profile-about .value {
-    font-size: 0.8rem;
-    color: var(--crna);
-    margin: 0;
-    padding: 0;
 }

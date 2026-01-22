@@ -62,7 +62,7 @@
     flex-direction: row;
     font-size: 1.1rem;
     font-weight: 500;
-    color: color-mix(in oklab, var(--crna) 50%, var(--bijela) 50%);
+    color: var(--crna);
 }
 
 .account-name p {

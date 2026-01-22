@@ -16,22 +16,6 @@
     background-color: var(--bijela);
 }
 
-.headboard {
-    background-color: var(--secondary);
-    height: 10vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    padding: 0 2%;
-    box-sizing: border-box;
-}
-
-.headboard p {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: rgba(255, 255, 255, 0.8);
-    margin: 0;
-}
 
 .new-comp-form {
     width: 60%;
@@ -100,7 +84,7 @@
 }
 
 ::placeholder {
-    color: var(--secondary-darker);
+    color: black;
     opacity: 0.5;
 }
 
@@ -150,7 +134,7 @@
     border-style: none;
     border-radius: 13px;
     background-color: var(--secondary-darker);
-    font-size: 0.9rem;
+    /* font-size: 0.9rem; */
     font-weight: bold;
     color: white;
     cursor: pointer;
