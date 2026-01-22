@@ -297,4 +297,14 @@ export const getMojiNastupi = async () => {
     }
 };
 
+export const getSubscriptions = async () => {
+    try {
+        const response = await api.get("/users/subscribed/");
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri dohvaćanju mojih pretplata:", error);
+        return [];
+    }
+};
+
 export default api;
