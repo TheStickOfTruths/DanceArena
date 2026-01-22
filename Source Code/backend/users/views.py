@@ -1,20 +1,16 @@
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.http import JsonResponse
 from django.contrib.auth import logout
-from django.views.decorators.csrf import csrf_exempt #FOR POSTMAN !!!!!!!!!!!
-from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.db import transaction
 from .decorators import role_required
-from .models import Role, User
+from .models import Role
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .paypal import get_paypal_access_token
@@ -23,6 +19,7 @@ import requests
 from datetime import date
 from dateutil.relativedelta import relativedelta
 import json
+from .organizerUtils import is_paid_organizer
 
 
 class GoogleLogin(SocialLoginView): 
@@ -184,3 +181,7 @@ def paypal_success(request):
     return JsonResponse({"success": True, "paypal_status": data.get("status")})
     
 
+@api_view(['GET'])
+@role_required(Role.ORGANIZER)
+def subscribed(request):
+    return JsonResponse({'is_subbed':is_paid_organizer(request.user)}, status=200)

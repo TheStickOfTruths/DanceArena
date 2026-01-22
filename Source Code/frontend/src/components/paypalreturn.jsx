@@ -7,22 +7,23 @@ function PayPalReturn() {
     useEffect(() => {
         const token = searchParams.get('token');
         const payerId = searchParams.get('PayerID');
+        const subscriptionId = searchParams.get('subscription_id');
+        const baToken = searchParams.get('ba_token');
 
         if (window.opener) {
-            // Send the data to the main window
             window.opener.postMessage(
                 {
                     type: 'PAYPAL_SUCCESS',
                     token: token,
-                    payerId: payerId
+                    payerId: payerId,
+                    subscriptionId: subscriptionId,
+                    baToken: baToken
                 },
                 window.location.origin
             );
 
-            // Close this popup
             window.close();
         } else {
-            // Fallback just in case opened directly
             document.body.innerHTML = "Payment successful. You can close this window.";
         }
     }, [searchParams]);

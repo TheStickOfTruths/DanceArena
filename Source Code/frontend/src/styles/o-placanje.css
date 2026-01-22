@@ -1,13 +1,63 @@
 .homepage-container {
     width: 100%;
     max-width: 1920px;
-    height: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    /* Light background for contrast */
 }
 
 .homepage-content-container {
-    width: 100%;
-    height: 100%;
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+}
+
+.homepage-content-container p {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.homepage-content-container .alert-text {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #d32f2f;
+    margin-bottom: 1.5rem;
+}
+
+.pay-button {
+    background: linear-gradient(135deg, #0070ba 0%, #003087 100%);
+    /* PayPal-ish blue gradient */
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pay-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(135deg, #005ea6 0%, #002570 100%);
+}
+
+.pay-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
