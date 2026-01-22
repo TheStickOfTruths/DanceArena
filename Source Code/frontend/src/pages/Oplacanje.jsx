@@ -1,64 +1,63 @@
 import '../styles/o-placanje.css';
 import Navbar from '../components/navbar.jsx';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getCurrentUser } from '../services/apiService.jsx';
-import axios from 'axios';
+import { createSubscription, connectSubscription } from '../services/apiService.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 
 function Oplacanje() {
 
-    const [currentUser, setCurrentUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { user: currentUser, loading, checkSubscription } = useAuth();
     const [paying, setPaying] = useState(false);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await getCurrentUser();
 
-                if (response) {
-                    setCurrentUser(response);
-                }
-            } catch (error) {
-                console.error("Greška u Oplacanje.jsx:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const handlePayPalPayment = async (event) => {
+        event.preventDefault();
+        setPaying(true);
 
-        fetchData();
-    }, []);
-
-
-    const handlePayPalPayment = async () => {
         try {
-            setPaying(true);
+            const subscriptionData = await createSubscription();
+            const popup = window.open(subscriptionData.links[0].href, "_blank", "width=600,height=800,left=200,top=100");
 
-            const response = await axios.post(
-                // ne znam tocno path - ispred je stajalo https://localhost:8000
-                "/users/create_subscription/",
-                {},
-                {
-                    withCredentials: true, // ako koristite cookie auth
+            const timer = setInterval(() => {
+                if (popup.closed) {
+                    clearInterval(timer);
                 }
-            );
-
-            const approveUrl = response.data?.approve_url;
-
-            if (!approveUrl) {
-                throw new Error("Approve URL nije dobiven");
-            }
-
-            window.open(approveUrl, "_blank");
+            }, 500);
         } catch (error) {
-            console.error("PayPal greška:", error);
-            alert("Došlo je do greške prilikom plaćanja.");
-        } finally {
+            console.error("Error creating order:", error);
             setPaying(false);
+            alert("Greška pri kreiranju narudžbe.");
         }
     };
 
+    useEffect(() => {
+        const handleMessage = async (event) => {
+            if (event.origin !== window.location.origin) return;
+
+            if (event.data.type === 'PAYPAL_SUCCESS') {
+                const { subscriptionId } = event.data;
+
+                try {
+                    await connectSubscription({ subscription_id: subscriptionId });
+
+                    await checkSubscription();
+
+                    navigate('/homepage');
+
+                } catch (err) {
+                    console.error("Registration failed", err);
+                    alert("Plaćanje je prošlo, ali povezivanje pretplate nije uspjelo. Kontaktirajte podršku.");
+                } finally {
+                    setPaying(false);
+                }
+            }
+        };
+
+        window.addEventListener('message', handleMessage);
+        return () => window.removeEventListener('message', handleMessage);
+    }, [navigate]);
 
     if (loading) {
         return (
@@ -76,14 +75,14 @@ function Oplacanje() {
             <Navbar
                 currentUser={currentUser} />
             <div className="homepage-content-container">
-                <p>Članarina je istekla!</p>
-                <p>Iznos članarine za ovu godinu iznosi {}. Molimo vas odaberite način plaćanja:</p>
+                <p className="alert-text">Članarina je istekla!</p>
+                <p>Kako bi ste nastavili koristiti usluge, molimo vas da izvršite uplatu članarine.</p>
                 <button
                     className="pay-button"
                     onClick={handlePayPalPayment}
                     disabled={paying}
                 >
-                    {paying ? "Preusmjeravanje na PayPal..." : "Plati PayPalom"}
+                    {paying ? "Preusmjeravanje..." : "Plati PayPalom"}
                 </button>
             </div>
         </div>

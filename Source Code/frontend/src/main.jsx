@@ -137,9 +137,7 @@ const router = createBrowserRouter([
   {
     path: "/paypal-return",
     element:
-      <ProtectedRoute>
-        <PaypalReturn />
-      </ProtectedRoute>
+      <PaypalReturn />
   },
   {
     path: "/payment-success",

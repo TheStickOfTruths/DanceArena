@@ -307,4 +307,24 @@ export const getSubscriptions = async () => {
     }
 };
 
+export const createSubscription = async () => {
+    try {
+        const response = await api.post("/users/create-subscription/");
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri kreiranju pretplate:", error);
+        throw error;
+    }
+};
+
+export const connectSubscription = async (paymentData) => {
+    try {
+        const response = await api.post("/users/paypal/success/", paymentData);
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri povezivanju pretplate:", error);
+        throw error;
+    }
+};
+
 export default api;
