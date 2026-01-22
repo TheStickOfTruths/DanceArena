@@ -11,23 +11,34 @@ function DropdownItem({
 	border = "yes",
 	onClick,
 	themeToggle = false,
+	textSizeToggle = false,
 	isDark,
-	setIsDark
+	setIsDark,
+	isLargeText,
+	setIsLargeText
 }) {
 	const handleClick = () => {
 		if (themeToggle) {
 			setIsDark(prev => !prev);
 		}
+		if (textSizeToggle) {
+			setIsLargeText(prev => !prev);
+		}
 		if (onClick) onClick();
 	};
 
-	const displayedIcon = themeToggle
-		? isDark ? "bi bi-sun" : "bi bi-moon"
-		: icon;
+	let displayedIcon = icon;
+	let displayedText = text;
 
-	const displayedText = themeToggle
-		? isDark ? "Normal" : "High Contrast"
-		: text;
+	if (themeToggle) {
+		displayedIcon = isDark ? "bi bi-sun" : "bi bi-moon";
+		displayedText = isDark ? "Normal" : "High Contrast";
+	}
+
+	if (textSizeToggle) {
+		displayedIcon = isLargeText ? "bi bi-dash-lg" : "bi bi-plus-lg";
+		displayedText = isLargeText ? "Smanji" : "Povećaj";
+	}
 
 	const itemContent = (
 		<div className={`da-dropdown-item ${border}`} onClick={handleClick}>
@@ -51,12 +62,21 @@ function Navbar({ currentUser }) {
 	const [isDark, setIsDark] = useState(() =>
 		localStorage.getItem("theme") === "dark"
 	);
+	const [isLargeText, setIsLargeText] = useState(() =>
+	localStorage.getItem("textSize") === "large"
+	);
 
 	useEffect(() => {
 		const root = document.getElementById("root");
 		root.classList.toggle("theme-dark", isDark);
 		localStorage.setItem("theme", isDark ? "dark" : "light");
 	}, [isDark]);
+
+	useEffect(() => {
+	const root = document.getElementById("root");
+	root.classList.toggle("larger-text", isLargeText);
+	localStorage.setItem("textSize", isLargeText ? "large" : "normal");
+	}, [isLargeText]);
 
 	// Logout funkcija
 	const handleLogout = () => {
@@ -146,6 +166,12 @@ function Navbar({ currentUser }) {
 							border="yes"
 							isDark={isDark}
 							setIsDark={setIsDark}
+						/>
+						<DropdownItem
+							textSizeToggle
+							border="yes"
+							isLargeText={isLargeText}
+							setIsLargeText={setIsLargeText}
 						/>
 						<DropdownItem
 							border="no"

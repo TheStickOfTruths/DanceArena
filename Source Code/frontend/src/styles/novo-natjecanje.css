@@ -130,7 +130,7 @@
 .submit-button {
     padding: 12px 20px;
     height: auto;
-    width: 200px;
+    min-width: 200px;
     border-style: none;
     border-radius: 13px;
     background-color: var(--secondary-darker);
