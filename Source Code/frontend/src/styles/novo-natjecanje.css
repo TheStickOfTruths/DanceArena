@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
 .new-comp-container {
-    display: grid;
-    grid-template-rows: 10vh 90vh;
+    display: flex;
+    flex-direction: column;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
@@ -10,21 +10,38 @@
 
 .new-comp-form-container {
     width: 100%;
-    height: 100%;
-    overflow-y: auto;
+    flex: 1;
+    overflow: hidden;
     position: relative;
     background-color: var(--bijela);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 }
 
+.new-comp-form-container::-webkit-scrollbar {
+    display: none;
+}
 
 .new-comp-form {
-    width: 60%;
+    width: 80%;
     max-width: 800px;
-    margin: 4vh auto;
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;
+    margin: 0;
+    padding-top: 3vh;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     gap: 25px;
-    padding-bottom: 10vh;
+    padding-bottom: 20px;
+}
+
+/* Hide scrollbar (Chrome/Safari/Edge) */
+.new-comp-form::-webkit-scrollbar {
+    display: none;
 }
 
 .form-group {

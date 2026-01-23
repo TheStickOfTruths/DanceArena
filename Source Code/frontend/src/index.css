@@ -33,7 +33,7 @@
 
 
 /* High Contrast Theme */
-#root.theme-dark { 
+#root.theme-dark {
   --primary: #FF69B4ff;
   --secondary: #00FFFFff;
   --primary-darker: #FF1493ff;
@@ -46,13 +46,14 @@
 
 /* Citljivost teksta */
 #root.larger-text {
+
   p,
   label,
   button,
   input,
   textarea,
   select,
-  .navbar-btn{
+  .navbar-btn {
     font-size: 1.5rem;
   }
 }

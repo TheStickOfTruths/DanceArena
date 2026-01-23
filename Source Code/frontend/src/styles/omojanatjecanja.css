@@ -1,31 +1,42 @@
 .page-container {
-    display: grid;
-    grid-template-rows: 10vh 90vh;
+    display: flex;
+    flex-direction: column;
     width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .page-content-container {
-    display: grid;
-    grid-template-rows: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     margin: 0;
     padding: 0;
-    width: 100%;
+    overflow: hidden;
     position: relative;
-    height: 90vh;
 }
 
+.headboard {
+    flex-shrink: 0;
+}
 
-.competition-list-container {
-    position: absolute;
-    top: 10vh;
-    left: 50%;
-    transform: translate(-50%);
-    display: grid;
-    grid-template-rows: auto;
-    gap: 10px;
-    padding: 10px;
-    width: 50%;
+.O-competition-list-container {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 80%;
+    max-width: 800px;
     margin: 0 auto;
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 20px;
+    scrollbar-width: none;
+}
+
+.O-competition-list-container::-webkit-scrollbar {
+    display: none;
 }
 
 .competition-o {

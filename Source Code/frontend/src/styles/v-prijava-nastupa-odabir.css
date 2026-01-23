@@ -1,23 +1,26 @@
 .page-container {
-    display: grid;
-    grid-template-rows: 10vh 90vh;
+    display: flex;
+    flex-direction: column;
     width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .page-content-container {
-    display: grid;
-    grid-template-rows: auto;
-    margin: 0;
-    padding: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     position: relative;
-    height: 90vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
 }
 
 .headboard-v {
     background-color: var(--primary);
     height: 10vh;
-    top:0;
+    top: 0;
     width: 100%;
     padding: 0;
     margin: 0;
@@ -30,20 +33,26 @@
     font-weight: bold;
     padding-left: 1%;
     color: var(--primary);
-    color: rgba(255,255,255,0.5)
+    color: rgba(255, 255, 255, 0.5)
 }
 
 .competition-list-container {
-    position:absolute;
-    top:10vh;
-    left: 50%;
-    transform: translate(-50%);
-    display: grid;
-    grid-template-rows: auto;
-    gap: 10px;
-    padding: 10px;
-    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    width: 80%;
+    max-width: 800px;
     margin: 0 auto;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    padding-bottom: 20px;
+    scrollbar-width: none;
+}
+
+.competition-list-container::-webkit-scrollbar {
+    display: none;
 }
 
 .competition {

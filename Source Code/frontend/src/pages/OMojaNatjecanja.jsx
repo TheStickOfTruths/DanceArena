@@ -63,7 +63,7 @@ function OMojaNatjecanja() {
                     <p>Moja Natjecanja</p>
                 </div>
 
-                <div className='competition-list-container'>
+                <div className='O-competition-list-container'>
                     {competitions.length > 0 ? (
                         competitions.map((competition) => (
                             <CompetitionMicro
