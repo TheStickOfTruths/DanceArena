@@ -522,6 +522,9 @@ def competition_get_appearances(request, competition_id):
     if Appearance.objects.filter(competition=competition).exists():
         data = []
         for appearance in Appearance.objects.filter(competition=competition).order_by('choreography'):
+            graded = False
+            if Grade.objects.filter(appearance=appearance, judge=request.user).exists():
+                graded = True
             url = 'music_not_uploaded'
             if appearance.music:
                 url = appearance.music.file.url
@@ -536,6 +539,7 @@ def competition_get_appearances(request, competition_id):
             'music_link': url,
             'accepted': appearance.accepted,
             'paid_registration': appearance.paid_registration,
+            'graded': graded,
             'id': appearance.id
         })
     
