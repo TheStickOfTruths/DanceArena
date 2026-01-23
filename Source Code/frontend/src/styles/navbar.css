@@ -3,7 +3,7 @@
     padding: 10px 20px;
     background-color: var(--bijela);
     width: 100%;
-    min-height: 12vh;
+    min-height: 10vh;
     display: flex;
     align-items: center;
     justify-content: space-between;
