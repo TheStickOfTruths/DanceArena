@@ -172,7 +172,7 @@ function VprijavaNastupa() {
                     >
                         <i className="bi bi-arrow-left"></i>
                     </div>
-                    <p>Prijava natjecanja</p>
+                    <p>Prijava nastupa</p>
                 </div>
 
                 <form className='new-act-form' onSubmit={handleSubmit}>

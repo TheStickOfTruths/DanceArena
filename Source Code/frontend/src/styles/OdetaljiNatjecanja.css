@@ -1,0 +1,14 @@
+.startna-lista-button {
+    background-color: var(--primary);
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 0;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    width: 95%;
+}

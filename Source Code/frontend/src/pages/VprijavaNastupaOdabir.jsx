@@ -53,7 +53,7 @@ function VprijavaNastupaOdabir() {
                     >
                         <i className="bi bi-arrow-left"></i>
                     </div>
-                    <p>Prijava Timova</p>
+                    <p>Odabir natjecanja</p>
                 </div>
 
                 <div className='competition-list-container'>
