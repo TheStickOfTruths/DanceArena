@@ -1,30 +1,22 @@
 import '../styles/s-odabir-natjecanja.css';
 import Navbar from '../components/navbar';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getCurrentUser } from '../services/apiService.jsx';
+import { getJudgeCompetitions } from '../services/apiService.jsx';
+import { useAuth } from "../context/AuthContext.jsx";
+import CompetitionMicro from '../components/competitionmicro.jsx';
 
 function SodabirNatjecanja() {
-    const [currentUser, setCurrentUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { user: currentUser, loading } = useAuth();
+    const [competitions, setCompetitions] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await getCurrentUser();
-
-                if (response) {
-                    setCurrentUser(response);
-                }
-            } catch (error) {
-                console.error("Greška u homepage.jsx:", error);
-            } finally {
-                setLoading(false);
-            }
+        const fetchCompetitions = async () => {
+            const data = await getJudgeCompetitions();
+            setCompetitions(data);
         };
-
-        fetchData();
+        fetchCompetitions();
     }, []);
 
     if (loading) {
@@ -38,15 +30,19 @@ function SodabirNatjecanja() {
         );
     }
 
-    function handleSocijeniNatjecanje() {
-        navigate('/sudac/ocijeni-natjecanje');
+    const handleCompetitionUpdate = (updatedCompetition) => {
+        setCompetitions((prevCompetitions) =>
+            prevCompetitions.map((competition) =>
+                competition.id === updatedCompetition.id ? updatedCompetition : competition
+            )
+        );
     }
 
     return (
         <div className='page-container'>
             <Navbar currentUser={currentUser} />
 
-            <div className='page-content-container'>
+            <div className='pejdz-content-container'>
                 <div className='headboard-s'>
                     <div
                         className="back-button"
@@ -60,15 +56,14 @@ function SodabirNatjecanja() {
                     <p>Odabir natjecanja</p>
                 </div>
 
-                <div className='competition-list-container'>
-                    <div className='competition'>
-                        <p>Natjecanje 1</p>
-                        <button className='prijava-button' label="1" onClick={handleSocijeniNatjecanje}>Ocijeni nastupe</button>
-                    </div>
-                    <div className='competition'>
-                        <p>Natjecanje 2</p>
-                        <button className='prijava-button' label="2" onClick={handleSocijeniNatjecanje}>Ocijeni nastupe</button>
-                    </div>
+                <div className='kompetisn-list-container'>
+                    {competitions.map((competition) => (
+                        <CompetitionMicro
+                            key={competition.id}
+                            competition={competition}
+                            onUpdate={handleCompetitionUpdate}
+                        />
+                    ))}
                 </div>
             </div>
         </div>

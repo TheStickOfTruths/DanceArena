@@ -20,6 +20,7 @@ urlpatterns = [
     path('<int:id>/get_judges/', views.get_judges, name='get_judges'),
     path('<int:competition_id>/grade/<int:appearance_id>/', 
         views.competition_grade, name='competition_grade'),
+    path('assigned_competitions/', views.assigned_competitions, name='assigned_competitions'),
 
     path('results/', views.competition_results, name='competition_results'),
     path('<int:competition_id>/results/<int:appearance_id>/',

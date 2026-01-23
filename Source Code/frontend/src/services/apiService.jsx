@@ -327,4 +327,25 @@ export const connectSubscription = async (paymentData) => {
     }
 };
 
+export const getJudgeCompetitions = async () => {
+    try {
+        const response = await api.get("/competitions/assigned_competitions/");
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri dohvaćanju sudijskih natjecanja:", error);
+        return [];
+    }
+};
+
+export const gradeCompetition = async (competitionId, appearanceId, gradeValue) => {
+    try {
+        const payload = { grade: gradeValue };
+        const response = await api.post(`/competitions/${competitionId}/grade/${appearanceId}/`, payload);
+        return response.data;
+    } catch (error) {
+        console.error("Greška pri slanju ocjena:", error);
+        throw error;
+    }
+};
+
 export default api;

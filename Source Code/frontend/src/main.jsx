@@ -16,7 +16,7 @@ import Login from "./pages/login.jsx";
 import Homepage from "./pages/homepage.jsx";
 import NovoNatjecanje from "./pages/novoNatjecanje.jsx";
 import SodabirNatjecanja from "./pages/SodabirNatjecanja.jsx";
-import SocijeniNatjecanje from "./pages/SocijeniNatjecanje.jsx";
+import SodabirNastupa from "./pages/SodabirNastupa.jsx";
 import VprijavaNastupaOdabir from "./pages/VprijavaNastupaOdabir.jsx";
 import VprijavaNastupa from "./pages/VprijavaNastupa.jsx";
 import VpregledNatjecanja from "./pages/VpregledNatjecanja.jsx";
@@ -107,10 +107,10 @@ const router = createBrowserRouter([
       </ProtectedRoute>,
   },
   {
-    path: "/sudac/ocijeni-natjecanje",
+    path: "/sudac/odabir-nastupa",
     element:
       <ProtectedRoute>
-        <SocijeniNatjecanje />
+        <SodabirNastupa />
       </ProtectedRoute>,
   },
   {
