@@ -53,15 +53,40 @@ def competition_filtered(request):
         return JsonResponse(data, safe=False, status=200)
     else:
         return JsonResponse({"success":"Nema natjecanja."}, status=200)
+    
+
+@api_view(['GET']) 
+@permission_classes([IsAuthenticated])
+def my_competitions(request):
+    data = []
+    if Competition.objects.filter(organizer=request.user):
+        for competition in Competition.objects.filter(organizer=request.user):
+            data.append({
+            'name': competition.name,
+            'organizer': competition.organizer.first_name or competition.organizer.username,
+            'date': competition.date,
+            'location': competition.location,
+            'registration_fee': competition.registration_fee,
+            'age_categories': [cat.get_name_display() for cat in competition.age_categories.all()],
+            'style_categories': [cat.get_name_display() for cat in competition.style_categories.all()],
+            'group_size_categories': [cat.get_name_display() for cat in competition.group_size_categories.all()],
+            'status': competition.status,
+            'id': competition.id
+        })
+    
+        return JsonResponse(data, safe=False, status=200)
+    else:
+        return JsonResponse({"success":"Nema natjecanja."}, status=200)
 
 
 @api_view(['GET']) 
 @permission_classes([IsAuthenticated]) 
 @organizer_subscription_required
-def my_competitions(request):
+def assigned_competitions(request):
     data = []
-    if Competition.objects.filter(organizer=request.user).exists():
-        for competition in Competition.objects.filter(organizer=request.user):
+    competition_ids = CompetitionJudge.objects.filter(judge=request.user)
+    if len(competition_ids) > 0:
+        for competition in Competition.objects.filter(id__in=competition_ids):
             data.append({
             'name': competition.name,
             'organizer': competition.organizer.first_name or competition.organizer.username,
