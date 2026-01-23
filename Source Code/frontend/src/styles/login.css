@@ -8,6 +8,8 @@ a {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
+    gap: 20px;
 }
 
 .login-form {
@@ -18,20 +20,20 @@ a {
     justify-content: space-evenly;
     flex-direction: column;
     align-items: center;
+    max-width: 500px;
+    box-sizing: border-box;
 }
 
 .login-pozadina {
-    width: 100%;
-    height: auto;
+    width: 50%;
+    height: 100%;
     display: block;
     object-fit: cover;
-    flex: 4;
-    height: 100%;
-    overflow: hidden;
+    flex: 1;
 }
 
 .login-logo-tekst {
-    width: 90%;
+    width: 80%;
     height: auto;
     display: block;
 }
@@ -46,6 +48,8 @@ a {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    gap: 10px;
 }
 
 .google-login {
@@ -54,6 +58,11 @@ a {
     color: white;
     background-color: #333333;
     border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 0;
 }
 
 .homepage-button {
@@ -62,6 +71,23 @@ a {
     background-color: var(--secondary-darker);
     max-height: 40px;
     border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 0;
+}
+
+.homepage-button p,
+.google-login p {
+    font-weight: normal;
+    font-size: 1rem;
+}
+
+.google-logo {
+    height: 20px;
+    width: auto;
+    margin-right: 5px;
 }
 
 .credits {
@@ -70,10 +96,12 @@ a {
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .credits p {
-    font-size: 10px;
+    font-size: 0.8rem;
     color: #33333384;
     font-weight: normal;
 }
@@ -86,6 +114,7 @@ a {
     display: flex;
     flex-direction: row;
     align-items: center;
+    gap: 5px;
 }
 
 .credits p:hover,
@@ -99,45 +128,62 @@ a {
     width: auto;
 }
 
-.google-login {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+@media (max-width: 1024px) {
+    .login-container {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .login-pozadina {
+        display: none;
+    }
+
+    .login-form {
+        max-width: 90%;
+    }
 }
 
-.homepage-button {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+@media (max-width: 768px) {
+    .login-form p {
+        font-size: 0.9rem;
+    }
+
+    .google-login p,
+    .homepage-button p {
+        font-size: 0.9rem;
+    }
+
+    .login-logo-tekst {
+        width: 100%;
+    }
+
+    .credits {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .login-pozadina {
+        display: none;
+    }
 }
 
-.homepage-button p,
-.google-login p {
-    font-weight: normal;
-    font-size: 13px;
-}
+@media (max-width: 480px) {
+    .login-container {
+        height: auto;
+        padding: 5px;
+    }
 
-.google-logo {
-    height: 20px;
-    width: auto;
-    margin-right: 5px;
-}
+    .login-pozadina {
+        display: none;
+    }
 
-.google-login:hover,
-.homepage-button:hover {
-    cursor: pointer;
-    opacity: 0.9;
-}
+    .google-login,
+    .homepage-button {
+        font-size: 0.8rem;
+        max-height: 35px;
+    }
 
-.github-anchor {
-    text-decoration: none;
-    color: inherit;
-}
-
-.google-login-anchor {
-    text-decoration: none;
-    color: inherit;
-    width: 100%;
+    .credits p {
+        font-size: 0.7rem;
+    }
 }

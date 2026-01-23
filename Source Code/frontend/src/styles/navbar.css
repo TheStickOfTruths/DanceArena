@@ -1,12 +1,13 @@
+
 .da-navbar {
-    padding: 5px 20px;
+    padding: 10px 20px;
     background-color: var(--bijela);
     width: 100%;
-    height: 10vh;
+    min-height: 10vh;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-direction: row;
+    flex-wrap: wrap;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
     position: relative;
@@ -15,23 +16,20 @@
 .logo-text-container {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    flex-direction: row;
-    background-color: #FDFEFEff;
+    gap: 6px;
 }
 
-.logo-text-container:hover {
-    cursor: pointer;
+.navbar-logo {
+    height: 45px;
+}
+
+.da-navbar-text {
+    height: 18px;
 }
 
 .navbar-buttons {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-direction: row;
     gap: 20px;
 }
 
@@ -42,24 +40,13 @@
     font-weight: 500;
 }
 
-.navbar-btn:hover {
-    cursor: pointer;
-    color: color-mix(in oklab, var(--crna) 50%, var(--bijela) 50%);;
-}
-
 .account-info-container {
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-direction: row;
     gap: 10px;
 }
 
 .account-name {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
     font-size: 1.1rem;
     font-weight: 500;
     color: var(--crna);
@@ -70,33 +57,20 @@
     padding: 0;
 }
 
-
-.navbar-logo {
-    height: 40px;
-    width: auto;
-}
-
-.da-navbar-text {
-    margin-left: 4px;
-    height: 15px;
-    width: auto;
-}
-
 .account-section {
     display: flex;
     align-items: center;
-    flex-direction: row;
+    justify-content: center;
     background-color: color-mix(in oklab, var(--crna) 50%, var(--bijela) 50%);
     border-radius: 50%;
     padding: 4px;
-    height: 43px;
-    width: 43px;
+    height: 46px;
+    width: 46px;
 }
 
 .user-icon {
     border-radius: 50%;
-    height: 35px;
-    width: auto;
+    height: 38px;
     cursor: pointer;
 }
 
@@ -107,12 +81,13 @@
     display: flex;
     flex-direction: column;
     position: absolute;
-    top: 20px;
-    right: 3px;
-    width: 20vw;
+    top: 60px;
+    right: 10px;
+    width: 80vw;
     max-width: 300px;
     overflow: hidden;
     z-index: 1000;
+    cursor: pointer;
 }
 
 .da-dropdown-item {
@@ -120,18 +95,13 @@
     align-items: center;
     font-size: 1rem;
     width: 100%;
-    padding: 5px 10px 5px 10px;
+    padding: 8px 12px;
     border-bottom: 2px solid var(--primary-darker);
     box-sizing: border-box;
 }
 
 .da-dropdown-item:hover {
-    background-color: var(--secondary);
-    cursor: pointer;
-}
-
-.da-dropdown-item.no {
-    border-bottom: none;
+    background-color: color-mix(in oklab, var(--bijela) 70%, var(--crna) 30%);
 }
 
 .da-dropdown-item div {
@@ -141,8 +111,8 @@
     background-color: var(--secondary);
     color: var(--bijela);
     border-radius: 50%;
-    width: 3vh;
-    height: 3vh;
+    width: 30px;
+    height: 30px;
 }
 
 .da-dropdown-item p {
@@ -155,6 +125,39 @@
     font-size: 1.2rem;
 }
 
+.da-dropdown-item.no {
+    border-bottom: none;
+}
+
 .da-dropdown-menu a {
     text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .da-navbar {
+        min-height: 16vh;
+        align-items: flex-start;
+    }
+
+    .navbar-buttons {
+        width: 100%;
+        order: 3;
+        justify-content: center;
+        margin-top: 10px;
+        flex-wrap: wrap;
+    }
+
+    .logo-text-container {
+        order: 1;
+    }
+
+    .account-info-container {
+        order: 2;
+        margin-left: auto;
+    }
+    .account-name {
+        display: block;
+        font-size: 0.9rem;
+    }
+
 }

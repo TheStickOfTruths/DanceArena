@@ -12,25 +12,6 @@
     justify-content: flex-start;
 }
 
-.headboard-v {
-    background-color: var(--primary);
-    height: 10vh;
-    top: 0;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    align-items: center;
-}
-
-.headboard-v p {
-    font-size: 1.5rem;
-    font-weight: bold;
-    padding-left: 1%;
-    color: var(--primary);
-    color: rgba(255, 255, 255, 0.5);
-}
-
 .nastupi-list-container {
     display: flex;
     flex-direction: column;
