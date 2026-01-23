@@ -135,3 +135,99 @@
     align-content: center;
     align-items: center;
 }
+
+
+@media (max-width: 1024px) {
+    .profile-info  {
+        width: 70%;
+        height: auto;
+    }
+
+    .profile-info-general {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .profile-buttons {
+        flex-direction: row;
+        justify-content: start;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .profile-info  .profile-buttons button {
+        min-width: 48%;
+        margin-top: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-content-container {
+        height: auto;
+    }
+
+    .headboard  {
+        height: 10vh;
+        margin-top: 6vh;
+        padding: 20px 0;
+    }
+
+    .profile-info  {
+        position: relative;
+        top: -60px;
+        width: 90%;
+        transform: translateX(-50%);
+    }
+
+    .profile-info  .profile-info-main {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-info  .profile-info-main .ime {
+        padding-left: 0;
+        margin-top: 10px;
+    }
+
+    .profile-info  .pfp {
+        width: 140px;
+        height: 140px;
+    }
+
+    .pfp img {
+        width: 140px;
+        height: 140px;
+    }
+
+    .profile-buttons {
+        flex-direction: column;
+        justify-content: start;
+        gap: 10px;
+    }
+
+    .profile-info  .profile-buttons button {
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .profile-about div {
+        height: auto;
+        padding: 10px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .headboard  p {
+        font-size: 1.2rem;
+    }
+
+    .profile-info  .profile-info-main .ime {
+        font-size: 1.4rem;
+    }
+
+    .profile-about .atribut,
+    .profile-about .value {
+        font-size: 0.75rem;
+    }
+}

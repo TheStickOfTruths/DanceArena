@@ -158,6 +158,7 @@
 
 .sudac-mini p {
     margin: 0;
+    color: color-mix(in srgb, var(--secondary-darker), white 15%);
 }
 
 .sudci-lista p {
@@ -318,5 +319,100 @@
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* --- MEDIA QUERIES --- */
+
+/* TABLET - Rezolucije do 1024px */
+@media screen and (max-width: 1024px) {
+    .sudci-nastupi-container {
+        flex-direction: column; /* Liste idu jedna ispod druge */
+        align-items: center;
+        gap: 20px;
+    }
+
+    .sudci-container, 
+    .nastupi-container {
+        width: 100%; /* Šire se na cijeli ekran */
+        height: auto; /* Više ne fiksiramo visinu na vh kako bi sadržaj mogao disati */
+        min-height: 400px;
+    }
+
+    .email-form input {
+        width: 250px; /* Malo uži input */
+    }
+
+    .sudci-scroll, 
+    .nastupi-scroll {
+        max-height: 500px; /* Ograničavamo visinu scrolla da stranica ne bude beskonačna */
+        overflow-y: auto;
+    }
+}
+
+/* MOBITEL - Rezolucije do 768px */
+@media screen and (max-width: 768px) {
+    .headboard p {
+        font-size: 1.1rem;
+        text-align: center;
+    }
+
+    .email-form form {
+        flex-direction: column; /* Input i gumb jedan ispod drugog */
+        width: 90%;
+        padding: 15px;
+    }
+
+    .email-form input {
+        width: 100%; /* Input uzima punu širinu forme */
+    }
+
+    .email-form button {
+        width: 100%;
+    }
+
+    .sudac-mini {
+        flex-direction: column; /* Info i gumb jedan ispod drugog */
+        text-align: center;
+        gap: 10px;
+    }
+
+    .nastup-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .nastup-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .nastup-actions button {
+        flex: 1; /* Gumbi su jednake širine na mobitelu */
+        padding: 10px;
+    }
+
+    .zatvaranje-botun {
+        width: 95%;
+        position: sticky; /* Gumb za zatvaranje prijava ostaje pri dnu ekrana */
+        bottom: 10px;
+        z-index: 10;
+        box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+    }
+}
+
+/* MALI MOBITELI - Rezolucije do 480px */
+@media screen and (max-width: 480px) {
+    .sudci-txt {
+        font-size: 1rem;
+    }
+
+    .nastup-title {
+        font-size: 1rem;
+    }
+
+    .detail-row {
+        font-size: 0.85rem;
     }
 }
