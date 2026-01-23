@@ -2,130 +2,127 @@
   {
     "model": "competitions.agecategory",
     "pk": 1,
-    "fields": {
-      "name": "DJECA"
-    }
+    "fields": { "name": "DJECA" }
   },
   {
     "model": "competitions.agecategory",
     "pk": 2,
-    "fields": {
-      "name": "JUNIORI"
-    }
+    "fields": { "name": "JUNIORI" }
   },
   {
     "model": "competitions.agecategory",
     "pk": 3,
-    "fields": {
-      "name": "SENIORI"
-    }
+    "fields": { "name": "SENIORI" }
   },
   {
     "model": "competitions.stylecategory",
     "pk": 1,
-    "fields": {
-      "name": "BALET"
-    }
+    "fields": { "name": "BREAK" }
   },
   {
     "model": "competitions.stylecategory",
     "pk": 2,
-    "fields": {
-      "name": "HIPHOP"
-    }
+    "fields": { "name": "HIPHOP" }
   },
   {
     "model": "competitions.stylecategory",
     "pk": 3,
-    "fields": {
-      "name": "JAZZ"
-    }
+    "fields": { "name": "BALET" }
   },
   {
     "model": "competitions.stylecategory",
     "pk": 4,
-    "fields": {
-      "name": "STEP"
-    }
+    "fields": { "name": "STEP" }
   },
   {
     "model": "competitions.stylecategory",
     "pk": 5,
-    "fields": {
-      "name": "BREAK"
-    }
+    "fields": { "name": "JAZZ" }
   },
   {
     "model": "competitions.groupsizecategory",
     "pk": 1,
-    "fields": {
-      "name": "SOLO"
-    }
+    "fields": { "name": "SOLO" }
   },
   {
     "model": "competitions.groupsizecategory",
     "pk": 2,
-    "fields": {
-      "name": "DUO"
-    }
+    "fields": { "name": "DUO" }
   },
   {
     "model": "competitions.groupsizecategory",
     "pk": 3,
-    "fields": {
-      "name": "MALA_GRUPA"
-    }
+    "fields": { "name": "MALA_GRUPA" }
   },
   {
     "model": "competitions.groupsizecategory",
     "pk": 4,
+    "fields": { "name": "FORMACIJA" }
+  },
+  {
+    "model": "competitions.competition",
+    "pk": 1,
     "fields": {
-      "name": "FORMACIJA"
+      "name": "Urbano skolsko natjecanje - prvi krug",
+      "date": "2026-01-21",
+      "location": "Zagreb",
+      "description": "Sve skole se natjecu u urbanim plesnim stilovima!",
+      "organizer": 6,
+      "status": "ACTIVE",
+      "starting_list": null,
+      "registration_fee": "10.00",
+      "age_categories": [1, 2],
+      "style_categories": [1, 2],
+      "group_size_categories": [1, 2, 3, 4]
     }
   },
   {
-    "model": "competitions.mediafile",
-    "pk": 4,
+    "model": "competitions.competition",
+    "pk": 2,
     "fields": {
-      "title": "List for 3",
-      "file_type": "pdf",
-      "file": "uploads/list_3.pdf",
-      "uploaded_at": "2026-01-10T12:47:44.843Z"
+      "name": "Urban Pulse Battle",
+      "date": "2026-01-22",
+      "location": "Zagreb",
+      "description": "Natjecanje koje okuplja najbolje street plesne stilove uz snažan naglasak na energiju, groove i osobni izraz",
+      "organizer": 6,
+      "status": "ACTIVE",
+      "starting_list": null,
+      "registration_fee": "15.00",
+      "age_categories": [1],
+      "style_categories": [2],
+      "group_size_categories": [4]
     }
   },
   {
-    "model": "competitions.mediafile",
-    "pk": 5,
+    "model": "competitions.competition",
+    "pk": 3,
     "fields": {
-      "title": "test",
-      "file_type": "mp3",
-      "file": "uploads/sample-3s.mp3",
-      "uploaded_at": "2026-01-19T13:01:02.718Z"
-    }
-  },
-  {
-    "model": "competitions.mediafile",
-    "pk": 7,
-    "fields": {
-      "title": "List for 9",
-      "file_type": "pdf",
-      "file": "uploads/list_9.pdf",
-      "uploaded_at": "2026-01-19T13:18:17.046Z"
+      "name": "Rhythm Clash",
+      "date": "2026-01-23",
+      "location": "Zagreb",
+      "description": "Dinamično plesno nadmetanje gdje se plesači suočavaju kroz improvizaciju i glazbenu interpretaciju.",
+      "organizer": 6,
+      "status": "ACTIVE",
+      "starting_list": null,
+      "registration_fee": "15.00",
+      "age_categories": [1, 2, 3],
+      "style_categories": [1, 2, 3, 4, 5],
+      "group_size_categories": [1, 2, 3, 4]
     }
   },
   {
     "model": "competitions.competition",
     "pk": 4,
     "fields": {
-      "name": "Seniorsko županijsko natjecanje Splitsko-dalmatinske županije",
-      "date": "2025-11-15",
-      "location": "Split",
-      "description": "18. županijsko plesno natjecanje za seniore",
-      "organizer": 2,
-      "status": "PUBLISHED",
+      "name": "Dance Arena Open",
+      "date": "2026-01-24",
+      "location": "Velika Gorica",
+      "description": "Otvoreno natjecanje za sve plesne stilove koje slavi raznolikost, kreativnost i scenski nastup.",
+      "organizer": 6,
+      "status": "ACTIVE",
       "starting_list": null,
-      "registration_fee": "5.00",
-      "age_categories": [3],
+      "registration_fee": "8.00",
+      "age_categories": [1, 2, 3],
       "style_categories": [1, 2, 3, 4, 5],
       "group_size_categories": [1, 2, 3, 4]
     }
@@ -134,50 +131,50 @@
     "model": "competitions.competition",
     "pk": 5,
     "fields": {
-      "name": "Otvoreno plesno natjecanje Grada Zagreba",
-      "date": "2025-11-27",
-      "location": "Zagreb",
-      "description": "Otvoreno plesno natjecanje za solo plesače",
-      "organizer": 2,
-      "status": "DRAFT",
+      "name": "Flow Masters",
+      "date": "2026-01-25",
+      "location": "Munich",
+      "description": "Natjecanje usmjereno na fluidnost pokreta, kontrolu tijela i povezanost s glazbom.",
+      "organizer": 6,
+      "status": "ACTIVE",
       "starting_list": null,
-      "registration_fee": "3.00",
+      "registration_fee": "12.00",
       "age_categories": [1, 2, 3],
-      "style_categories": [1, 2, 3, 4, 5],
-      "group_size_categories": [1]
+      "style_categories": [3, 5],
+      "group_size_categories": [1, 2]
     }
   },
   {
     "model": "competitions.competition",
     "pk": 6,
     "fields": {
-      "name": "Županijsko natjecanje u baletu Zagrebačke županije",
-      "date": "2025-12-04",
-      "location": "Zagreb",
-      "description": "Županijsko natjecanje u baletu za djecu i juniore",
-      "organizer": 2,
-      "status": "DRAFT",
+      "name": "Street Dominion",
+      "date": "2026-01-26",
+      "location": "Los Angeles",
+      "description": "Intenzivni battle format u kojem dominiraju karakter, stav i tehnička preciznost.",
+      "organizer": 6,
+      "status": "ACTIVE",
       "starting_list": null,
-      "registration_fee": "7.85",
-      "age_categories": [1, 2],
-      "style_categories": [1],
-      "group_size_categories": [1, 2, 3, 4]
+      "registration_fee": "25.00",
+      "age_categories": [3],
+      "style_categories": [1, 2],
+      "group_size_categories": [1, 2]
     }
   },
   {
     "model": "competitions.competition",
     "pk": 7,
     "fields": {
-      "name": "Županijsko natjecanje slobodnog plesa Zagrebačke županije",
-      "date": "2025-12-05",
-      "location": "Zagreb",
-      "description": "Županijsko natjecanje slobodnog plesa za djecu i juniore",
-      "organizer": 2,
-      "status": "DRAFT",
+      "name": "Motion X",
+      "date": "2026-01-27",
+      "location": "Rijeka",
+      "description": "Moderno plesno natjecanje koje spaja eksperiment, inovaciju i suvremeni plesni izričaj.",
+      "organizer": 6,
+      "status": "ACTIVE",
       "starting_list": null,
-      "registration_fee": "7.85",
-      "age_categories": [1, 2],
-      "style_categories": [2, 3, 4, 5],
+      "registration_fee": "10.00",
+      "age_categories": [1, 2, 3],
+      "style_categories": [3, 4, 5],
       "group_size_categories": [1, 2, 3, 4]
     }
   },
@@ -185,57 +182,167 @@
     "model": "competitions.competition",
     "pk": 8,
     "fields": {
-      "name": "Seniorsko županijsko natjecanje Zagrebačke županije",
-      "date": "2025-12-13",
+      "name": "Beat Control",
+      "date": "2026-01-28",
       "location": "Zagreb",
-      "description": "Seniorsko županijsko natjecanje za sve plesove",
-      "organizer": 2,
-      "status": "DRAFT",
+      "description": "Natjecanje koje testira sposobnost plesača da savršeno “uhvate” ritam i strukturu glazbe.",
+      "organizer": 6,
+      "status": "ACTIVE",
       "starting_list": null,
-      "registration_fee": "10.50",
-      "age_categories": [3],
-      "style_categories": [1, 2, 3, 4, 5],
-      "group_size_categories": [1, 2, 3, 4]
+      "registration_fee": "15.00",
+      "age_categories": [1, 2, 3],
+      "style_categories": [1, 2, 4],
+      "group_size_categories": [1, 2, 3]
     }
   },
   {
     "model": "competitions.competition",
     "pk": 9,
     "fields": {
-      "name": "Test",
+      "name": "Freestyle Uprising",
       "date": "2026-01-29",
-      "location": "Split",
-      "description": "test",
-      "organizer": 2,
-      "status": "COMPLETED",
-      "starting_list": 7,
-      "registration_fee": "1.00",
+      "location": "Zurich",
+      "description": "Platforma za plesače koji kroz freestyle žele pokazati autentičnost i osobni stil.",
+      "organizer": 6,
+      "status": "ACTIVE",
+      "starting_list": null,
+      "registration_fee": "20.00",
+      "age_categories": [2, 3],
+      "style_categories": [1, 2],
+      "group_size_categories": [1]
+    }
+  },
+  {
+    "model": "competitions.competition",
+    "pk": 10,
+    "fields": {
+      "name": "Stage Impact",
+      "date": "2026-01-30",
+      "location": "Berlin",
+      "description": "Natjecanje fokusirano na scenski dojam, karizmu i snažnu komunikaciju s publikom.",
+      "organizer": 6,
+      "status": "ACTIVE",
+      "starting_list": null,
+      "registration_fee": "30.00",
       "age_categories": [1, 2, 3],
-      "style_categories": [1, 2, 3, 4, 5],
+      "style_categories": [2, 3, 4, 5],
       "group_size_categories": [1, 2, 3, 4]
     }
   },
   {
     "model": "competitions.competitionjudge",
     "pk": 1,
+    "fields": { "competition": 1, "judge": 8 }
+  },
+  {
+    "model": "competitions.competitionjudge",
+    "pk": 2,
+    "fields": { "competition": 2, "judge": 8 }
+  },
+  {
+    "model": "competitions.competitionjudge",
+    "pk": 3,
+    "fields": { "competition": 3, "judge": 8 }
+  },
+  {
+    "model": "competitions.competitionjudge",
+    "pk": 4,
+    "fields": { "competition": 4, "judge": 8 }
+  },
+  {
+    "model": "competitions.competitionjudge",
+    "pk": 5,
+    "fields": { "competition": 5, "judge": 8 }
+  },
+  {
+    "model": "competitions.competitionjudge",
+    "pk": 6,
+    "fields": { "competition": 6, "judge": 9 }
+  },
+  {
+    "model": "competitions.competitionjudge",
+    "pk": 7,
+    "fields": { "competition": 7, "judge": 9 }
+  },
+  {
+    "model": "competitions.competitionjudge",
+    "pk": 8,
+    "fields": { "competition": 8, "judge": 9 }
+  },
+  {
+    "model": "competitions.competitionjudge",
+    "pk": 9,
+    "fields": { "competition": 9, "judge": 9 }
+  },
+  {
+    "model": "competitions.competitionjudge",
+    "pk": 10,
+    "fields": { "competition": 10, "judge": 9 }
+  },
+  {
+    "model": "competitions.appearance",
+    "pk": 1,
     "fields": {
-      "competition": 9,
-      "judge": 14
+      "competition": 1,
+      "club_manager": 7,
+      "choreography": "Gravity Lines",
+      "length": "00:02:45",
+      "choreograph": "Ana Kovačević",
+      "music": null,
+      "age_category": 1,
+      "style_category": 2,
+      "group_size_category": 4,
+      "accepted": true,
+      "paid_registration": true
+    }
+  },
+  {
+    "model": "competitions.appearance",
+    "pk": 2,
+    "fields": {
+      "competition": 1,
+      "club_manager": 7,
+      "choreography": "Echoes of Motion",
+      "length": "00:03:10",
+      "choreograph": "Marko Petrović",
+      "music": null,
+      "age_category": 3,
+      "style_category": 2,
+      "group_size_category": 3,
+      "accepted": true,
+      "paid_registration": true
+    }
+  },
+  {
+    "model": "competitions.appearance",
+    "pk": 3,
+    "fields": {
+      "competition": 2,
+      "club_manager": 7,
+      "choreography": "Raw Frequency",
+      "length": "00:02:30",
+      "choreograph": "Luka Jurić",
+      "music": null,
+      "age_category": 1,
+      "style_category": 2,
+      "group_size_category": 4,
+      "accepted": true,
+      "paid_registration": true
     }
   },
   {
     "model": "competitions.appearance",
     "pk": 4,
     "fields": {
-      "competition": 9,
-      "club_manager": 13,
-      "choreography": "prvi",
-      "length": "00:01:11",
-      "choreograph": "prvi",
-      "music": 5,
+      "competition": 2,
+      "club_manager": 10,
+      "choreography": "Silent Tension",
+      "length": "00:03:00",
+      "choreograph": "Ivana Horvat",
+      "music": null,
       "age_category": 1,
-      "style_category": 1,
-      "group_size_category": 1,
+      "style_category": 2,
+      "group_size_category": 4,
       "accepted": true,
       "paid_registration": true
     }
@@ -244,49 +351,49 @@
     "model": "competitions.appearance",
     "pk": 5,
     "fields": {
-      "competition": 9,
-      "club_manager": 13,
-      "choreography": "drugi",
-      "length": "00:01:12",
-      "choreograph": "drugi",
+      "competition": 3,
+      "club_manager": 10,
+      "choreography": "Pulse Theory",
+      "length": "00:02:20",
+      "choreograph": "Nikola Babić",
       "music": null,
-      "age_category": 1,
-      "style_category": 1,
-      "group_size_category": 1,
+      "age_category": 2,
+      "style_category": 2,
+      "group_size_category": 3,
       "accepted": true,
-      "paid_registration": true
+      "paid_registration": false
     }
   },
   {
     "model": "competitions.appearance",
     "pk": 6,
     "fields": {
-      "competition": 9,
-      "club_manager": 13,
-      "choreography": "treci",
-      "length": "00:01:13",
-      "choreograph": "treci",
+      "competition": 3,
+      "club_manager": 10,
+      "choreography": "Fragments",
+      "length": "00:03:15",
+      "choreograph": "Sara Milić",
       "music": null,
-      "age_category": 1,
-      "style_category": 1,
-      "group_size_category": 1,
+      "age_category": 2,
+      "style_category": 5,
+      "group_size_category": 4,
       "accepted": true,
-      "paid_registration": true
+      "paid_registration": false
     }
   },
   {
     "model": "competitions.appearance",
     "pk": 7,
     "fields": {
-      "competition": 9,
-      "club_manager": 13,
-      "choreography": "cetvrti",
-      "length": "00:01:14",
-      "choreograph": "cetvrti",
+      "competition": 3,
+      "club_manager": 7,
+      "choreography": "Unspoken",
+      "length": "00:02:50",
+      "choreograph": "Filip Radić",
       "music": null,
-      "age_category": 1,
-      "style_category": 1,
-      "group_size_category": 4,
+      "age_category": 3,
+      "style_category": 5,
+      "group_size_category": 3,
       "accepted": true,
       "paid_registration": true
     }
@@ -295,14 +402,14 @@
     "model": "competitions.appearance",
     "pk": 8,
     "fields": {
-      "competition": 9,
-      "club_manager": 13,
-      "choreography": "peti",
-      "length": "00:01:15",
-      "choreograph": "peti",
+      "competition": 3,
+      "club_manager": 7,
+      "choreography": "Between Beats",
+      "length": "00:03:05",
+      "choreograph": "Petra Novak",
       "music": null,
-      "age_category": 1,
-      "style_category": 1,
+      "age_category": 3,
+      "style_category": 2,
       "group_size_category": 4,
       "accepted": true,
       "paid_registration": true
@@ -312,15 +419,15 @@
     "model": "competitions.appearance",
     "pk": 9,
     "fields": {
-      "competition": 9,
-      "club_manager": 13,
-      "choreography": "sesti",
-      "length": "00:01:16",
-      "choreograph": "sesti",
+      "competition": 4,
+      "club_manager": 7,
+      "choreography": "Instinct",
+      "length": "00:02:35",
+      "choreograph": "Tomislav Blažević",
       "music": null,
-      "age_category": 3,
-      "style_category": 4,
-      "group_size_category": 2,
+      "age_category": 2,
+      "style_category": 3,
+      "group_size_category": 3,
       "accepted": true,
       "paid_registration": true
     }
@@ -329,15 +436,15 @@
     "model": "competitions.appearance",
     "pk": 10,
     "fields": {
-      "competition": 9,
-      "club_manager": 13,
-      "choreography": "sedmi",
-      "length": "00:01:17",
-      "choreograph": "sedmi",
+      "competition": 4,
+      "club_manager": 10,
+      "choreography": "Momentum Shift",
+      "length": "00:03:20",
+      "choreograph": "Ema Vuković",
       "music": null,
       "age_category": 3,
-      "style_category": 4,
-      "group_size_category": 2,
+      "style_category": 1,
+      "group_size_category": 3,
       "accepted": true,
       "paid_registration": true
     }
@@ -346,11 +453,113 @@
     "model": "competitions.appearance",
     "pk": 11,
     "fields": {
-      "competition": 9,
-      "club_manager": 13,
-      "choreography": "osmi",
-      "length": "00:01:18",
-      "choreograph": "osmi",
+      "competition": 4,
+      "club_manager": 7,
+      "choreography": "Inner Drive",
+      "length": "00:02:40",
+      "choreograph": "Ana Kovačević",
+      "music": null,
+      "age_category": 2,
+      "style_category": 2,
+      "group_size_category": 3,
+      "accepted": true,
+      "paid_registration": true
+    }
+  },
+  {
+    "model": "competitions.appearance",
+    "pk": 12,
+    "fields": {
+      "competition": 4,
+      "club_manager": 10,
+      "choreography": "Break the Frame",
+      "length": "00:02:30",
+      "choreograph": "Marko Petrović",
+      "music": null,
+      "age_category": 2,
+      "style_category": 1,
+      "group_size_category": 4,
+      "accepted": true,
+      "paid_registration": true
+    }
+  },
+  {
+    "model": "competitions.appearance",
+    "pk": 13,
+    "fields": {
+      "competition": 5,
+      "club_manager": 7,
+      "choreography": "Low Signal",
+      "length": "00:03:00",
+      "choreograph": "Ivana Horvat",
+      "music": null,
+      "age_category": 3,
+      "style_category": 3,
+      "group_size_category": 1,
+      "accepted": true,
+      "paid_registration": true
+    }
+  },
+  {
+    "model": "competitions.appearance",
+    "pk": 14,
+    "fields": {
+      "competition": 5,
+      "club_manager": 7,
+      "choreography": "After the Drop",
+      "length": "00:03:10",
+      "choreograph": "Luka Jurić",
+      "music": null,
+      "age_category": 2,
+      "style_category": 3,
+      "group_size_category": 1,
+      "accepted": true,
+      "paid_registration": true
+    }
+  },
+  {
+    "model": "competitions.appearance",
+    "pk": 15,
+    "fields": {
+      "competition": 6,
+      "club_manager": 7,
+      "choreography": "Control / Release",
+      "length": "00:02:55",
+      "choreograph": "Dario Knez",
+      "music": null,
+      "age_category": 3,
+      "style_category": 2,
+      "group_size_category": 1,
+      "accepted": true,
+      "paid_registration": true
+    }
+  },
+  {
+    "model": "competitions.appearance",
+    "pk": 16,
+    "fields": {
+      "competition": 6,
+      "club_manager": 10,
+      "choreography": "Still Moving",
+      "length": "00:03:00",
+      "choreograph": "Nikola Babić",
+      "music": null,
+      "age_category": 3,
+      "style_category": 2,
+      "group_size_category": 1,
+      "accepted": true,
+      "paid_registration": true
+    }
+  },
+  {
+    "model": "competitions.appearance",
+    "pk": 17,
+    "fields": {
+      "competition": 7,
+      "club_manager": 7,
+      "choreography": "Pressure Point",
+      "length": "00:02:30",
+      "choreograph": "Ivana Horvat",
       "music": null,
       "age_category": 2,
       "style_category": 4,
@@ -361,197 +570,404 @@
   },
   {
     "model": "competitions.appearance",
-    "pk": 12,
+    "pk": 18,
     "fields": {
-      "competition": 9,
-      "club_manager": 13,
-      "choreography": "deveti",
-      "length": "00:01:19",
-      "choreograph": "deveti",
+      "competition": 8,
+      "club_manager": 7,
+      "choreography": "Crossfade",
+      "length": "00:02:45",
+      "choreograph": "Sara Milić",
       "music": null,
       "age_category": 2,
-      "style_category": 5,
+      "style_category": 2,
+      "group_size_category": 3,
+      "accepted": true,
+      "paid_registration": true
+    }
+  },
+  {
+    "model": "competitions.appearance",
+    "pk": 19,
+    "fields": {
+      "competition": 8,
+      "club_manager": 10,
+      "choreography": "Under Current",
+      "length": "00:03:10",
+      "choreograph": "Marko Petrović",
+      "music": null,
+      "age_category": 2,
+      "style_category": 4,
+      "group_size_category": 3,
+      "accepted": true,
+      "paid_registration": true
+    }
+  },
+  {
+    "model": "competitions.appearance",
+    "pk": 20,
+    "fields": {
+      "competition": 9,
+      "club_manager": 7,
+      "choreography": "Edge of Silence",
+      "length": "00:02:30",
+      "choreograph": "Marko Petrović",
+      "music": null,
+      "age_category": 3,
+      "style_category": 1,
       "group_size_category": 1,
       "accepted": true,
       "paid_registration": true
     }
   },
   {
+    "model": "competitions.appearance",
+    "pk": 21,
+    "fields": {
+      "competition": 9,
+      "club_manager": 10,
+      "choreography": "Signal Lost",
+      "length": "00:02:30",
+      "choreograph": "Sara Milić",
+      "music": null,
+      "age_category": 3,
+      "style_category": 2,
+      "group_size_category": 1,
+      "accepted": true,
+      "paid_registration": true
+    }
+  },
+  {
+    "model": "competitions.appearance",
+    "pk": 22,
+    "fields": {
+      "competition": 10,
+      "club_manager": 7,
+      "choreography": "Driven by Echo",
+      "length": "00:02:30",
+      "choreograph": "Ana Kovačević",
+      "music": null,
+      "age_category": 3,
+      "style_category": 2,
+      "group_size_category": 4,
+      "accepted": true,
+      "paid_registration": true
+    }
+  },
+  {
+    "model": "competitions.appearance",
+    "pk": 23,
+    "fields": {
+      "competition": 10,
+      "club_manager": 7,
+      "choreography": "Grounded",
+      "length": "00:03:10",
+      "choreograph": "Sara Milić",
+      "music": null,
+      "age_category": 3,
+      "style_category": 3,
+      "group_size_category": 4,
+      "accepted": true,
+      "paid_registration": true
+    }
+  },
+  {
+    "model": "competitions.appearance",
+    "pk": 24,
+    "fields": {
+      "competition": 10,
+      "club_manager": 10,
+      "choreography": "Heatwave",
+      "length": "00:02:45",
+      "choreograph": "Ivana Horvat",
+      "music": null,
+      "age_category": 3,
+      "style_category": 4,
+      "group_size_category": 4,
+      "accepted": false,
+      "paid_registration": true
+    }
+  },
+  {
+    "model": "competitions.appearance",
+    "pk": 25,
+    "fields": {
+      "competition": 10,
+      "club_manager": 10,
+      "choreography": "Between Stillness",
+      "length": "00:03:00",
+      "choreograph": "Nikola Babić",
+      "music": null,
+      "age_category": 3,
+      "style_category": 5,
+      "group_size_category": 4,
+      "accepted": false,
+      "paid_registration": true
+    }
+  },
+  {
     "model": "competitions.grade",
     "pk": 1,
-    "fields": {
-      "judge": 14,
-      "appearance": 4,
-      "grade": 4
-    }
+    "fields": { "judge": 8, "appearance": 1, "grade": 23 }
   },
   {
     "model": "competitions.grade",
     "pk": 2,
-    "fields": {
-      "judge": 14,
-      "appearance": 5,
-      "grade": 5
-    }
+    "fields": { "judge": 8, "appearance": 2, "grade": 18 }
   },
   {
     "model": "competitions.grade",
     "pk": 3,
-    "fields": {
-      "judge": 14,
-      "appearance": 6,
-      "grade": 6
-    }
+    "fields": { "judge": 8, "appearance": 3, "grade": 26 }
   },
   {
     "model": "competitions.grade",
     "pk": 4,
-    "fields": {
-      "judge": 14,
-      "appearance": 7,
-      "grade": 7
-    }
+    "fields": { "judge": 8, "appearance": 4, "grade": 20 }
   },
   {
     "model": "competitions.grade",
     "pk": 5,
-    "fields": {
-      "judge": 14,
-      "appearance": 8,
-      "grade": 8
-    }
+    "fields": { "judge": 8, "appearance": 7, "grade": 27 }
   },
   {
     "model": "competitions.grade",
     "pk": 6,
-    "fields": {
-      "judge": 14,
-      "appearance": 9,
-      "grade": 9
-    }
+    "fields": { "judge": 8, "appearance": 5, "grade": 26 }
   },
   {
     "model": "competitions.grade",
     "pk": 7,
-    "fields": {
-      "judge": 14,
-      "appearance": 10,
-      "grade": 10
-    }
+    "fields": { "judge": 8, "appearance": 8, "grade": 25 }
   },
   {
     "model": "competitions.grade",
     "pk": 8,
-    "fields": {
-      "judge": 14,
-      "appearance": 11,
-      "grade": 11
-    }
+    "fields": { "judge": 8, "appearance": 6, "grade": 24 }
   },
   {
     "model": "competitions.grade",
     "pk": 9,
-    "fields": {
-      "judge": 14,
-      "appearance": 12,
-      "grade": 12
-    }
+    "fields": { "judge": 8, "appearance": 9, "grade": 29 }
+  },
+  {
+    "model": "competitions.grade",
+    "pk": 10,
+    "fields": { "judge": 8, "appearance": 11, "grade": 27 }
+  },
+  {
+    "model": "competitions.grade",
+    "pk": 11,
+    "fields": { "judge": 8, "appearance": 10, "grade": 22 }
+  },
+  {
+    "model": "competitions.grade",
+    "pk": 12,
+    "fields": { "judge": 8, "appearance": 12, "grade": 11 }
+  },
+  {
+    "model": "competitions.grade",
+    "pk": 13,
+    "fields": { "judge": 8, "appearance": 13, "grade": 25 }
+  },
+  {
+    "model": "competitions.grade",
+    "pk": 14,
+    "fields": { "judge": 8, "appearance": 14, "grade": 22 }
+  },
+  {
+    "model": "competitions.grade",
+    "pk": 15,
+    "fields": { "judge": 9, "appearance": 15, "grade": 23 }
+  },
+  {
+    "model": "competitions.grade",
+    "pk": 16,
+    "fields": { "judge": 9, "appearance": 16, "grade": 15 }
+  },
+  {
+    "model": "competitions.grade",
+    "pk": 17,
+    "fields": { "judge": 9, "appearance": 17, "grade": 21 }
+  },
+  {
+    "model": "competitions.grade",
+    "pk": 18,
+    "fields": { "judge": 9, "appearance": 18, "grade": 30 }
+  },
+  {
+    "model": "competitions.grade",
+    "pk": 19,
+    "fields": { "judge": 9, "appearance": 19, "grade": 1 }
+  },
+  {
+    "model": "competitions.grade",
+    "pk": 20,
+    "fields": { "judge": 9, "appearance": 20, "grade": 18 }
+  },
+  {
+    "model": "competitions.grade",
+    "pk": 21,
+    "fields": { "judge": 9, "appearance": 21, "grade": 4 }
+  },
+  {
+    "model": "competitions.grade",
+    "pk": 22,
+    "fields": { "judge": 9, "appearance": 22, "grade": 30 }
+  },
+  {
+    "model": "competitions.grade",
+    "pk": 23,
+    "fields": { "judge": 9, "appearance": 23, "grade": 29 }
+  },
+  {
+    "model": "competitions.grade",
+    "pk": 24,
+    "fields": { "judge": 9, "appearance": 24, "grade": 28 }
+  },
+  {
+    "model": "competitions.grade",
+    "pk": 25,
+    "fields": { "judge": 9, "appearance": 25, "grade": 27 }
   },
   {
     "model": "competitions.result",
     "pk": 1,
-    "fields": {
-      "competition": 9,
-      "appearance": 6,
-      "rank": 1
-    }
+    "fields": { "competition": 1, "appearance": 1, "rank": 1 }
   },
   {
     "model": "competitions.result",
     "pk": 2,
-    "fields": {
-      "competition": 9,
-      "appearance": 5,
-      "rank": 2
-    }
+    "fields": { "competition": 1, "appearance": 2, "rank": 2 }
   },
   {
     "model": "competitions.result",
     "pk": 3,
-    "fields": {
-      "competition": 9,
-      "appearance": 4,
-      "rank": 3
-    }
+    "fields": { "competition": 2, "appearance": 3, "rank": 1 }
   },
   {
     "model": "competitions.result",
     "pk": 4,
-    "fields": {
-      "competition": 9,
-      "appearance": 8,
-      "rank": 1
-    }
+    "fields": { "competition": 2, "appearance": 4, "rank": 2 }
   },
   {
     "model": "competitions.result",
     "pk": 5,
-    "fields": {
-      "competition": 9,
-      "appearance": 7,
-      "rank": 2
-    }
+    "fields": { "competition": 3, "appearance": 7, "rank": 1 }
   },
   {
     "model": "competitions.result",
     "pk": 6,
-    "fields": {
-      "competition": 9,
-      "appearance": 11,
-      "rank": 1
-    }
+    "fields": { "competition": 3, "appearance": 5, "rank": 2 }
   },
   {
     "model": "competitions.result",
     "pk": 7,
-    "fields": {
-      "competition": 9,
-      "appearance": 12,
-      "rank": 1
-    }
+    "fields": { "competition": 3, "appearance": 8, "rank": 3 }
   },
   {
     "model": "competitions.result",
     "pk": 8,
-    "fields": {
-      "competition": 9,
-      "appearance": 10,
-      "rank": 1
-    }
+    "fields": { "competition": 3, "appearance": 6, "rank": 4 }
   },
   {
     "model": "competitions.result",
     "pk": 9,
-    "fields": {
-      "competition": 9,
-      "appearance": 9,
-      "rank": 2
-    }
+    "fields": { "competition": 4, "appearance": 9, "rank": 1 }
+  },
+  {
+    "model": "competitions.result",
+    "pk": 10,
+    "fields": { "competition": 4, "appearance": 11, "rank": 2 }
+  },
+  {
+    "model": "competitions.result",
+    "pk": 11,
+    "fields": { "competition": 4, "appearance": 10, "rank": 3 }
+  },
+  {
+    "model": "competitions.result",
+    "pk": 12,
+    "fields": { "competition": 4, "appearance": 12, "rank": 4 }
+  },
+  {
+    "model": "competitions.result",
+    "pk": 13,
+    "fields": { "competition": 5, "appearance": 13, "rank": 1 }
+  },
+  {
+    "model": "competitions.result",
+    "pk": 14,
+    "fields": { "competition": 5, "appearance": 14, "rank": 2 }
+  },
+  {
+    "model": "competitions.result",
+    "pk": 15,
+    "fields": { "competition": 6, "appearance": 15, "rank": 1 }
+  },
+  {
+    "model": "competitions.result",
+    "pk": 16,
+    "fields": { "competition": 6, "appearance": 16, "rank": 2 }
+  },
+  {
+    "model": "competitions.result",
+    "pk": 17,
+    "fields": { "competition": 7, "appearance": 17, "rank": 1 }
+  },
+  {
+    "model": "competitions.result",
+    "pk": 18,
+    "fields": { "competition": 8, "appearance": 18, "rank": 1 }
+  },
+  {
+    "model": "competitions.result",
+    "pk": 19,
+    "fields": { "competition": 8, "appearance": 19, "rank": 2 }
+  },
+  {
+    "model": "competitions.result",
+    "pk": 20,
+    "fields": { "competition": 9, "appearance": 20, "rank": 1 }
+  },
+  {
+    "model": "competitions.result",
+    "pk": 21,
+    "fields": { "competition": 9, "appearance": 21, "rank": 2 }
+  },
+  {
+    "model": "competitions.result",
+    "pk": 22,
+    "fields": { "competition": 10, "appearance": 22, "rank": 1 }
+  },
+  {
+    "model": "competitions.result",
+    "pk": 23,
+    "fields": { "competition": 10, "appearance": 23, "rank": 2 }
+  },
+  {
+    "model": "competitions.result",
+    "pk": 24,
+    "fields": { "competition": 10, "appearance": 24, "rank": 3 }
+  },
+  {
+    "model": "competitions.result",
+    "pk": 25,
+    "fields": { "competition": 10, "appearance": 25, "rank": 4 }
   },
   {
     "model": "users.user",
-    "pk": 1,
+    "pk": 4,
     "fields": {
-      "password": "pbkdf2_sha256$1000000$APK2OFqjq6DsUAYCm8XOQO$RhAzt6hF5K/Q8G3ALk68eTkgqE0t59J8MDzdV+oh5CU=",
-      "last_login": "2026-01-15T12:15:52.626Z",
+      "password": "pbkdf2_sha256$1000000$DVxyZeuAUUYExsTDwwtpBS$ceykW4asXSeCA6jqADk1iCEz2yffSXnGVzKHnyXAz3I=",
+      "last_login": "2026-01-21T16:01:09Z",
       "is_superuser": true,
-      "username": "admin",
-      "first_name": "Admin",
-      "last_name": "Admin",
-      "email": "admin.admin@gmail.com",
+      "username": "karlo-admin",
+      "first_name": "",
+      "last_name": "",
+      "email": "karlo.visnjovski@gmail.com",
       "is_staff": true,
       "is_active": true,
-      "date_joined": "2025-11-11T14:05:40Z",
+      "date_joined": "2026-01-21T16:00:42Z",
       "role": "ADMIN",
       "club_name": null,
       "club_location": null,
@@ -562,43 +978,43 @@
   },
   {
     "model": "users.user",
-    "pk": 2,
+    "pk": 6,
     "fields": {
-      "password": "!hHr7p7WVm3eykxTwCxM23aXnAMyshNLjvabX8NUn",
-      "last_login": "2026-01-19T14:30:02.773Z",
+      "password": "!atNXd4bwcWXJJX8PZE7EfWjAWvlREUa83EQqdgnp",
+      "last_login": "2026-01-21T16:19:40.848Z",
       "is_superuser": false,
-      "username": "roko.cacija",
-      "first_name": "Roko",
-      "last_name": "Cacija",
-      "email": "roko.cacija@gmail.com",
+      "username": "vlasnik",
+      "first_name": "Vlasnik",
+      "last_name": "Vlasic",
+      "email": "vlasnik0000@gmail.com",
       "is_staff": false,
       "is_active": true,
-      "date_joined": "2025-11-11T14:06:29Z",
+      "date_joined": "2026-01-21T16:14:50.374Z",
       "role": "ORGANIZER",
       "club_name": null,
       "club_location": null,
-      "contact": "0913079053",
+      "contact": "123456789",
       "groups": [],
       "user_permissions": []
     }
   },
   {
     "model": "users.user",
-    "pk": 13,
+    "pk": 7,
     "fields": {
-      "password": "!q0drI50DbsLEgHuppb8paPZI6d32188EYoGuwpge",
-      "last_login": "2026-01-19T14:00:23.773Z",
+      "password": "!wkwbTLumOzzPmNsfe7PDB9UyBWtLxabSXgWAoo6j",
+      "last_login": "2026-01-21T16:42:41.909Z",
       "is_superuser": false,
-      "username": "roko",
-      "first_name": "Vodja",
-      "last_name": "vodja",
-      "email": "rc55780@fer.hr",
+      "username": "igrac",
+      "first_name": "Vid",
+      "last_name": "Voditelj",
+      "email": "igrac0000@gmail.com",
       "is_staff": false,
       "is_active": true,
-      "date_joined": "2026-01-19T10:06:46.443Z",
+      "date_joined": "2026-01-21T16:16:40.474Z",
       "role": "CLUB_MANAGER",
-      "club_name": "123",
-      "club_location": "123",
+      "club_name": "PS Fusion",
+      "club_location": "Zagreb",
       "contact": null,
       "groups": [],
       "user_permissions": []
@@ -606,19 +1022,85 @@
   },
   {
     "model": "users.user",
-    "pk": 14,
+    "pk": 8,
     "fields": {
-      "password": "!edPPdbgosZTFw5BuZjDiLxw33e0R1kKJmB5jyLfz",
-      "last_login": "2026-01-19T12:56:05.130Z",
+      "password": "!2ldJkAUS72RU4D1Gv2urtEWe7IZpxk30P3nOIyWd",
+      "last_login": "2026-01-21T18:00:22.771Z",
       "is_superuser": false,
-      "username": "admin2",
-      "first_name": "Testni",
-      "last_name": "sudac",
-      "email": "dancearenaa@gmail.com",
+      "username": "karlo",
+      "first_name": "Karlo",
+      "last_name": "Sudac",
+      "email": "karlo.putuje@gmail.com",
       "is_staff": false,
       "is_active": true,
-      "date_joined": "2026-01-19T12:56:05.094Z",
+      "date_joined": "2026-01-21T16:18:05.232Z",
       "role": "JUDGE",
+      "club_name": null,
+      "club_location": null,
+      "contact": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 9,
+    "fields": {
+      "password": "!IGqv5bZMaaDhiJXstheMl1274hGn9a2yWfUgGUrU",
+      "last_login": "2026-01-21T16:18:49.605Z",
+      "is_superuser": false,
+      "username": "visnja",
+      "first_name": "Vićnja",
+      "last_name": "Sutkin",
+      "email": "kay2kay0710@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-01-21T16:18:49.541Z",
+      "role": "JUDGE",
+      "club_name": null,
+      "club_location": null,
+      "contact": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 10,
+    "fields": {
+      "password": "!I5LlqTJf7OVNmpg6f19tQ4pldYK4qwgqOn63q54Z",
+      "last_login": "2026-01-21T17:26:44.746Z",
+      "is_superuser": false,
+      "username": "visnja7",
+      "first_name": "Dragan",
+      "last_name": "Vodicki",
+      "email": "visnja.biz@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-01-21T17:26:44.627Z",
+      "role": "CLUB_MANAGER",
+      "club_name": "My Way",
+      "club_location": "Zagreb",
+      "contact": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 11,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$t3YyEv4DNV5qYEWYcWkg4j$HvlbpWJ+seOyTzEGbeQyknhJe6SYeYEy40cJftEjqv8=",
+      "last_login": "2026-01-21T18:30:28Z",
+      "is_superuser": true,
+      "username": "admin",
+      "first_name": "",
+      "last_name": "",
+      "email": "admin.admin@gmail.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2026-01-21T18:30:07Z",
+      "role": "ADMIN",
       "club_name": null,
       "club_location": null,
       "contact": null,
@@ -630,26 +1112,56 @@
     "model": "sites.site",
     "pk": 1,
     "fields": {
-      "domain": "127.0.0.1:8000",
-      "name": "DanceArena Local"
+      "domain": "https://dancearena-cvxq.onrender.com",
+      "name": "DanceArena"
     }
   },
   {
     "model": "account.emailaddress",
-    "pk": 7,
+    "pk": 3,
     "fields": {
-      "user": 13,
-      "email": "rc55780@fer.hr",
+      "user": 6,
+      "email": "vlasnik0000@gmail.com",
       "verified": true,
       "primary": true
     }
   },
   {
     "model": "account.emailaddress",
-    "pk": 8,
+    "pk": 4,
     "fields": {
-      "user": 14,
-      "email": "dancearenaa@gmail.com",
+      "user": 7,
+      "email": "igrac0000@gmail.com",
+      "verified": true,
+      "primary": true
+    }
+  },
+  {
+    "model": "account.emailaddress",
+    "pk": 5,
+    "fields": {
+      "user": 8,
+      "email": "karlo.putuje@gmail.com",
+      "verified": true,
+      "primary": true
+    }
+  },
+  {
+    "model": "account.emailaddress",
+    "pk": 6,
+    "fields": {
+      "user": 9,
+      "email": "kay2kay0710@gmail.com",
+      "verified": true,
+      "primary": true
+    }
+  },
+  {
+    "model": "account.emailaddress",
+    "pk": 7,
+    "fields": {
+      "user": 10,
+      "email": "visnja.biz@gmail.com",
       "verified": true,
       "primary": true
     }
@@ -660,9 +1172,9 @@
     "fields": {
       "provider": "google",
       "provider_id": "",
-      "name": "Google Login",
+      "name": "Google",
       "client_id": "787949986823-lr02rkl4hida1inqimp51faf9h3uapc2.apps.googleusercontent.com",
-      "secret": "",
+      "secret": "dancearenaa!#!\"o@f+a$^4e7i8wxo6=u(%yca-8y!mdqg34j@iq(ww$c9@zbkt",
       "key": "",
       "settings": {},
       "sites": [1]
@@ -670,61 +1182,97 @@
   },
   {
     "model": "socialaccount.socialaccount",
-    "pk": 1,
+    "pk": 4,
     "fields": {
-      "user": 2,
+      "user": 6,
       "provider": "google",
-      "uid": "107462092323372270135",
-      "last_login": "2026-01-19T14:30:02.757Z",
-      "date_joined": "2025-12-17T20:32:17.593Z",
+      "uid": "109998488817404285400",
+      "last_login": "2026-01-21T16:19:40.831Z",
+      "date_joined": "2026-01-21T16:14:50.398Z",
       "extra_data": {
-        "id": "107462092323372270135",
-        "name": "Roko Cacija",
-        "email": "roko.cacija@gmail.com",
-        "picture": "https://lh3.googleusercontent.com/a/ACg8ocKFNvlEHJqGsLKTKc12qfyUSs3Kd8e4AMKNgoIsk6O5GqwQOw=s96-c",
-        "given_name": "Roko",
-        "family_name": "Cacija",
-        "verified_email": true
+        "id": "109998488817404285400",
+        "email": "vlasnik0000@gmail.com",
+        "verified_email": true,
+        "name": "vlasnik",
+        "given_name": "vlasnik",
+        "picture": "https://lh3.googleusercontent.com/a/ACg8ocKgQBbgt-DytJhn7my0IRxnHzmpe3SzcOsvERXW3bPl5p6Saw=s96-c"
       }
     }
   },
   {
     "model": "socialaccount.socialaccount",
-    "pk": 9,
+    "pk": 5,
     "fields": {
-      "user": 13,
+      "user": 7,
       "provider": "google",
-      "uid": "118260816838826589636",
-      "last_login": "2026-01-19T14:00:23.764Z",
-      "date_joined": "2026-01-19T10:06:46.499Z",
+      "uid": "116252040977013868964",
+      "last_login": "2026-01-21T16:42:41.876Z",
+      "date_joined": "2026-01-21T16:16:40.506Z",
       "extra_data": {
-        "hd": "fer.hr",
-        "id": "118260816838826589636",
-        "name": "Roko ╚ačija",
-        "email": "rc55780@fer.hr",
-        "picture": "https://lh3.googleusercontent.com/a/ACg8ocJSFgiKkOP29pYIOi11xdak3NjQn5E4HMv-NDKpO7M6ZZgnrw=s96-c",
-        "given_name": "Roko",
-        "family_name": "╚ačija",
-        "verified_email": true
+        "id": "116252040977013868964",
+        "email": "igrac0000@gmail.com",
+        "verified_email": true,
+        "name": "igrac",
+        "given_name": "igrac",
+        "picture": "https://lh3.googleusercontent.com/a/ACg8ocLZsApUkNQCQ6KLNO_5JPrzI4JDyh_AfaFrHGbq4ZnsUzO6NA=s96-c"
       }
     }
   },
   {
     "model": "socialaccount.socialaccount",
-    "pk": 10,
+    "pk": 6,
     "fields": {
-      "user": 14,
+      "user": 8,
       "provider": "google",
-      "uid": "113855373717911560382",
-      "last_login": "2026-01-19T12:56:05.118Z",
-      "date_joined": "2026-01-19T12:56:05.118Z",
+      "uid": "115471671643844901210",
+      "last_login": "2026-01-21T18:00:22.737Z",
+      "date_joined": "2026-01-21T16:18:05.256Z",
       "extra_data": {
-        "id": "113855373717911560382",
-        "name": "admin",
-        "email": "dancearenaa@gmail.com",
-        "picture": "https://lh3.googleusercontent.com/a/ACg8ocJFC__r9YVhSXq7ezYID0r0NdLI-5OM9AJZRKNSJJ1JLGSeTw=s96-c",
-        "given_name": "admin",
-        "verified_email": true
+        "id": "115471671643844901210",
+        "email": "karlo.putuje@gmail.com",
+        "verified_email": true,
+        "name": "Karlo Travel",
+        "given_name": "Karlo",
+        "family_name": "Travel",
+        "picture": "https://lh3.googleusercontent.com/a/ACg8ocLF1LTNnlvgRHsQ2zF9b5IrFb0mR6EEALIi-t4RX5zTJ0TL_BE=s96-c"
+      }
+    }
+  },
+  {
+    "model": "socialaccount.socialaccount",
+    "pk": 7,
+    "fields": {
+      "user": 9,
+      "provider": "google",
+      "uid": "116704765823638655462",
+      "last_login": "2026-01-21T16:18:49.566Z",
+      "date_joined": "2026-01-21T16:18:49.566Z",
+      "extra_data": {
+        "id": "116704765823638655462",
+        "email": "kay2kay0710@gmail.com",
+        "verified_email": true,
+        "name": "Višnja",
+        "given_name": "Višnja",
+        "picture": "https://lh3.googleusercontent.com/a/ACg8ocJIoVsFuWLsuP1MdXQ-uJKHACsAbh-QfHu2HHvCCalwLjoeuus=s96-c"
+      }
+    }
+  },
+  {
+    "model": "socialaccount.socialaccount",
+    "pk": 8,
+    "fields": {
+      "user": 10,
+      "provider": "google",
+      "uid": "111175752724213685485",
+      "last_login": "2026-01-21T17:26:44.690Z",
+      "date_joined": "2026-01-21T17:26:44.690Z",
+      "extra_data": {
+        "id": "111175752724213685485",
+        "email": "visnja.biz@gmail.com",
+        "verified_email": true,
+        "name": "Višnja",
+        "given_name": "Višnja",
+        "picture": "https://lh3.googleusercontent.com/a/ACg8ocLyfTUJltpioPsE6TXKu6-s5O6w9SW5eTamJYMVxEfPk0yRP5c=s96-c"
       }
     }
   }
