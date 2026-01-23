@@ -17,7 +17,6 @@
     align-items: center;
     justify-content: flex-start;
     flex-direction: row;
-    background-color: #FDFEFEff;
 }
 
 .logo-text-container:hover {
@@ -44,7 +43,7 @@
 
 .navbar-btn:hover {
     cursor: pointer;
-    color: color-mix(in oklab, var(--crna) 50%, var(--bijela) 50%);;
+    color: color-mix(in oklab, var(--crna) 50%, var(--bijela) 50%);
 }
 
 .account-info-container {
@@ -69,7 +68,6 @@
     margin: 0;
     padding: 0;
 }
-
 
 .navbar-logo {
     height: 40px;
@@ -120,7 +118,7 @@
     align-items: center;
     font-size: 1rem;
     width: 100%;
-    padding: 5px 10px 5px 10px;
+    padding: 5px 10px;
     border-bottom: 2px solid var(--primary-darker);
     box-sizing: border-box;
 }
@@ -157,4 +155,84 @@
 
 .da-dropdown-menu a {
     text-decoration: none;
+}
+
+@media (max-width: 1024px) {
+    .navbar-buttons {
+        position: static;
+        transform: none;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 5px;
+    }
+
+    .switch-view label,
+    .navbar-btn {
+        font-size: 0.95rem;
+    }
+
+    .da-dropdown-menu {
+        width: 25vw;
+        max-width: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .da-navbar {
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
+    }
+
+    .navbar-buttons {
+        margin-top: 10px;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .account-info-container {
+        margin-top: 5px;
+    }
+
+    .da-dropdown-menu {
+        width: 35vw;
+        max-width: 200px;
+        top: 45px;
+        right: 5px;
+    }
+
+    .navbar-btn {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .da-navbar {
+        padding: 5px 10px;
+    }
+
+    .navbar-buttons {
+        flex-direction: column;
+        gap: 5px;
+        margin-top: 5px;
+    }
+
+    .navbar-btn {
+        font-size: 0.8rem;
+    }
+
+    .da-dropdown-menu {
+        width: 50vw;
+        max-width: 180px;
+        top: 50px;
+        right: 5px;
+    }
+
+    .da-navbar-text {
+        height: 12px;
+    }
+
+    .navbar-logo {
+        height: 35px;
+    }
 }
