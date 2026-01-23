@@ -28,6 +28,8 @@ import ProfileWrapper from "./components/ProfileWrapper.jsx";
 import OMojaNatjecanja from "./pages/OMojaNatjecanja.jsx";
 import PaypalReturn from "./components/paypalreturn.jsx";
 import PaymentSuccess from "./pages/paymentsuccess.jsx";
+import OdetaljiNatjecanja from "./pages/OdetaljiNatjecanja.jsx";
+import OprikazRezultata from "./pages/OprikazRezultata.jsx";
 
 // Dohvati Client ID iz .env datoteke
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -98,6 +100,21 @@ const router = createBrowserRouter([
       <ProtectedRoute>
         <OupravljanjePrijavama />
       </ProtectedRoute>,
+  },
+  {
+    path: "/organizator/detalji-natjecanja",
+    element:
+      <ProtectedRoute>
+        <OdetaljiNatjecanja />
+      </ProtectedRoute>,
+  },
+  {
+    path: "/organizator/prikaz-rezultata",
+    element:
+      <ProtectedRoute>
+        <OprikazRezultata />
+      </ProtectedRoute>,
+
   },
   {
     path: "/sudac/odabir-natjecanja",

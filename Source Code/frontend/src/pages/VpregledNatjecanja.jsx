@@ -82,7 +82,7 @@ function VpregledNatjecanja() {
                     >
                         <i className="bi bi-arrow-left"></i>
                     </div>
-                    <p>Moji nastupi</p>
+                    <p>Prijavljeni nastupi</p>
                 </div>
 
                 <div className='nastupi-list-container'>

@@ -55,7 +55,7 @@ function ProfileV() {
                     <div className='profile-info-general'>
                         <div className='profile-buttons'>
                             <button className='prijavi-nastup' onClick={handleVprijavaNastupaOdabir}>Prijavi nastup</button>
-                            <button className='moja-natjecanja' onClick={handleVpregledNatjecanja}>Otvorene prijave</button>
+                            <button className='moja-natjecanja' onClick={handleVpregledNatjecanja}>Prijavljeni nastupi</button>
                         </div>
                         <div className='profile-about'>
                             <div>

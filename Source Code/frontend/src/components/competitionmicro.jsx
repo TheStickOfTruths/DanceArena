@@ -65,11 +65,20 @@ const CompetitionMicro = ({ competition, onUpdate }) => {
         }
     };
 
+    const handleCompetitionDetails = (e) => {
+        e.stopPropagation();
+        navigate('/organizator/detalji-natjecanja', { state: { competition } });
+    };
+
     const handleOcijeniNastupe = (e) => {
         e.stopPropagation();
         navigate('/sudac/odabir-nastupa', { state: { competition } });
     };
 
+    const handleViewResults = (e) => {
+        e.stopPropagation();
+        navigate('/organizator/prikaz-rezultata', { state: { competition } });
+    };
 
     const getStatusDetails = (status) => {
         switch (status) {
@@ -197,13 +206,18 @@ const CompetitionMicro = ({ competition, onUpdate }) => {
                         )}
 
                         {competition.status === 'ACTIVE' && (
-                            <button className="micro-btn btn-primary" onClick={handleFinishCompetition}>
-                                Završi natjecanje
-                            </button>
+                            <>
+                                <button className="micro-btn btn-secondary" onClick={handleCompetitionDetails}>
+                                    Detalji natjecanja
+                                </button>
+                                <button className="micro-btn btn-primary" onClick={handleFinishCompetition}>
+                                    Završi natjecanje
+                                </button>
+                            </>
                         )}
 
                         {competition.status === 'COMPLETED' && (
-                            <button className="micro-btn btn-secondary-darker" onClick={(e) => e.stopPropagation()}>
+                            <button className="micro-btn btn-secondary-darker" onClick={handleViewResults}>
                                 Rezultati
                             </button>
                         )}
