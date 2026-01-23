@@ -67,6 +67,13 @@ Sustav se oslanja na REST API za komunikaciju između klijenta i poslužitelja.
 
 ---
 
+## Upute za pristup deployanoj aplikaciji:
+Uđite na link https://dancearena.netlify.app/ .
+
+Ako prvi put nakon nekog vremena ulazite u stranicu potrebno je pričekati minutu dok se backend server ne probudi.
+
+---
+
 **Projekt:** *DanceArena – Sustav za upravljanje plesnim natjecanjima*  
 **Kolegij:** Programsko inženjerstvo – FER  
 **Zavod:** Elektronika, mikroelektronika, računalni i inteligentni sustavi

@@ -1,43 +1,109 @@
 .homepage-container {
-    display: grid;
-    grid-template-rows: 10vh 90vh;
-    max-width: 1920px;
+    display: flex;
+    flex-direction: column;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
 }
 
+
 .homepage-content-container {
+    flex: 1;
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 30px;
+    overflow: hidden;
+    padding: 20px;
     box-sizing: border-box;
-    overflow-y: auto;
 }
 
-.competitions-container {
+
+.competitions-container,
+.results-container {
     width: 100%;
+    max-width: 1000px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    padding: 20px 0;
-}
-
-.homepage-content-container {
+    margin-top: 20px;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    padding-bottom: 20px;
     scrollbar-width: none;
-    -ms-overflow-style: none;
 }
 
-.homepage-content-container::-webkit-scrollbar {
+.competitions-container::-webkit-scrollbar,
+.results-container::-webkit-scrollbar {
     display: none;
 }
 
-.not-logged-in {
+.results-container {
+    width: 70%;
+}
+
+
+.card {
+    width: 100%;
+    transition: all 0.3s ease;
+    height: auto;
+}
+
+.switch-view {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 10px;
+}
+
+
+@media screen and (max-width: 1024px) {
+    .results-container {
+        width: 90%;
+    }
+
+    .switch-view {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .homepage-content-container {
+        padding: 10px;
+    }
+
+    .switch-view {
+        width: 95%;
+    }
+
+    .switch-view label {
+        font-size: 1rem;
+        flex: 1;
+        text-align: center;
+    }
+
+    .competitions-container,
+    .results-container {
+        width: 100%;
+        gap: 15px;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+    }
+}
+
+
+@media screen and (max-width: 480px) {
+    .homepage-content-container {
+        padding: 5px;
+    }
+
+    .switch-view label {
+        padding: 8px 5px;
+        font-size: 0.9rem;
+    }
 }

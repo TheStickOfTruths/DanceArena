@@ -8,8 +8,11 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib.units import cm
 import itertools
 from collections import defaultdict
-from .models import Appearance, Grade
+from .models import Appearance, Grade, MediaFile, Result, CompetitionJudge, Competition
 from datetime import datetime, date, time, timedelta
+import uuid
+from django.conf import settings
+import requests
 
 
 def calculate_start_time(base_time: time, length: timedelta) -> time:
@@ -42,7 +45,6 @@ def generate_starting_list_pdf(competition):
 
     elements = []
 
-    # Header section
     elements.append(Paragraph(f"<b>Startna lista</b>", styles['Heading']))
     elements.append(Paragraph(f"Datum: {competition.date.strftime('%d.%m.%Y')}", styles['Normal']))
     elements.append(Paragraph(f"Lokacija: {competition.location}", styles['Normal']))
@@ -50,11 +52,10 @@ def generate_starting_list_pdf(competition):
     elements.append(Paragraph(f"Opis: {competition.description}", styles['Normal']))
     elements.append(Spacer(1, 12))
 
-    # Generate category triplets
     triplets = list(itertools.product(
-        competition.age_categories,
-        competition.style_categories,
-        competition.group_size_categories
+        competition.age_categories.all(),
+        competition.style_categories.all(),
+        competition.group_size_categories.all()
     ))
 
     start_time = time(8, 0)
@@ -70,7 +71,7 @@ def generate_starting_list_pdf(competition):
         if not appearances.exists():
             continue
 
-        elements.append(Paragraph(f"{age}  {style}  {size}", styles['SectionHeader']))
+        elements.append(Paragraph(f"{age.get_name_display()} - {style.get_name_display()} - {size.get_name_display()}", styles['SectionHeader']))
 
         table_data = [["#", "Pocetak nastupa", "Koreograf", "Koreografija", "Voditelj kluba", "Duljina nastupa"]]
         for i, app in enumerate(appearances, start=1):
@@ -112,24 +113,31 @@ def generate_starting_list_pdf(competition):
     doc.build(elements)
     buffer.seek(0)
 
-    pdf_filename = f"{competition.id}_starting_list.pdf"
-    competition.starting_list_pdf.save(pdf_filename, ContentFile(buffer.read()))
+    new_media = MediaFile(
+        title=f"List for {competition.id}",
+        file_type='pdf'
+    )
+
+    new_media.file.save(f"list_{competition.id}.pdf", ContentFile(buffer.getvalue()))
+    new_media.save()
     buffer.close()
 
+    competition.starting_list = new_media
     competition.save()
 
-    return competition.starting_list_pdf.url
+    return new_media
     
 
 def generate_results(competition):
 
     triplets = list(itertools.product(
-        competition.age_categories,
-        competition.style_categories,
-        competition.group_size_categories
+        competition.age_categories.all(),
+        competition.style_categories.all(),
+        competition.group_size_categories.all()
     ))
 
     results = defaultdict(dict)
+    results_to_db = []
 
     for age, style, size in triplets:
 
@@ -155,22 +163,21 @@ def generate_results(competition):
             for position, app in enumerate(sorted_app_map, start=1)
         }
 
+        for position, app in ranked_map.items():
+            results_to_db.append(Result(
+                competition=competition,
+                appearance=app,
+                rank=position
+            ))
+
         category = f"{age}-{style}-{size}"
         results[category] = ranked_map 
 
-    results_json = {
-        category: [
-            {
-                position: {
-                    'id': app.id,
-                    'choreography': app.choreography
-                    }
-            } for position, app in ranked_map.items()
-        ]
-        for category, ranked_map in results.items()
-    }
+    if results_to_db:
+        Result.objects.filter(competition=competition).delete()
+        Result.objects.bulk_create(results_to_db)
 
-    return results_json
+    return
 
 
 def generate_grades(appearance):
@@ -178,7 +185,8 @@ def generate_grades(appearance):
     grades_json = {
         "grades": [
             {
-                f"{judge_name} {judge_surname}": grade
+                'judge': f"{judge_name} {judge_surname}",
+                'grade': grade
             } for judge_name, judge_surname, grade in Grade.objects.filter(appearance=appearance)
             .values_list('judge__first_name', 'judge__last_name', 'grade')
         ],
@@ -186,3 +194,55 @@ def generate_grades(appearance):
     }
     
     return grades_json
+
+
+def send_judge_invite(email, invite_link):
+    url = "https://mailserver.automationlounge.com/api/v1/messages/send"
+    
+    api_key = settings.API_MAIL_KEY
+    
+    payload = {
+        "to": email,
+        "subject": "Judge Registration Invitation - Dance Arena",
+        "html": f"""
+            <h1>Welcome!</h1>
+            <p>You have been invited to register as a judge on Dance Arena.</p>
+            <p>Please use the link below to register:</p>
+            <a href="{invite_link}">Register as Judge</a>
+            <br><br>
+            <p>Best regards,<br>Dance Arena Team</p>
+        """
+    }
+
+    print(api_key)
+    
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        
+        if response.status_code == 200:
+            print(f"--- API Email uspješno poslan na: {email} ---")
+            print(f"Response: {response.json()}")
+        else:
+            print(f"--- API Greška ({response.status_code}): {response.text} ---")
+            
+    except Exception as e:
+        print(f"--- Greška pri API pozivu: {e} ---")
+
+
+def judging_in_progress(competition):
+    for comp_judge in CompetitionJudge.objects.filter(competition=competition):
+        judge = comp_judge.judge
+        if Appearance.objects.filter(competition=competition):
+            for appearance in Appearance.objects.filter(competition=competition):
+                if not Grade.objects.filter(judge=judge, appearance=appearance):
+                    return True
+        else:
+            return False
+        
+    return False
+            

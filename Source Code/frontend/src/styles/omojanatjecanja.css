@@ -1,0 +1,79 @@
+.page-container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.page-content-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.headboard {
+    flex-shrink: 0;
+}
+
+.O-competition-list-container {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 80%;
+    max-width: 800px;
+    margin: 0 auto;
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 20px;
+    scrollbar-width: none;
+}
+
+.O-competition-list-container::-webkit-scrollbar {
+    display: none;
+}
+
+.competition-o {
+    border: 1px solid var(--secondary-darker);
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.competition-o p {
+    font-size: 1.1rem;
+    color: var(--secondary-darker);
+}
+
+.competition-o .btn-container {
+    padding: 1%;
+    width: 40%;
+    height: 60%;
+    justify-content: space-between;
+    display: flex;
+    gap: 10px;
+}
+
+.competition-o .prijava-button {
+    height: 100%;
+    width: 50%;
+    border-style: none;
+    border-radius: 18px;
+    background-color: var(--secondary-darker);
+    font-size: 0.9rem;
+    color: white;
+}
+
+.competition-o .prijava-button:hover {
+    cursor: pointer;
+    background-color: color-mix(in oklab, var(--secondary-darker) 100%, black 30%)
+}

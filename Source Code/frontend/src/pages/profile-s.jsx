@@ -1,0 +1,72 @@
+import '../styles/profile-s.css';
+import Navbar from '../components/navbar';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
+function ProfileS() {
+
+    const { user: currentUser, loading } = useAuth();
+    const navigate = useNavigate();
+
+    if (loading) {
+        return (
+            <div className="homepage-container">
+                <Navbar currentUser={currentUser} />
+                <div className="homepage-content-container">
+                    <p>Učitavanje podataka...</p>
+                </div>
+            </div>
+        );
+    }
+
+
+    function handleSodabirNatjecanja() {
+        navigate('/sudac/odabir-natjecanja');
+    }
+
+    return (
+        <div className='profile-container'>
+            <Navbar currentUser={currentUser} />
+
+            <div className='profile-content-container'>
+                <div className='headboard-s'>
+                    <div
+                        className="back-button"
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Return to previous page"
+                        onClick={() => navigate('/homepage')}
+                        >
+                        <i className="bi bi-arrow-left"></i>
+                    </div>
+                    <p>Profil (Sudac)</p>
+                </div>
+                <div className='profile-info-s'>
+                    <div className='profile-info-main'>
+                        <div className='pfp'>
+                            <img src="./pictures/profile-icon.webp" alt="profile-picture" />
+                        </div>
+                        <p className='ime'>{`${currentUser.first_name} ${currentUser.last_name}`}</p>
+                    </div>
+
+                    <div className='profile-info-general'>
+                        <div className='profile-buttons'>
+                            <button className='prijavi-nastup' onClick={handleSodabirNatjecanja}>Ocijeni nastupe</button>
+
+                        </div>
+                        <div className='profile-about'>
+                            <div>
+                                <p className='atribut'>E-mail:</p>
+                                <p className='value'>{currentUser.email}</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    );
+}
+
+export default ProfileS

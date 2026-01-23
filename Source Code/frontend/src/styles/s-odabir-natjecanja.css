@@ -1,0 +1,151 @@
+.page-container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.pejdz-content-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+}
+
+.headboard-s {
+    background-color: var(--primary);
+    height: 10vh;
+    top: 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.headboard-s p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-left: 1%;
+    color: var(--primary);
+    color: rgba(255, 255, 255, 0.5)
+}
+
+.kompetisn-list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 70%;
+    flex: 1;
+    height: auto;
+    overflow-y: auto;
+    padding: 15px;
+    padding-bottom: 20px;
+    min-height: 0;
+    gap: 15px;
+    scrollbar-width: none;
+}
+
+.kompetisn-list-container::-webkit-scrollbar {
+    display: none;
+}
+
+.competition {
+    border: 1px solid var(--primary-darker);
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.competition p {
+    font-size: 1.1rem;
+    color: var(--primary-darker);
+}
+
+.competition .prijava-button {
+    padding: 0;
+    height: 60%;
+    width: 12%;
+    border-style: none;
+    border-radius: 18px;
+    background-color: var(--primary-darker);
+    font-size: 0.9rem;
+    color: white;
+}
+
+.competition .prijava-button:hover {
+    cursor: pointer;
+    background-color: color-mix(in oklab, var(--primary-darker) 100%, black 30%)
+}
+
+.grading-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+}
+
+.grade-input {
+    width: 60px;
+    padding: 5px;
+    font-size: 1rem;
+    text-align: center;
+    border: 2px solid var(--primary);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+    background-color: white;
+    color: var(--primary-darker);
+    font-weight: bold;
+}
+
+.grade-input:focus {
+    border-color: var(--primary-darker);
+}
+
+.prihvati-btn {
+    padding: 5px 15px;
+    font-size: 0.9rem;
+    background-color: var(--primary-darker);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    height: 35px;
+}
+
+.prihvati-btn:hover {
+    background-color: color-mix(in oklab, var(--primary-darker) 100%, black 20%);
+}
+
+.opozovi-btn {
+    background-color: #d9534f;
+}
+
+.nastup-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 200px;
+}
+
+.grade-input::-webkit-outer-spin-button,
+.grade-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.grade-input {
+    -moz-appearance: textfield;
+}

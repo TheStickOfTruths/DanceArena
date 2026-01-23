@@ -1,7 +1,7 @@
 .profile-container {
     display: grid;
     grid-template-rows: 10vh 90vh;
-    width: 100vw;
+    max-width: 1920px;
 }
 
 
@@ -16,7 +16,7 @@
 }
 
 .headboard {
-    background-color: var(--svijetloplava);
+    background-color: var(--secondary);
     height: 10vh;
     top: 0;
     width: 100%;
@@ -24,14 +24,23 @@
     margin: 0;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    color: var(--bijela);
 }
 
 .headboard p {
     font-size: 1.5rem;
     font-weight: bold;
-    padding-left: 1%;
-    color: var(--svijetloplava);
-    color: rgba(255, 255, 255, 0.5)
+    padding-right: 2%;
+    color: color-mix(in oklab, var(--secondary) 70%, var(--bijela) 30%);
+    margin: 0;
+}
+
+.headboard .back-button {
+    font-size: 1.5rem;
+    color: var(--bijela);
+    margin-left: 2%;
+    cursor: pointer;
 }
 
 .profile-info {
@@ -52,7 +61,7 @@
     align-items: end;
     justify-content: left;
     width: 100%;
-    border-bottom: 1px solid var(--tamnoplava);
+    border-bottom: 1px solid var(--secondary-darker);
     padding-bottom: 20px;
 }
 
@@ -63,7 +72,7 @@
     font-weight: bold;
     padding-left: 5%;
     margin-bottom: 2%;
-    color: var(--tamnoplava)
+    color: var(--secondary-darker);
 }
 
 .pfp {
@@ -73,7 +82,7 @@
     width: 20vh;
     height: 20vh;
     border-radius: 20px;
-    border: 5px solid var(--svijetloplava);
+    border: 5px solid var(--secondary);
     overflow: hidden;
 }
 
@@ -86,7 +95,7 @@
 
 .profile-info-general {
     display: grid;
-    grid-template-columns: 22vh auto;
+    grid-template-columns: 17vw auto;
     gap: 0 5%;
     margin-top: 2%
 }
@@ -102,39 +111,123 @@
 .profile-buttons button {
     padding: 0;
     height: 4.5vh;
+    min-height: 40px;
     width: 90%;
     border-style: none;
     border-radius: 13px;
-    background-color: var(--tamnoplava);
+    background-color: var(--secondary-darker);
     margin-top: 11%;
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     color: white
 }
 
 .profile-buttons :hover {
     cursor: pointer;
-    background-color: color-mix(in oklab, var(--tamnoplava) 100%, black 30%)
+    background-color: color-mix(in oklab, var(--secondary-darker) 100%, black 30%)
 }
 
 .profile-about div {
-    display: grid;
-    grid-template-columns: 20% 70%;
-    border-bottom: 1px solid var(--tamnoplava);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--secondary-darker);
     height: 7vh;
     align-content: center;
     align-items: center;
 }
 
-.profile-about .atribut {
-    font-size: 0.8rem;
-    color: rgba(0, 0, 0, 0.4);
-    margin: 0;
-    padding: 0;
+
+@media (max-width: 1024px) {
+    .profile-info  {
+        width: 70%;
+        height: auto;
+    }
+
+    .profile-info-general {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .profile-buttons {
+        flex-direction: row;
+        justify-content: start;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .profile-info  .profile-buttons button {
+        min-width: 48%;
+        margin-top: 0;
+    }
 }
 
-.profile-about .value {
-    font-size: 0.8rem;
-    color: rgb(0, 0, 0);
-    margin: 0;
-    padding: 0;
+@media (max-width: 768px) {
+    .profile-content-container {
+        height: auto;
+    }
+
+    .headboard  {
+        height: 10vh;
+        margin-top: 6vh;
+        padding: 20px 0;
+    }
+
+    .profile-info  {
+        position: relative;
+        top: -60px;
+        width: 90%;
+        transform: translateX(-50%);
+    }
+
+    .profile-info  .profile-info-main {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-info  .profile-info-main .ime {
+        padding-left: 0;
+        margin-top: 10px;
+    }
+
+    .profile-info  .pfp {
+        width: 140px;
+        height: 140px;
+    }
+
+    .pfp img {
+        width: 140px;
+        height: 140px;
+    }
+
+    .profile-buttons {
+        flex-direction: column;
+        justify-content: start;
+        gap: 10px;
+    }
+
+    .profile-info  .profile-buttons button {
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .profile-about div {
+        height: auto;
+        padding: 10px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .headboard  p {
+        font-size: 1.2rem;
+    }
+
+    .profile-info  .profile-info-main .ime {
+        font-size: 1.4rem;
+    }
+
+    .profile-about .atribut,
+    .profile-about .value {
+        font-size: 0.75rem;
+    }
 }

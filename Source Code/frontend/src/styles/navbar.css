@@ -1,12 +1,13 @@
-.navbar {
-    padding: 5px 20px;
-    background-color: rgb(255, 255, 255);
+
+.da-navbar {
+    padding: 10px 20px;
+    background-color: var(--bijela);
     width: 100%;
-    height: 10vh;
+    min-height: 10vh;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-direction: row;
+    flex-wrap: wrap;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
     position: relative;
@@ -15,107 +16,148 @@
 .logo-text-container {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    flex-direction: row;
-}
-
-.logo-text-container :hover {
-    cursor: pointer;
+    gap: 6px;
 }
 
 .navbar-logo {
-    height: 40px;
-    width: auto;
+    height: 45px;
 }
 
-.navbar-text {
-    margin-left: 4px;
-    height: 15px;
-    width: auto;
+.da-navbar-text {
+    height: 18px;
 }
 
-.nav-links {
+.navbar-buttons {
     display: flex;
     align-items: center;
-    flex-direction: row;
     gap: 20px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+}
+
+.navbar-btn {
+    text-decoration: underline;
+    color: var(--crna);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.account-info-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.account-name {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--crna);
+}
+
+.account-name p {
+    margin: 0;
+    padding: 0;
 }
 
 .account-section {
     display: flex;
     align-items: center;
-    flex-direction: row;
-    background-color: var(--tamnoljubičasta);
-    padding: 3px;
+    justify-content: center;
+    background-color: color-mix(in oklab, var(--crna) 50%, var(--bijela) 50%);
     border-radius: 50%;
-    height: 35px;
-    width: 35px;
+    padding: 4px;
+    height: 46px;
+    width: 46px;
 }
 
 .user-icon {
     border-radius: 50%;
-    height: 35px;
-    width: auto;
+    height: 38px;
+    cursor: pointer;
 }
 
-.dropdown-menu {
-    border: 3px solid var(--tamnoljubičasta);
+.da-dropdown-menu {
+    border: 3px solid var(--primary-darker);
     border-radius: 10px;
     background-color: var(--bijela);
     display: flex;
     flex-direction: column;
     position: absolute;
-    top: 20px;
-    right: 3px;
-    width: 20vw;
+    top: 60px;
+    right: 10px;
+    width: 80vw;
     max-width: 300px;
     overflow: hidden;
     z-index: 1000;
+    cursor: pointer;
 }
 
-.dropdown-item {
+.da-dropdown-item {
     display: flex;
     align-items: center;
     font-size: 1rem;
     width: 100%;
-    padding: 5px 10px 5px 10px;
-    border-bottom: 2px solid var(--tamnoljubičasta);
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--primary-darker);
     box-sizing: border-box;
 }
 
-.dropdown-item:hover {
-    background-color: var(--svijetloplava);
-    cursor: pointer;
+.da-dropdown-item:hover {
+    background-color: color-mix(in oklab, var(--bijela) 70%, var(--crna) 30%);
 }
 
-.dropdown-item.no {
-    border-bottom: none;
-}
-
-.dropdown-item div {
+.da-dropdown-item div {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--svijetloplava);
+    background-color: var(--secondary);
     color: var(--bijela);
     border-radius: 50%;
-    width: 3vh;
-    height: 3vh;
+    width: 30px;
+    height: 30px;
 }
 
-.dropdown-item p {
+.da-dropdown-item p {
     margin-left: 15px;
-    color: var(--tamnoljubičasta);
+    margin-bottom: 0;
+    color: var(--primary-darker);
 }
 
-.dropdown-item i {
+.da-dropdown-item i {
     font-size: 1.2rem;
 }
 
-.dropdown-menu a {
+.da-dropdown-item.no {
+    border-bottom: none;
+}
+
+.da-dropdown-menu a {
     text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .da-navbar {
+        min-height: 16vh;
+        align-items: flex-start;
+    }
+
+    .navbar-buttons {
+        width: 100%;
+        order: 3;
+        justify-content: center;
+        margin-top: 10px;
+        flex-wrap: wrap;
+    }
+
+    .logo-text-container {
+        order: 1;
+    }
+
+    .account-info-container {
+        order: 2;
+        margin-left: auto;
+    }
+    .account-name {
+        display: block;
+        font-size: 0.9rem;
+    }
+
 }

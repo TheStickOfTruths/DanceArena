@@ -1,0 +1,418 @@
+.stranica-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 1920px;
+}
+
+.stranica-content-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.sudci-nastupi-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 20px 0 20px;
+}
+
+.sudci-container {
+    width: 50%;
+    height: 73vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.email-form {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: 14%;
+}
+
+.email-form form {
+    display: flex;
+    gap: 12px;
+    background: #ffffff;
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    align-items: center;
+}
+
+.email-form input {
+    padding: 12px 16px;
+    font-size: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.2s ease;
+    width: 300px;
+    color: #333;
+}
+
+.email-form input:focus {
+    border-color: var(--secondary-darker);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.email-form input::placeholder {
+    color: #94a3b8;
+}
+
+.email-form button {
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background-color: var(--secondary-darker);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.email-form button:hover {
+    background-color: color-mix(in srgb, var(--secondary-darker), white 15%);
+}
+
+.email-form button:active {
+    transform: scale(0.98);
+}
+
+.sudci-lista {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 41%;
+}
+
+
+.sudci-scroll {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    width: 100%;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.sudci-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.sudac-mini {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 15px;
+    margin-top: 10px;
+    width: 95%;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.sudac-mini:hover {
+    border-color: var(--secondary-darker);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.pozovi-button {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    background-color: var(--secondary-darker);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    white-space: nowrap;
+}
+
+.pozovi-button:hover {
+    background-color: color-mix(in srgb, var(--secondary-darker), white 15%);
+    transform: scale(1.02);
+}
+
+.pozovi-button:active {
+    transform: scale(0.98);
+}
+
+.sudac-mini p {
+    margin: 0;
+    color: color-mix(in srgb, var(--secondary-darker), white 15%);
+}
+
+.sudci-lista p {
+    margin: 10px;
+}
+
+.sudci-txt {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 10px 0 0 0;
+    height: 4%;
+}
+
+.zatvaranje-botun {
+    width: 90%;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: white;
+    background-color: var(--primary);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 6px;
+}
+
+.nastupi-container {
+    width: 45%;
+    height: 73vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nastupi-scroll {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    width: 100%;
+    height: 100%;
+    scrollbar-width: none;
+    padding-bottom: 20px;
+}
+
+.nastup-mini {
+    background-color: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 10px;
+    width: 95%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.nastup-mini:hover {
+    border-color: var(--secondary-darker);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.nastup-mini.accepted-bg {
+    border-left: 6px solid #4caf50;
+}
+
+.nastup-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nastup-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nastup-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 0;
+    color: #333;
+}
+
+.nastup-subtitle {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.nastup-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.nastup-actions button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: opacity 0.2s;
+}
+
+.nastup-actions button:hover {
+    opacity: 0.9;
+}
+
+.odbij-btn {
+    background-color: #ef4444;
+    color: white;
+}
+
+.prihvati-btn {
+    background-color: #22c55e;
+    color: white;
+}
+
+.opozovi-btn {
+    background-color: #f59e0b;
+    color: white;
+}
+
+.nastup-details {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.detail-row {
+    font-size: 0.95rem;
+    color: #475569;
+}
+
+.detail-row span {
+    font-weight: 600;
+    color: #333;
+    margin-right: 5px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- MEDIA QUERIES --- */
+
+/* TABLET - Rezolucije do 1024px */
+@media screen and (max-width: 1024px) {
+    .sudci-nastupi-container {
+        flex-direction: column; /* Liste idu jedna ispod druge */
+        align-items: center;
+        gap: 20px;
+    }
+
+    .sudci-container, 
+    .nastupi-container {
+        width: 100%; /* Šire se na cijeli ekran */
+        height: auto; /* Više ne fiksiramo visinu na vh kako bi sadržaj mogao disati */
+        min-height: 400px;
+    }
+
+    .email-form input {
+        width: 250px; /* Malo uži input */
+    }
+
+    .sudci-scroll, 
+    .nastupi-scroll {
+        max-height: 500px; /* Ograničavamo visinu scrolla da stranica ne bude beskonačna */
+        overflow-y: auto;
+    }
+}
+
+/* MOBITEL - Rezolucije do 768px */
+@media screen and (max-width: 768px) {
+    .headboard p {
+        font-size: 1.1rem;
+        text-align: center;
+    }
+
+    .email-form form {
+        flex-direction: column; /* Input i gumb jedan ispod drugog */
+        width: 90%;
+        padding: 15px;
+    }
+
+    .email-form input {
+        width: 100%; /* Input uzima punu širinu forme */
+    }
+
+    .email-form button {
+        width: 100%;
+    }
+
+    .sudac-mini {
+        flex-direction: column; /* Info i gumb jedan ispod drugog */
+        text-align: center;
+        gap: 10px;
+    }
+
+    .nastup-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .nastup-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .nastup-actions button {
+        flex: 1; /* Gumbi su jednake širine na mobitelu */
+        padding: 10px;
+    }
+
+    .zatvaranje-botun {
+        width: 95%;
+        position: sticky; /* Gumb za zatvaranje prijava ostaje pri dnu ekrana */
+        bottom: 10px;
+        z-index: 10;
+        box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+    }
+}
+
+/* MALI MOBITELI - Rezolucije do 480px */
+@media screen and (max-width: 480px) {
+    .sudci-txt {
+        font-size: 1rem;
+    }
+
+    .nastup-title {
+        font-size: 1rem;
+    }
+
+    .detail-row {
+        font-size: 0.85rem;
+    }
+}

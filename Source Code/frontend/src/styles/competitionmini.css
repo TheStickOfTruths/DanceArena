@@ -8,6 +8,7 @@
     border: 1px solid #e0e0e0;
     overflow: hidden;
     transition: all 0.3s ease;
+    flex-shrink: 0
 }
 
 .competition-mini-header {
@@ -25,7 +26,7 @@
 
 .header-main-info h3 {
     margin: 0 0 10px 0;
-    color: var(--tamnoplava);
+    color: var(--secondary-darker);
     font-size: 1.4rem;
 }
 
@@ -44,12 +45,12 @@
 }
 
 .header-meta .bi {
-    color: var(--svijetloplava);
+    color: var(--secondary);
 }
 
 .header-toggle .bi {
     font-size: 1.5rem;
-    color: var(--tamnoplava);
+    color: var(--secondary-darker);
     transition: transform 0.3s ease;
 }
 
@@ -86,11 +87,11 @@
     align-items: center;
     gap: 8px;
     margin-bottom: 10px;
-    color: var(--tamnoplava);
+    color: var(--secondary-darker);
 }
 
 .category-group .bi {
-    color: var(--tamnoljubičasta);
+    color: var(--secondary-darker);
 }
 
 .category-list {
@@ -103,7 +104,7 @@
 }
 
 .category-list li {
-    background-color: var(--svijetloplava);
+    background-color: var(--secondary);
     color: white;
     padding: 4px 10px;
     border-radius: 15px;
@@ -115,7 +116,7 @@
     padding: 10px 18px;
     border: none;
     border-radius: 8px;
-    background-color: var(--tamnoplava);
+    background-color: var(--secondary-darker);
     color: white;
     font-weight: bold;
     font-family: 'Poppins', sans-serif;
@@ -124,7 +125,7 @@
 }
 
 .prijavi-se-btn:hover {
-    background-color: color-mix(in oklab, var(--tamnoplava) 80%, black 20%);
+    background-color: color-mix(in oklab, var(--secondary-darker) 80%, black 20%);
 }
 
 @keyframes fadeIn {

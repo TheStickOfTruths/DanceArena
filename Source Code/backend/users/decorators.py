@@ -12,3 +12,18 @@ def role_required(allowed_roles):
             return view_func(request, *args, **kwargs)
         return wrapper
     return decorator
+
+
+
+from django.http import JsonResponse
+from .organizerUtils import is_paid_organizer
+
+def organizer_subscription_required(view_func):
+    def _wrapped(request, *args, **kwargs):
+        if not is_paid_organizer(request.user):
+            return JsonResponse(
+                {"error": "Subscription required", "code": "SUBSCRIPTION_EXPIRED"},
+                status=402,
+            )
+        return view_func(request, *args, **kwargs)
+    return _wrapped

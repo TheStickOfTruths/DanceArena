@@ -6,18 +6,60 @@
   flex-direction: column;
   align-items: center;
   font-family: 'Poppins', sans-serif;
+  background-color: var(--bijela);
+  color: var(--crna);
 }
 
-:root,
-.theme-original {
-  --svijetloplava: #37D2E7ff;
+:root {
+  --primary: #E04594ff;
+  --secondary: #37D2E7ff;
+  --primary-darker: #8A206Aff;
+  --secondary-darker: #21519Aff;
   --bijela: #FDFEFEff;
-  --roza: #E04594ff;
-  --tamnoplava: #21519Aff;
-  --ljubičasta: #8E45B3ff;
-  --tamnoljubičasta: #8A206Aff;
+  --crna: black;
+  --ljubicasta: #8E45B3ff;
+
+}
+
+/* #root.theme-dark {
+  --primary: #8A206Aff;
+  --secondary: #21519Aff;
+  --primary-darker: #E04594ff;
+  --secondary-darker: #37D2E7ff;
+  --bijela: #2C3E50ff;
+  --crna: #ECF0F1ff;
+  --ljubicasta: #5D3375ff;
+} */
+
+
+/* High Contrast Theme */
+#root.theme-dark {
+  --primary: #FF69B4ff;
+  --secondary: #00FFFFff;
+  --primary-darker: #FF1493ff;
+  --secondary-darker: #1E90FFFF;
+  --bijela: #000000ff;
+  --crna: #FFFFFFff;
+  --ljubicasta: #9400D3ff;
+
+}
+
+/* Citljivost teksta */
+#root.larger-text {
+
+  p,
+  label,
+  button,
+  input,
+  textarea,
+  select,
+  .navbar-btn {
+    font-size: 1.5rem;
+  }
 }
 
 body {
+  background-color: var(--bijela);
+  color: var(--crna);
   margin: 0;
 }

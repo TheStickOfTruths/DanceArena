@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import AgeCategory, StyleCategory, GroupSizeCategory, \
-                    Competition, Appearance, Grade, CompetitionJudge
+from .models import AgeCategory, StyleCategory, GroupSizeCategory, Result,\
+                    Competition, Appearance, Grade, CompetitionJudge, MediaFile
 
 
 @admin.register(AgeCategory)
@@ -16,6 +16,13 @@ class StyleCategoryAdmin(admin.ModelAdmin):
 @admin.register(GroupSizeCategory)
 class GroupSizeCategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
+
+
+@admin.register(MediaFile)
+class MediaFileAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 'title', 'file_type', 'file', 'uploaded_at'
+    )
 
 
 @admin.register(Competition)
@@ -45,7 +52,7 @@ class CompetitionAdmin(admin.ModelAdmin):
 class AppearanceAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'competition_info', 'club_manager__username', 'paid_registration', 
-        'choreography', 'choreograph',
+        'accepted', 'choreography', 'choreograph',
         'age_category', 'style_category', 'group_size_category'
     )
     search_fields = (
@@ -58,7 +65,7 @@ class AppearanceAdmin(admin.ModelAdmin):
     ordering = ('club_manager', 'id')
 
     def competition_info(self, obj):
-        return f"{obj.competition.id} - {obj.competition.location}"
+        return f"ID:{obj.competition.id} ORGANIZER:{obj.competition.organizer}"
     competition_info.short_description = 'Competition'
 
 @admin.register(Grade)
@@ -75,7 +82,7 @@ class GradeAdmin(admin.ModelAdmin):
     competition_info.short_description = 'Competition'
 
     def judge_info(self, obj):
-        return f"{obj.judge.id} - {obj.judge.username}"
+        return f"{obj.judge.id} - {obj.judge}"
     judge_info.short_description = 'Judge'
 
     def appearance_id(self, obj):
@@ -93,9 +100,16 @@ class CompetitionJudgeAdmin(admin.ModelAdmin):
     ordering = ('competition', 'id')
 
     def judge_info(self, obj):
-        return f"{obj.judge.id} - {obj.judge.username}"
+        return f"{str(obj.judge)}"
     judge_info.short_description = 'Judge'
 
     def competition_info(self, obj):
-        return f"{obj.competition.id} - {obj.competition.location}"
+        return f"ID:{obj.competition.id} ORGANIZER:{obj.competition.organizer}"
     competition_info.short_description = 'Competition'
+
+
+@admin.register(Result)
+class ResultAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 'competition_id', 'appearance_id', 'rank'
+    )

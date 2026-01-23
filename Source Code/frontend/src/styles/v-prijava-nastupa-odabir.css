@@ -1,0 +1,87 @@
+.page-container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.page-content-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.headboard-v {
+    background-color: var(--primary);
+    height: 10vh;
+    top: 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.headboard-v p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-left: 1%;
+    color: var(--primary);
+    color: rgba(255, 255, 255, 0.5)
+}
+
+.competition-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    width: 80%;
+    max-width: 800px;
+    margin: 0 auto;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    padding-bottom: 20px;
+    scrollbar-width: none;
+}
+
+.competition-list-container::-webkit-scrollbar {
+    display: none;
+}
+
+.competition {
+    border: 1px solid var(--primary-darker);
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.competition p {
+    font-size: 1.1rem;
+    color: var(--primary-darker);
+}
+
+.competition .prijava-button {
+    padding: 0;
+    height: 60%;
+    width: 12%;
+    border-style: none;
+    border-radius: 18px;
+    background-color: var(--primary-darker);
+    font-size: 0.9rem;
+    color: white;
+}
+
+.competition .prijava-button:hover {
+    cursor: pointer;
+    background-color: color-mix(in oklab, var(--primary-darker) 100%, black 30%)
+}

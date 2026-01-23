@@ -1,13 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
-from .models import User, OrganizerSubscription
+from .models import User, OrganizerSubscription, OrganizerSubscriptionPrice
+
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
     model = User
     list_display = (
         'id', 'first_name', 'last_name', 'username', 
-        'email', 'role', 'club_name', 'club_location', 'is_staff', 'is_active'
+        'email', 'role', 'club_name', 'club_location', 'contact', 'is_staff', 'is_active'
     )
     list_filter = ('role', 'is_staff', 'is_active')
     fieldsets = (
@@ -39,3 +40,8 @@ class OrganizerSubscriptionAdmin(admin.ModelAdmin):
     def organizer_info(self, obj):
         return f"{obj.organizer.id} - {obj.organizer.username}"
     organizer_info.short_description = "Organizer"
+
+#Organizator postavlja cijenu
+@admin.register(OrganizerSubscriptionPrice)
+class OrganizerSubscriptionPriceAdmin(admin.ModelAdmin):
+    list_display = ('price', 'updated_at')

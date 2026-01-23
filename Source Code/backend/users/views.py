@@ -1,75 +1,186 @@
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
+from django.http import JsonResponse
+from django.contrib.auth import logout
+from django.conf import settings
+from django.db import transaction
 from .decorators import role_required
 from .models import Role
-from django.views.decorators.csrf import csrf_exempt #FOR POSTMAN !!!!!!!!!!!
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
-from django.middleware.csrf import get_token
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from dj_rest_auth.registration.views import SocialLoginView
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .paypal import get_paypal_access_token
+from .models import OrganizerSubscriptionPrice, OrganizerSubscription
+import requests
+from datetime import date
+from dateutil.relativedelta import relativedelta
+import json
+from .organizerUtils import is_paid_organizer
 
-@csrf_exempt
-def login_user(req):
-    if req.method == "POST":
-        username = req.POST['username']
-        password = req.POST['password']
-        user = authenticate(req, username=username, password=password)
-    else:
-        return HttpResponse("Login.html")
-    if user is not None:
-        role = user.role
-        print(Role.CLUB_MANAGER)
-        print(role)
-        login(req, user)
-        if role.lower() == 'admin':
-            return redirect('/admin')
-        else:
-            return redirect('/users/' + role.lower())
 
-@role_required(Role.ORGANIZER)
-def organizers(req):
-    return HttpResponse('Organizer.html')
+class GoogleLogin(SocialLoginView): 
+    adapter_class = GoogleOAuth2Adapter
+    callback_url = settings.LOGIN_REDIRECT_URL
+    client_class = OAuth2Client
+    permission_classes = [AllowAny]
 
-@role_required(Role.CLUB_MANAGER)
-def club_managers(req):
-    return HttpResponse('Club manager.html')
 
-@role_required(Role.JUDGE)
-def judges(req):
-    return HttpResponse('Judge.html')
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['email'] = user.email
+        
+        return token
 
-def google_login(request):
-    user_email = None
-    user_name = None
-    if request.user.is_authenticated:
-        user_email = request.user.email
-        user_name = request.user.get_full_name() or request.user.username
-    return render(request, 'users/google_login.html', {
-        'user_email': user_email,
-        'user_name': user_name,
-    })
-@require_POST
-def custom_logout(request):
-    if not request.user.is_authenticated:
-        return JsonResponse({'success': 'User already logged out.'}, status = 200) #Ako nije nitko prijavljen, vrati OK
-    
-    logout(request) #Logout za Django
 
-    return JsonResponse({'success': "User loged out successfully."}, status = 200) #Vrati JSONRepsonse za logout nakon Django logouta
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
+
+@api_view(['GET'])
+@permission_classes([AllowAny]) 
 def current_user(request):
     if not request.user.is_authenticated:
-        return JsonResponse({'error': 'Not authenticated'}, status=401)
+        return JsonResponse({'authenticated': False}, status=200)
     
     user = request.user
+
+    refresh = RefreshToken.for_user(user)
+    
     data = {
+        'authenticated': True,
         'id': user.id,
         'username': user.username,
         'email': user.email,
         'first_name': user.first_name,
         'last_name': user.last_name,
         'role': user.role,
-        'csrf_token': get_token(request)
+        'contact': user.contact,
+        'club_name': user.club_name,
+        'club_location': user.club_location,
+        'access': str(refresh.access_token),
+        'refresh': str(refresh),
     }
     return JsonResponse(data)
+
+
+@api_view(['PUT'])
+@permission_classes([AllowAny]) 
+def user_info(request):
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Nevazeci JSON'}, status=400)
+
+    user = request.user
+    role = data.get('role')
+    try:
+        with transaction.atomic():
+            user.role = role
+            user.first_name = data.get('name', user.first_name)
+            user.last_name = data.get('surname', user.last_name)
+
+            if role == Role.JUDGE:
+                pass 
+            
+            elif role == Role.ORGANIZER:
+                user.contact = data.get('contact', user.contact)
+                
+            elif role == Role.CLUB_MANAGER:
+                user.club_name = data.get('club_name', user.club_name)
+                user.club_location = data.get('club_location', user.club_location)
+            else:
+                return JsonResponse({'error': "Nevazeca uloga"}, status=400)
+            user.save()
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+    return JsonResponse({'success': "Uspjeh"}, status=200)
+
+
+@api_view(['POST'])
+def custom_logout(request):
+    logout(request)
+    return JsonResponse({'success': "Logged out successfully."}, status=200)
+
+
+@api_view(['POST'])
+@role_required(Role.ORGANIZER)
+def create_subscription(request):
+    price_obj = OrganizerSubscriptionPrice.objects.first()
+    if not price_obj:
+        return JsonResponse({"error": "Subscription price not set"}, status=400)
+
+    access_token = get_paypal_access_token()
+
+    payload = {
+        "plan_id": price_obj.paypal_plan_id,
+        "application_context": {
+            "return_url": settings.PAYPAL_RETURN_URL,
+            "cancel_url": settings.PAYPAL_CANCEL_URL,
+        },
+    }
+
+    response = requests.post(
+        f"{settings.PAYPAL_API_BASE}/v1/billing/subscriptions",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json",
+        },
+        json=payload,
+    )
+
+    try:
+        response.raise_for_status()
+    except requests.HTTPError:
+        return JsonResponse(
+            {"paypal_error": response.json()},
+            status=response.status_code,
+        )
+
+    return JsonResponse(response.json())
+
+
+@api_view(['POST'])
+def paypal_success(request):
+    subscription_id = request.data.get("subscription_id")
+    if not subscription_id:
+        return JsonResponse({"error": "Missing subscription ID"}, status=400)
+
+    access_token = get_paypal_access_token()
+    resp = requests.get(
+        f"{settings.PAYPAL_API_BASE}/v1/billing/subscriptions/{subscription_id}",
+        headers={
+            "Authorization": f"Bearer {access_token}"},
+    )
+
+    resp.raise_for_status()
+    data = resp.json()
+
+    if data.get("status") != "ACTIVE":
+        return JsonResponse({"error": "Subscription not active", "paypal_status": data.get("status")}, status=400)
+
+    subscription, _ = OrganizerSubscription.objects.get_or_create(
+        organizer=request.user
+    )
+
+    current_price_obj = OrganizerSubscriptionPrice.objects.first()
+    current_price = current_price_obj.price if current_price_obj else None
+
+    subscription.paid_subscription = True
+    subscription.paypal_subscription_id = subscription_id
+    subscription.paypal_status = data.get("status")
+    subscription.price_paid = current_price
+    subscription.end_date = date.today() + relativedelta(years=1)
+    subscription.save()
+
+    return JsonResponse({"success": True, "paypal_status": data.get("status")})
+    
+
+@api_view(['GET'])
+def subscribed(request):
+    return JsonResponse({'is_subbed':is_paid_organizer(request.user)}, status=200)

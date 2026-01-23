@@ -3,6 +3,7 @@ from users.models import User
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
+from django.core.exceptions import ValidationError
 
 
 class AgeChoices(models.TextChoices):
@@ -67,6 +68,21 @@ class StatusChoices(models.TextChoices):
     COMPLETED = "COMPLETED", "Completed"
 
 
+class MediaFile(models.Model):
+    FILE_TYPES = (
+        ('mp3', 'Music'),
+        ('pdf', 'Document'),
+    )
+    
+    title = models.CharField(max_length=255)
+    file_type = models.CharField(max_length=10, choices=FILE_TYPES)
+    file = models.FileField(upload_to='uploads/') 
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+
 class Competition(models.Model):
     name = models.CharField(max_length=255)
     date = models.DateField()
@@ -83,10 +99,12 @@ class Competition(models.Model):
     group_size_categories = models.ManyToManyField(GroupSizeCategory, related_name='competitions')
     status = models.CharField(choices=StatusChoices, max_length=20, default=StatusChoices.DRAFT)
     judges = models.ManyToManyField(User, through='CompetitionJudge', related_name='judged_competitions')
-    starting_list_pdf = models.FileField(
-        upload_to='starting_lists/',
+    starting_list = models.OneToOneField(
+        MediaFile, 
+        on_delete=models.SET_NULL, 
+        null=True, 
         blank=True,
-        null=True
+        related_name='competition_starting_list'
     )
     registration_fee = models.DecimalField(
         decimal_places=2, 
@@ -96,12 +114,7 @@ class Competition(models.Model):
     )
 
     def __str__(self):
-        return f"""ID:{self.id}-ORGANIZER:{self.organizer}-  
-                AGE CATEGORIES:{self.age_categories}-
-                STYLE CATEGORIES:{self.style_categories}-
-                GROUP SIZE CATEGORIES:{self.group_size_categories}
-                ====================
-                """
+        return f"ID:{self.id} ORGANIZER:{self.organizer}"
 
 
 class CompetitionJudge(models.Model):
@@ -123,8 +136,7 @@ class CompetitionJudge(models.Model):
         ]
 
     def __str__(self):
-        return f"""{self.judge.username}->{self.competition}
-                ===================="""
+        return f"{self.judge}->{self.competition}"
 
 
 class Appearance(models.Model):
@@ -135,15 +147,20 @@ class Appearance(models.Model):
     )
     club_manager = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        limit_choices_to={'role': 'CLUB MANAGER'},
+        limit_choices_to={'role': 'CLUB_MANAGER'},
         on_delete=models.CASCADE,
-        related_name='appearances',
-        null=True
+        related_name='appearances'
     )
     choreography = models.CharField(max_length=50)
     length = models.DurationField()
     choreograph = models.CharField(max_length=50)
-    music = models.FileField(null=True, blank=True)
+    music = models.OneToOneField(
+        MediaFile, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        related_name='appearance_music'
+    )
     age_category = models.ForeignKey(
         AgeCategory, 
         on_delete=models.PROTECT
@@ -156,16 +173,34 @@ class Appearance(models.Model):
         GroupSizeCategory, 
         on_delete=models.PROTECT
     )
+    accepted = models.BooleanField(default=False)
     paid_registration = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"""ID:{self.id}-COMPETITION ID:{self.competition.id}-
-                CLUB MANAGER:{self.club_manager}-
-                AGE CATEGORY:{self.age_category}-
-                STYLE CATEGORY:{self.style_category}-
-                GROUP SIZE CATEGORY:{self.group_size_category}
-                ====================
-                """
+        return f"ID:{self.id} COMPETITION_ID:{self.competition.id} CLUB_MANAGER:{self.club_manager}"
+    
+    def clean(self):
+        super().clean()
+        if not self.competition.group_size_categories.filter(id=self.group_size_category.id).exists():
+            raise ValidationError({
+                'group_size_category': f"Nedozvoljena kategorija za velicinu grupe."
+            })
+        if not self.competition.style_categories.filter(id=self.style_category.id).exists():
+            raise ValidationError({
+                'group_size_category': f"Nedozvoljena kategorija za stil."
+            })
+        if not self.competition.age_categories.filter(id=self.age_category.id).exists():
+            raise ValidationError({
+                'group_size_category': f"Nedozvoljena kategorija za dob."
+            })
+    
+    def get_length_display(self):
+        if self.length:
+            total_seconds = int(self.length.total_seconds())
+            minutes = total_seconds // 60
+            seconds = total_seconds % 60
+            return f"{minutes:02d}:{seconds:02d}"
+        return "00:00"
 
 
 class Grade(models.Model):
@@ -190,7 +225,22 @@ class Grade(models.Model):
         ]
 
     def __str__(self):
-        return f"""{self.judge.username}->{self.appearance.id}:{self.grade}
-                ===================="""
+        return f"{self.judge.username}->{self.appearance.id}:{self.grade}"
+    
 
+class Result(models.Model):
+    competition = models.ForeignKey(
+        Competition,
+        on_delete=models.CASCADE,
+        related_name='results'
+    )
+    appearance = models.ForeignKey(
+        Appearance,
+        on_delete=models.CASCADE,
+        related_name='results'
+    )
+    rank = models.IntegerField(validators=[MinValueValidator(1)])
 
+    class Meta:
+        ordering = ['rank'] 
+        unique_together = ('competition', 'appearance')

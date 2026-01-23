@@ -2,8 +2,9 @@ import '../styles/novo-natjecanje.css';
 import Navbar from '../components/navbar';
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
-import { createCompetition, getCurrentUser } from '../services/apiService';
-import { useNavigate, Link } from 'react-router-dom';
+import { createCompetition, getCompetitionByID, updateCompetition } from '../services/apiService';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const stilOptions = [
     { value: 'HIPHOP', label: 'Hip Hop' },
@@ -28,38 +29,47 @@ const velicinaOptions = [
 
 
 function NovoNatjecanje() {
-    const [currentUser, setCurrentUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { user: currentUser, loading } = useAuth();
+    const { id } = useParams();
+    const isEditMode = !!id;
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        naziv: '',
-        datumStart: '',
-        datumEnd: '',
-        lokacija: '',
-        opis: '',
-        stilovi: [],
-        dobneKategorije: [],
-        velicine: [],
-        kotizacija: 0
+        name: '',
+        date: '',
+        location: '',
+        description: '',
+        style_categories: [],
+        age_categories: [],
+        group_size_categories: [],
+        registration_fee: 0
     });
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await getCurrentUser();
-
-                if (response) {
-                    setCurrentUser(response);
+        if (currentUser.role !== 'ORGANIZER') {
+            navigate('/');
+        }
+        if (isEditMode) {
+            const fetchData = async () => {
+                try {
+                    const data = await getCompetitionByID(id);
+                    setFormData({
+                        name: data.name,
+                        date: data.date ? data.date.split("T")[0] : "",
+                        location: data.location || "",
+                        description: data.description || "",
+                        registration_fee: data.registration_fee || 0,
+                        style_categories: data.style_categories || [],
+                        age_categories: data.age_categories || [],
+                        group_size_categories: data.group_size_categories || [],
+                    });
+                } catch (error) {
+                    alert("Greška pri učitavanju natjecanja.");
+                    navigate("/organizator/moja-natjecanja");
                 }
-            } catch (error) {
-                console.error("Greška u homepage.jsx:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, []);
+            };
+            fetchData();
+        }
+    }, [id, isEditMode, navigate]);
 
     if (loading) {
         return (
@@ -91,25 +101,20 @@ function NovoNatjecanje() {
         e.preventDefault();
 
         try {
-            const competitionData = {
-                name: formData.naziv,
-                date: formData.datumStart,
-                location: formData.lokacija,
-                description: formData.opis,
-                registration_fee: parseFloat(formData.kotizacija),
-                age_categories: formData.dobneKategorije,
-                style_categories: formData.stilovi,
-                group_size_categories: formData.velicine
-            };
-
-            const response = await createCompetition(competitionData);
-            if (response) {
-                console.log("Natjecanje uspješno kreirano:", response);
-                navigate('/homepage');
+            if (isEditMode) {
+                console.log("Ažuriram natjecanje...", formData);
+                await updateCompetition(id, formData);
+                alert("Natjecanje uspješno ažurirano!");
+            } else {
+                console.log("Kreiram novo natjecanje...", formData);
+                await createCompetition(formData);
+                alert("Natjecanje uspješno kreirano!");
             }
 
+            navigate("/organizator/moja-natjecanja");
         } catch (error) {
-            console.error("Greška pri kreiranju natjecanja:", error);
+            console.error("Greška:", error);
+            alert("Došlo je do greške. Provjerite podatke.");
         }
     };
 
@@ -120,7 +125,16 @@ function NovoNatjecanje() {
 
                 <div className='new-comp-form-container'>
                     <div className='headboard'>
-                        <p>Novo natjecanje</p>
+                        <div
+                            className="back-button"
+                            role="button"
+                            tabIndex={0}
+                            aria-label="Return to previous page"
+                            onClick={() => navigate('/profile')}
+                        >
+                            <i className="bi bi-arrow-left"></i>
+                        </div>
+                        <p>{isEditMode ? 'Uredi natjecanje' : 'Novo natjecanje'}</p>
                     </div>
 
                     <form className='new-comp-form' onSubmit={handleSubmit}>
@@ -129,9 +143,9 @@ function NovoNatjecanje() {
                             <input
                                 type='text'
                                 id='naziv-natjecanja'
-                                name='naziv'
+                                name='name'
                                 placeholder='Unesite naziv natjecanja'
-                                value={formData.naziv}
+                                value={formData.name}
                                 onChange={handleChange}
                                 className='form-input'
                                 required
@@ -143,8 +157,8 @@ function NovoNatjecanje() {
                             <input
                                 type='date'
                                 id='datum-start'
-                                name='datumStart'
-                                value={formData.datumStart}
+                                name='date'
+                                value={formData.date}
                                 onChange={handleChange}
                                 className='form-input'
                                 required
@@ -156,9 +170,9 @@ function NovoNatjecanje() {
                             <input
                                 type='text'
                                 id='lokacija-natjecanja'
-                                name='lokacija'
+                                name='location'
                                 placeholder='Unesite lokaciju natjecanja'
-                                value={formData.lokacija}
+                                value={formData.location}
                                 onChange={handleChange}
                                 className='form-input'
                                 required
@@ -169,9 +183,9 @@ function NovoNatjecanje() {
                             <label htmlFor='opis-natjecanja'>Opis natjecanja:</label>
                             <textarea
                                 id='opis-natjecanja'
-                                name='opis'
+                                name='description'
                                 placeholder='Unesite opis natjecanja'
-                                value={formData.opis}
+                                value={formData.description}
                                 onChange={handleChange}
                                 className='form-textarea'
                                 required
@@ -183,11 +197,12 @@ function NovoNatjecanje() {
                                 <p>Stilovi:</p>
                                 <Select
                                     isMulti
-                                    name="stilovi"
+                                    name="style_categories"
                                     options={stilOptions}
                                     className="basic-multi-select"
                                     classNamePrefix="select"
-                                    onChange={(options) => handleSelectChange('stilovi', options)}
+                                    value={stilOptions.filter(option => formData.style_categories.includes(option.value))}
+                                    onChange={(options) => handleSelectChange('style_categories', options)}
                                     placeholder="Odaberi stilove..."
                                     required
                                 />
@@ -197,11 +212,12 @@ function NovoNatjecanje() {
                                 <p>Dobne kategorije:</p>
                                 <Select
                                     isMulti
-                                    name="dobneKategorije"
+                                    name="age_categories"
                                     options={dobOptions}
                                     className="basic-multi-select"
                                     classNamePrefix="select"
-                                    onChange={(options) => handleSelectChange('dobneKategorije', options)}
+                                    value={dobOptions.filter(option => formData.age_categories.includes(option.value))}
+                                    onChange={(options) => handleSelectChange('age_categories', options)}
                                     placeholder="Odaberi dob..."
                                     required
                                 />
@@ -211,11 +227,12 @@ function NovoNatjecanje() {
                                 <p>Veličine grupa:</p>
                                 <Select
                                     isMulti
-                                    name="velicine"
+                                    name="group_size_categories"
                                     options={velicinaOptions}
                                     className="basic-multi-select"
+                                    value={velicinaOptions.filter(option => formData.group_size_categories.includes(option.value))}
                                     classNamePrefix="select"
-                                    onChange={(options) => handleSelectChange('velicine', options)}
+                                    onChange={(options) => handleSelectChange('group_size_categories', options)}
                                     placeholder="Odaberi veličine..."
                                     required
                                 />
@@ -227,9 +244,9 @@ function NovoNatjecanje() {
                             <input
                                 type='number'
                                 id='iznos-kotizacije'
-                                name='kotizacija'
+                                name='registration_fee'
                                 placeholder='0.00'
-                                value={formData.kotizacija}
+                                value={formData.registration_fee}
                                 onChange={handleChange}
                                 className='form-input'
                                 min="0"
@@ -239,7 +256,7 @@ function NovoNatjecanje() {
                             />
                         </div>
 
-                        <input type='submit' value='Kreiraj natjecanje' className='submit-button' />
+                        <input type='submit' value={isEditMode ? 'Spremi promjene' : 'Kreiraj natjecanje'} className='submit-button' />
 
                     </form>
                 </div>
