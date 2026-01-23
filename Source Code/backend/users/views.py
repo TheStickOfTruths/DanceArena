@@ -182,6 +182,5 @@ def paypal_success(request):
     
 
 @api_view(['GET'])
-@role_required(Role.ORGANIZER)
 def subscribed(request):
     return JsonResponse({'is_subbed':is_paid_organizer(request.user)}, status=200)
