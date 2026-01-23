@@ -84,9 +84,9 @@ def my_competitions(request):
 @organizer_subscription_required
 def assigned_competitions(request):
     data = []
-    competitions = Competition.objects.filter(competitionjudge__judge=request.user).distinct()
-    if len(competitions) > 0:
-        for competition in competitions:
+    competition_ids = CompetitionJudge.objects.filter(judge=request.user).values_list('competition__id', flat=True)
+    if len(competition_ids) > 0:
+        for competition in Competition.objects.filter(id__in=competition_ids):
             data.append({
             'name': competition.name,
             'organizer': competition.organizer.first_name or competition.organizer.username,
