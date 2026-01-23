@@ -2,11 +2,13 @@ import '../styles/competitionmicro.css';
 import { publishCompetition, getStartnaLista, startCompetition, finishCompetition } from '../services/apiService';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useState } from 'react';
 
 const CompetitionMicro = ({ competition, onUpdate }) => {
 
     const navigate = useNavigate();
     const { user } = useAuth();
+    const [expanded, setExpanded] = useState(false);
 
     const handleEdit = (e) => {
         e.stopPropagation();
@@ -63,6 +65,11 @@ const CompetitionMicro = ({ competition, onUpdate }) => {
         }
     };
 
+    const handleOcijeniNastupe = (e) => {
+        e.stopPropagation();
+        navigate('/sudac/odabir-nastupa', { state: { competition } });
+    };
+
 
     const getStatusDetails = (status) => {
         switch (status) {
@@ -83,76 +90,126 @@ const CompetitionMicro = ({ competition, onUpdate }) => {
 
     const { label, className } = getStatusDetails(competition.status);
 
+    const renderDetails = () => (
+        <div className="comp-micro-details" onClick={(e) => e.stopPropagation()}>
+            <div className="comp-micro-details-grid">
+                <div className="detail-row"><span>Datum:</span> {competition.date}</div>
+                <div className="detail-row"><span>Lokacija:</span> {competition.location}</div>
+                <div className="detail-row"><span>Organizator:</span> {competition.organizer}</div>
+                <div className="detail-row"><span>Kotizacija:</span> {competition.registration_fee} €</div>
+            </div>
+            <div className="detail-row"><span>Dobne kategorije:</span> {competition.age_categories?.join(', ')}</div>
+            <div className="detail-row"><span>Plesni stilovi:</span> {competition.style_categories?.join(', ')}</div>
+            <div className="detail-row"><span>Veličine grupa:</span> {competition.group_size_categories?.join(', ')}</div>
+        </div>
+    );
+
     if (user.role === "CLUB_MANAGER") {
         return (
-            <div className={`comp-micro-container ${className}-border`}>
-                <div className="comp-micro-info">
-                    <h3 className="comp-micro-name">{competition.name}</h3>
-                    <span className={`status-badge ${className}`}>
-                        {label}
-                    </span>
+            <div
+                className={`comp-micro-container ${className}-border ${expanded ? 'expanded' : ''}`}
+                onClick={() => setExpanded(!expanded)}
+            >
+                <div className="comp-micro-header">
+                    <div className="comp-micro-info">
+                        <h3 className="comp-micro-name">{competition.name}</h3>
+                        <span className={`status-badge ${className}`}>
+                            {label}
+                        </span>
+                    </div>
+                    <div className="comp-micro-actions">
+                        <button className="micro-btn btn-primary" onClick={handlePrijavaNastupa}>
+                            Prijavi Nastup
+                        </button>
+                    </div>
                 </div>
-                <div className="comp-micro-actions">
-                    <button className="micro-btn btn-primary" onClick={handlePrijavaNastupa}>
-                        Prijavi Nastup
-                    </button>
+                {expanded && renderDetails()}
+            </div>
+        );
+    } if (user.role === "JUDGE") {
+        return (
+            <div
+                className={`comp-micro-container ${className}-border ${expanded ? 'expanded' : ''}`}
+                onClick={() => setExpanded(!expanded)}
+            >
+                <div className="comp-micro-header">
+                    <div className="comp-micro-info">
+                        <h3 className="comp-micro-name">{competition.name}</h3>
+                        <span className={`status-badge ${className}`}>
+                            {label}
+                        </span>
+                    </div>
+                    <div className="comp-micro-actions">
+                        {competition.status === 'ACTIVE' && (
+                            <button className="micro-btn btn-primary" onClick={handleOcijeniNastupe}>
+                                Ocijeni Nastupe
+                            </button>
+                        )}
+                    </div>
                 </div>
+                {expanded && renderDetails()}
             </div>
         );
     }
     else {
         return (
-            <div className={`comp-micro-container ${className}-border`}>
-                <div className="comp-micro-info">
-                    <h3 className="comp-micro-name">{competition.name}</h3>
-                    <span className={`status-badge ${className}`}>
-                        {label}
-                    </span>
+            <div
+                className={`comp-micro-container ${className}-border ${expanded ? 'expanded' : ''}`}
+                onClick={() => setExpanded(!expanded)}
+            >
+                <div className="comp-micro-header">
+                    <div className="comp-micro-info">
+                        <h3 className="comp-micro-name">{competition.name}</h3>
+                        <span className={`status-badge ${className}`}>
+                            {label}
+                        </span>
+                    </div>
+
+                    <div className="comp-micro-actions">
+                        {competition.status === 'DRAFT' && (
+                            <>
+                                <button className="micro-btn btn-secondary-darker" onClick={handleEdit}>
+                                    Uredi
+                                </button>
+                                <button className="micro-btn btn-primary" onClick={handlePublish}>
+                                    Objavi
+                                </button>
+                            </>
+                        )}
+
+                        {competition.status === 'PUBLISHED' && (
+                            <>
+                                <button className="micro-btn btn-secondary" onClick={handleManageRegistrations}>
+                                    Upravljaj Natjecanjem
+                                </button>
+                            </>
+                        )}
+
+                        {competition.status === 'CLOSED_APPLICATIONS' && (
+                            <>
+                                <button className="micro-btn btn-secondary" onClick={handleViewStartList}>
+                                    Pregledaj startnu listu
+                                </button>
+                                <button className="micro-btn btn-primary-darker" onClick={handleStartCompetition}>
+                                    Započni Natjecanje
+                                </button>
+                            </>
+                        )}
+
+                        {competition.status === 'ACTIVE' && (
+                            <button className="micro-btn btn-primary" onClick={handleFinishCompetition}>
+                                Završi natjecanje
+                            </button>
+                        )}
+
+                        {competition.status === 'COMPLETED' && (
+                            <button className="micro-btn btn-secondary-darker" onClick={(e) => e.stopPropagation()}>
+                                Rezultati
+                            </button>
+                        )}
+                    </div>
                 </div>
-
-                <div className="comp-micro-actions">
-                    {competition.status === 'DRAFT' && (
-                        <>
-                            <button className="micro-btn btn-secondary-darker" onClick={handleEdit}>
-                                Uredi
-                            </button>
-                            <button className="micro-btn btn-primary" onClick={handlePublish}>
-                                Objavi
-                            </button>
-                        </>
-                    )}
-
-                    {competition.status === 'PUBLISHED' && (
-                        <>
-                            <button className="micro-btn btn-secondary" onClick={handleManageRegistrations}>
-                                Upravljaj Natjecanjem
-                            </button>
-                        </>
-                    )}
-
-                    {competition.status === 'CLOSED_APPLICATIONS' && (
-                        <>
-                            <button className="micro-btn btn-secondary" onClick={handleViewStartList}>
-                                Pregledaj startnu listu
-                            </button>
-                            <button className="micro-btn btn-primary-darker" onClick={handleStartCompetition}>
-                                Započni Natjecanje
-                            </button>
-                        </>
-                    )}
-
-                    {competition.status === 'ACTIVE' && (
-                        <button className="micro-btn btn-primary" onClick={handleFinishCompetition}>
-                            Završi natjecanje
-                        </button>
-                    )}
-
-                    {competition.status === 'COMPLETED' && (
-                        <button className="micro-btn btn-secondary-darker" onClick={(e) => e.stopPropagation()}>
-                            Rezultati
-                        </button>
-                    )}
-                </div>
+                {expanded && renderDetails()}
             </div>
         );
     }

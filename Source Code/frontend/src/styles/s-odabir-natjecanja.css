@@ -4,20 +4,19 @@
     width: 100vw;
 }
 
-.page-content-container {
-    display: grid;
-    grid-template-rows: auto;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    position: relative;
-    height: 90vh;
+.pejdz-content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100vw;
+    height: 100%;
 }
 
 .headboard-s {
     background-color: var(--primary);
     height: 10vh;
-    top:0;
+    top: 0;
     width: 100%;
     padding: 0;
     margin: 0;
@@ -30,20 +29,17 @@
     font-weight: bold;
     padding-left: 1%;
     color: var(--primary);
-    color: rgba(255,255,255,0.5)
+    color: rgba(255, 255, 255, 0.5)
 }
 
-.competition-list-container {
-    position:absolute;
-    top:10vh;
-    left: 50%;
-    transform: translate(-50%);
-    display: grid;
-    grid-template-rows: auto;
-    gap: 10px;
-    padding: 10px;
-    width: 50%;
-    margin: 0 auto;
+.kompetisn-list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 70%;
+    height: 78vh;
+    padding: 15px;
 }
 
 .competition {
@@ -75,4 +71,66 @@
 .competition .prijava-button:hover {
     cursor: pointer;
     background-color: color-mix(in oklab, var(--primary-darker) 100%, black 30%)
+}
+
+.grading-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+}
+
+.grade-input {
+    width: 60px;
+    padding: 5px;
+    font-size: 1rem;
+    text-align: center;
+    border: 2px solid var(--primary);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+    background-color: white;
+    color: var(--primary-darker);
+    font-weight: bold;
+}
+
+.grade-input:focus {
+    border-color: var(--primary-darker);
+}
+
+.prihvati-btn {
+    padding: 5px 15px;
+    font-size: 0.9rem;
+    background-color: var(--primary-darker);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    height: 35px;
+}
+
+.prihvati-btn:hover {
+    background-color: color-mix(in oklab, var(--primary-darker) 100%, black 20%);
+}
+
+.opozovi-btn {
+    background-color: #d9534f;
+}
+
+.nastup-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 200px;
+}
+
+.grade-input::-webkit-outer-spin-button,
+.grade-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.grade-input {
+    -moz-appearance: textfield;
 }
